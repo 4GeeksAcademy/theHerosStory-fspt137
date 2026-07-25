@@ -17,3 +17,21 @@ class User(db.Model):
             "email": self.email,
             # do not serialize the password, its a security breach
         }
+
+    
+
+class Mentor(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    mentorname: Mapped[str] = mapped_column(String(20), unique=True, nullable=False)
+    email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    password: Mapped[str] = mapped_column(String(250), nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
+
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "mentorname": self.mentorname,
+            "email": self.email,
+            "is_active": self.is_active,
+        }
