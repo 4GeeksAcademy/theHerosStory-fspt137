@@ -11,10 +11,70 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
-# Mentor Methods
-# CREATE
+
+#User Methods
+#CREATE
+@api.route('/users', methods=['POST'])
+def create_user():
+    body = request.get_json()
+    
+    new_user = User(
+        username=body['username'],
+        email=body['email'],
+        password=body['password'],
+        is_active=True
+    )
+    
+    db.session.add(new_user)
+    db.session.commit()
+    
+    return jsonify(new_user.serialize()), 201
 
 
+#READ
+@api.route('/users', methods=['GET'])
+def get_all_users():
+    users = User.query.all()
+    
+    all_users_serialized = [user.serialize() for user in users]
+    
+    return jsonify(all_users_serialized), 200
+
+
+#UPDATE
+@api.route('/users/<int:id>', methods=['PUT'])
+def update_user(id):
+    body = request.get_json()
+    user = User.query.get(id)
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    user.username = body['username']
+    user.email = body['email']
+    user.password = body['password']
+    
+    db.session.commit()
+    
+    return jsonify(user.serialize()), 200
+
+
+#DELETE
+@api.route('/users/<int:id>', methods=['DELETE'])
+def delete_user(id):
+    user = User.query.get(id)
+    
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+        
+    db.session.delete(user)
+    db.session.commit()
+    
+    return jsonify({"msg": f"User with ID {id} succesfully deleted"}), 200
+
+
+#Mentor Methods
+#CREATE
 @api.route('/mentors', methods=['POST'])
 def create_mentor():
     body = request.get_json()
