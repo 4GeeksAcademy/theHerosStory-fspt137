@@ -113,7 +113,7 @@ def get_all_mentors():
     return jsonify(all_mentors_serialized), 200
   
   #READ ID
-  @api.route('/mentors/<int:mentor_id>', methods=['GET'])
+@api.route('/mentors/<int:mentor_id>', methods=['GET'])
 def get_mentor(mentor_id):
     mentor = Mentor.query.get(mentor_id)
 
