@@ -12,35 +12,36 @@ api = Blueprint('api', __name__)
 CORS(api)
 
 
-#User Methods
-#CREATE
+# User Methods
+# CREATE
 @api.route('/users', methods=['POST'])
 def create_user():
     body = request.get_json()
-    
+
     new_user = User(
         username=body['username'],
         email=body['email'],
         password=body['password'],
         is_active=True
     )
-    
+
     db.session.add(new_user)
     db.session.commit()
-    
+
     return jsonify(new_user.serialize()), 201
 
 
-#READ
+# READ
 @api.route('/users', methods=['GET'])
 def get_all_users():
     users = User.query.all()
-    
+
     all_users_serialized = [user.serialize() for user in users]
-    
+
     return jsonify(all_users_serialized), 200
 
-#READ ID
+# READ ID
+
 
 @api.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
@@ -52,7 +53,7 @@ def get_user(user_id):
     return jsonify(user.serialize()), 200
 
 
-#UPDATE
+# UPDATE
 @api.route('/users/<int:id>', methods=['PUT'])
 def update_user(id):
     body = request.get_json()
@@ -64,31 +65,34 @@ def update_user(id):
     user.username = body['username']
     user.email = body['email']
     user.password = body['password']
-    
+
     db.session.commit()
-    
+
     return jsonify(user.serialize()), 200
 
 
-#DELETE
+# DELETE
 @api.route('/users/<int:id>', methods=['DELETE'])
 def delete_user(id):
     user = User.query.get(id)
-    
+
     if not user:
         return jsonify({"error": "User not found"}), 404
-        
+
     db.session.delete(user)
     db.session.commit()
-    
+
     return jsonify({"msg": f"User with ID {id} succesfully deleted"}), 200
 
 
-#Mentor Methods
-#CREATE
+# Mentor Methods
+# CREATE
 @api.route('/mentors', methods=['POST'])
 def create_mentor():
-    body = request.get_json()
+    body = request.get_json(silent=True) or {}
+
+    if not body.get('mentorname') or not body.get('email') or not body.get('password'):
+        return jsonify({"msg": "mentorname, email and password are required"}), 400
 
     new_mentor = Mentor(
         mentorname=body['mentorname'],
@@ -111,8 +115,10 @@ def get_all_mentors():
     all_mentors_serialized = [mentor.serialize() for mentor in mentors]
 
     return jsonify(all_mentors_serialized), 200
-  
-  #READ ID
+
+  # READ ID
+
+
 @api.route('/mentors/<int:mentor_id>', methods=['GET'])
 def get_mentor(mentor_id):
     mentor = Mentor.query.get(mentor_id)
