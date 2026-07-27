@@ -40,6 +40,16 @@ def get_all_users():
     
     return jsonify(all_users_serialized), 200
 
+#READ ID
+@api.route('/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    user = User.query.get(user_id)
+
+    if user is None:
+        return jsonify({"msg": "User not found"}), 404
+
+    return jsonify(user.serialize()), 200
+
 
 #UPDATE
 @api.route('/users/<int:id>', methods=['PUT'])
