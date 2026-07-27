@@ -40,6 +40,17 @@ def get_all_users():
     
     return jsonify(all_users_serialized), 200
 
+#READ ID
+
+@api.route('/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    user = User.query.get(user_id)
+
+    if user is None:
+        return jsonify({"msg": "User not found"}), 404
+
+    return jsonify(user.serialize()), 200
+
 
 #UPDATE
 @api.route('/users/<int:id>', methods=['PUT'])
@@ -100,6 +111,16 @@ def get_all_mentors():
     all_mentors_serialized = [mentor.serialize() for mentor in mentors]
 
     return jsonify(all_mentors_serialized), 200
+  
+  #READ ID
+@api.route('/mentors/<int:mentor_id>', methods=['GET'])
+def get_mentor(mentor_id):
+    mentor = Mentor.query.get(mentor_id)
+
+    if mentor is None:
+        return jsonify({"error": "Mentor not found"}), 404
+
+    return jsonify(mentor.serialize()), 200
 
 
 # UPDATE
