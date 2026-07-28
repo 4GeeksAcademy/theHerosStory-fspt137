@@ -251,18 +251,16 @@ def delete_quest(quest_id):
     return jsonify({"msg": f"Quest with ID {quest_id} succesfully deleted"}), 200
 
 
-# ==========================================
-# CHAT METHODS (Flujo Bilateral Limpio)
-# ==========================================
 
-# 1. READ ALL - Listar absolutamente todos los chats en el Inbox global
+#CHAT METHODS 
+#READ ALL
 @api.route('/chats', methods=['GET'])
 def get_all_chats():
     chats = Chat.query.all()
     return jsonify([chat.serialize() for chat in chats]), 200
 
 
-# 2. CREATE - Crear una sala de chat vacía entre un User y un Mentor
+#CREATE 
 @api.route('/chats', methods=['POST'])
 def create_chat():
     body = request.get_json()
@@ -276,13 +274,11 @@ def create_chat():
     if not user_id or not mentor_id:
         return jsonify({"msg": "User and mentor ID are required"}), 400
 
-    # Validaciones de existencia en la base de datos
     user_exists = User.query.get(user_id)
     mentor_exists = Mentor.query.get(mentor_id)
     if not user_exists or not mentor_exists:
         return jsonify({"msg": "User or Mentor does not exist"}), 400
 
-    # Evitamos duplicados: si ya existe una sala entre ellos, la devolvemos
     existing_chat = Chat.query.filter_by(user_id=user_id, mentor_id=mentor_id).first()
     if existing_chat:
         return jsonify({
@@ -300,7 +296,7 @@ def create_chat():
     }), 201
 
 
-# 3. POST MESSAGE - Enviar un mensaje de forma bilateral dentro de una sala
+#POST MESSAGE
 @api.route('/chats/message', methods=['POST'])
 def send_message():
     body = request.get_json()
@@ -309,7 +305,7 @@ def send_message():
         return jsonify({"msg": "Request body is required"}), 400
 
     chat_id = body.get("chat_id")
-    sender = body.get("sender")     # Debe ser estrictamente "user" o "mentor"
+    sender = body.get("sender")     #"user" OR "mentor"
     content = body.get("content")
 
     if not all([chat_id, sender, content]):
@@ -337,7 +333,7 @@ def send_message():
     }), 201
 
 
-# 4. GET MESSAGES - Obtener todo el historial cronológico de un chat específico
+#GET MESSAGES
 @api.route('/chats/<int:chat_id>/messages', methods=['GET'])
 def get_chat_messages(chat_id):
     chat = Chat.query.get(chat_id)
@@ -345,7 +341,6 @@ def get_chat_messages(chat_id):
     if chat is None:
         return jsonify({"msg": "Chat not found"}), 404
 
-    # Los ordena del más antiguo al más reciente de forma nativa por fecha
     messages = ChatMessage.query.filter_by(chat_id=chat_id).order_by(ChatMessage.created_at.asc()).all()
     messages_serialized = [msg.serialize() for msg in messages]
 

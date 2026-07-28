@@ -66,15 +66,12 @@ class Quest(db.Model):
 class Chat(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    #Vinculados a los nombres automáticos de tabla: 'user' y 'mentor'
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id'), nullable=False)
     mentor_id: Mapped[int] = mapped_column(ForeignKey('mentor.id'), nullable=False)
 
-    #DateTime nativo para ordenar correctamente de forma cronológica
     created_at: Mapped[datetime] = mapped_column(
     DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
 
-    #Conexiones virtuales entre objetos de Python
     user: Mapped["User"] = relationship(back_populates="chats")
     mentor: Mapped["Mentor"] = relationship(back_populates="chats")
     messages: Mapped[list["ChatMessage"]] = relationship(back_populates="chat", cascade="all, delete-orphan")
@@ -91,14 +88,12 @@ class Chat(db.Model):
 class ChatMessage(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    #Vinculado al nombre automático de tabla: 'chat'
     chat_id: Mapped[int] = mapped_column(ForeignKey('chat.id'), nullable=False)
 
     sender: Mapped[str] = mapped_column(String(20), nullable=False)  # "user" o "mentor"
     content: Mapped[str] = mapped_column(String(500), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
 
-    #Relación inversa hacia el chat padre
     chat: Mapped["Chat"] = relationship(back_populates="messages")
 
     def serialize(self):
