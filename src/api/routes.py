@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Mentor, Quest
+from api.models import db, User, Mentor, Quest, Chat, ChatMessage
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
@@ -249,6 +249,233 @@ def delete_quest(quest_id):
     db.session.commit()
 
     return jsonify({"msg": f"Quest with ID {quest_id} succesfully deleted"}), 200
+
+
+#CHAT METHODS
+#POST
+@api.route('/chat', methods=['POST'])
+def create_chat():
+    body = request.get_json()
+
+    if body is None:
+        return jsonify({"msg": "Request body is required"}), 400
+
+    user_id = body.get("user_id")
+    mentor_id = body.get("mentor_id")
+
+    if not user_id or not mentor_id:
+        return jsonify({"msg": "User and mentor ID are required"}), 400
+
+    user_exists = User.query.get(user_id)
+    mentor_exists = Mentor.query.get(mentor_id)
+    if not user_exists or not mentor_exists:
+        return jsonify({"msg": "User or Mentor does not exist"}), 400
+
+    existing_chat = Chat.query.filter_by(user_id=user_id, mentor_id=mentor_id).first()
+    if existing_chat:
+        return jsonify({
+            "msg": "Chat already exists between this user and mentor",
+            "chat": existing_chat.serialize()
+        }), 200
+
+    new_chat = Chat(user_id=user_id, mentor_id=mentor_id)
+    db.session.add(new_chat)
+    db.session.commit()
+
+    return jsonify({
+        "msg": "Chat created successfully",
+        "chat": new_chat.serialize()
+    }), 201
+
+
+#POST
+@api.route('chat/message', methods=['POST'])
+def send_message():
+    body = request.get_json()
+
+    if body is None:
+            return jsonify({"msg": "Request body is required"}), 400
+
+    chat_id = body.get("chat_id")
+    sender = body.get("sender")     
+    content = body.get("content")
+
+    if not all([chat_id, sender, content]):
+        return jsonify({"msg": "chat_id, sender and content are required"}), 400
+
+    if sender not in ["user", "mentor"]:
+        return jsonify({"msg": "Sender must be either 'user' or 'mentor'"}), 400
+
+    chat = Chat.query.get(chat_id)
+    if chat is None:
+        return jsonify({"msg": "Chat conversation not found. Create the chat first."}), 404
+
+    new_message = ChatMessage(
+        chat_id=chat_id,
+        sender=sender,
+        content=content
+    )
+
+    db.session.add(new_message)
+    db.session.commit()
+
+    return jsonify({
+        "msg": "Message sent successfully",
+        "message": new_message.serialize()
+    }), 201
+
+
+#GET
+@api.route('/chat/<int:chat_id>/messages', methods=['GET'])
+def get_chat_messages(chat_id):
+    chat = Chat.query.get(chat_id)
+
+    if chat is None:
+        return jsonify({"msg": "Chat not found"}), 404
+
+    messages = ChatMessage.query.filter_by(chat_id=chat_id).order_by(ChatMessage.created_at.asc()).all()
+    messages_serialized = [msg.serialize() for msg in messages]
+
+    return jsonify({
+        "chat_id": chat.id,
+        "user_id": chat.user_id,
+        "mentor_id": chat.mentor_id,
+        "messages": messages_serialized
+    }), 200
+
+
+#GET BY ID
+@api.route('/chats/<string:role>/<int:role_id>', methods=['GET'])
+def get_active_chats(role, role_id):
+    if role == "user":
+        chats = Chat.query.filter_by(user_id=role_id).all()
+    elif role == "mentor":
+        chats = Chat.query.filter_by(mentor_id=role_id).all()
+    else:
+        return jsonify({"msg": "Invalid role. Use 'user' or 'mentor'"}), 400
+
+    return jsonify([chat.serialize() for chat in chats]), 200
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @api.route('/hello', methods=['POST', 'GET'])
