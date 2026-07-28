@@ -9,16 +9,24 @@ export const ChatsInbox = () => {
 
     function getChats() {
         if (!backendUrl) return
+        
+        // CORRECCIÓN: Consumimos el endpoint raíz en plural sin parámetros extraños
         fetch(backendUrl + "/api/chats")
             .then((response) => response.json())
-            .then((responseJson) => {
-                if (!responseJson.error) {
-                    setChats(responseJson.data)
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    setChats(data)
+                } else {
+                    setChats([])
                 }
             })
-            .catch((error) => console.error(error))
+            .catch((error) => {
+                console.error("Error getting chats:", error)
+                setChats([])
+            })
     }
 
+    // Se ejecuta una única vez al montar la bandeja de entrada
     useEffect(() => {
         getChats()
     }, [])
@@ -28,19 +36,39 @@ export const ChatsInbox = () => {
             <div className="container-lg">
                 <div className="row">
                     <div className="col-12">
-                        <h1>Chats</h1>
+                        <div className="d-flex justify-content-between align-items-center mb-4">
+                            <h1 className="h2">Global Inbox</h1>
+                            <Link to="/mentors" className="btn btn-outline-secondary btn-sm">
+                                Back to Mnetors
+                            </Link>
+                        </div>
+
                         <div className="row row-cols-1 row-cols-md-2 g-3">
-                            {chats.map((chat) => (
-                                <div key={chat.id} className="col">
-                                    <Link
-                                        className="card card-body text-decoration-none"
-                                        to={"/chats/" + chat.id}
-                                    >
-                                        <h2>{chat.title || "Chat" + chat.id}</h2>
-                                        <p>{chat.lastMessage || "Sin mensaje reciente"}</p>
-                                    </Link>
+                            {chats && chats.length === 0 ? (
+                                <div className="col-12 text-center text-muted py-4">
+                                    No chats yet.
                                 </div>
-                            ))}
+                            ) : (
+                                chats && chats.map((chat) => (
+                                    <div key={chat.id} className="col">
+                                        <Link
+                                            className="card card-body text-decoration-none shadow-sm h-100 style-clickable"
+                                            to={"/chats/" + chat.id} 
+                                        >
+                                            <h2 className="h5 text-primary">ChatRoom {chat.id}</h2>
+                                            <p className="text-muted mb-1 small">
+                                                <strong>Alumno (User) ID:</strong> {chat.user_id}
+                                            </p>
+                                            <p className="text-muted mb-0 small">
+                                                <strong>Mentor ID:</strong> {chat.mentor_id}
+                                            </p>
+                                            <small className="text-muted d-block mt-2">
+                                                Iniciated: {new Date(chat.created_at).toLocaleDateString()}
+                                            </small>
+                                        </Link>
+                                    </div>
+                                ))
+                            )}
                         </div>
                     </div>
                 </div>
