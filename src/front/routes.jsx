@@ -13,6 +13,10 @@ import { Mentors } from "./pages/Mentors";
 import { SingleMentor } from "./pages/SingleMentor";
 import { NewMentor } from "./pages/NewMentor";
 import { EditMentor } from "./pages/EditMentor";
+import { ChatsInbox } from "./pages/ChatsInbox";
+import { ChatWindow } from "./pages/ChatWindow";
+import { CreateChat } from "./pages/CreateChat";
+
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -33,6 +37,9 @@ export const router = createBrowserRouter(
       <Route path="/mentors/:mentorId" element={<SingleMentor />} />
       <Route path="/new_mentor" element={<NewMentor />} />
       <Route path="/edit_mentor/:mentorId" element={<EditMentor />} />
+      <Route path="/chats" element={<ChatsInbox />} />
+      <Route path="/chats/:chatId" element={<ChatWindow />} />
+      <Route path="/create-chat" element={<CreateChat />} />
 
     </Route>
   )

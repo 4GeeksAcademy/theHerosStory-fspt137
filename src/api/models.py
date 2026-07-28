@@ -14,7 +14,7 @@ class User(db.Model):
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
 
     #Relación para acceder a los chats del usuario
-    chats: Mapped[list["Chat"]] = relationship(back_populates="user")
+    chats: Mapped[list["Chat"]] = relationship(back_populates="user", cascade="all, delete-orphan")
 
     def serialize(self):
         return {
@@ -33,7 +33,7 @@ class Mentor(db.Model):
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
 
     #Relación para acceder a los chats del mentor
-    chats: Mapped[list["Chat"]] = relationship(back_populates="mentor")
+    chats: Mapped[list["Chat"]] = relationship(back_populates="mentor", cascade="all, delete-orphan")
 
     def serialize(self):
         return {

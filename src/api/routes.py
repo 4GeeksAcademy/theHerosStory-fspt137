@@ -252,8 +252,14 @@ def delete_quest(quest_id):
 
 
 #CHAT METHODS
+#READ
+@api.route('/chats', methods=['GET'])
+def get_all_chats():
+    chats = Chat.query.all()
+    return jsonify([chat.serialize() for chat in chats]), 200
+
 #POST
-@api.route('/chat', methods=['POST'])
+@api.route('/chats', methods=['POST'])
 def create_chat():
     body = request.get_json()
 
@@ -289,7 +295,7 @@ def create_chat():
 
 
 #POST
-@api.route('/chat/message', methods=['POST'])
+@api.route('/chats/message', methods=['POST'])
 def send_message():
     body = request.get_json()
 
@@ -326,7 +332,7 @@ def send_message():
 
 
 #GET
-@api.route('/chat/<int:chat_id>/messages', methods=['GET'])
+@api.route('/chats/<int:chat_id>/messages', methods=['GET'])
 def get_chat_messages(chat_id):
     chat = Chat.query.get(chat_id)
 

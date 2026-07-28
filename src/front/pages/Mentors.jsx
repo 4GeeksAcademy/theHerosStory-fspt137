@@ -59,6 +59,9 @@ export const Mentors = () => {
 			<Link to="/new_mentor">
 				<button className="btn btn-success">Create Mentor</button>
 			</Link>
+			<Link to="/chats">
+				<button className="btn btn-success">Chats Inbox</button>
+			</Link>
             {mentors.map((mentor)=>
             <p key={mentor.id}>
                 Name: {mentor.mentorname} Email: {mentor.email}
@@ -68,8 +71,9 @@ export const Mentors = () => {
 				<Link to={"/edit_mentor/" + mentor.id}>
 					<button className="btn btn-primary">Edit Mentor</button>
 				</Link>
-				<Link>
-					<button onClick={()=>deleteMentor(mentor.id)} className="btn btn-danger">Delete Mentor</button>
+				<button onClick={()=>deleteMentor(mentor.id)} className="btn btn-danger">Delete Mentor</button>
+				<Link to={"/create-chat"}>
+					<button className="btn btn-secondary">New Chat</button>
 				</Link>
             </p>
             )}
