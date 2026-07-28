@@ -289,7 +289,7 @@ def create_chat():
 
 
 #POST
-@api.route('chat/message', methods=['POST'])
+@api.route('/chat/message', methods=['POST'])
 def send_message():
     body = request.get_json()
 
