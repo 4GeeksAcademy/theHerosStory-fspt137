@@ -19,8 +19,6 @@ import { EditMentor } from "./pages/EditMentor";
 import { ChatsInbox } from "./pages/ChatsInbox";
 import { ChatWindow } from "./pages/ChatWindow";
 import { CreateChat } from "./pages/CreateChat";
-
-import { Mentors } from "./pages/Mentors";
 import { Quests } from "./pages/Quests";
 import { CreateQuest } from "./pages/CreateQuest";
 import { EditQuest } from "./pages/EditQuest";
@@ -48,7 +46,9 @@ export const router = createBrowserRouter(
       <Route path="/chats" element={<ChatsInbox />} />
       <Route path="/chats/:chatId" element={<ChatWindow />} />
       <Route path="/create-chat" element={<CreateChat />} />
-
+      <Route path="/quests" element={<Quests />} />
+      <Route path="/quests/new" element={<CreateQuest />} />
+      <Route path="/quests/edit/:quest_id" element={<EditQuest />} />
     </Route>
   )
 )

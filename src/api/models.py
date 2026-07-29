@@ -18,10 +18,8 @@ class User(db.Model):
     #Relación para acceder a los chats del usuario
     chats: Mapped[list["Chat"]] = relationship(back_populates="user", cascade="all, delete-orphan")
     
-#relacion de user con ques
-    quests: Mapped[list["Quest"]] = relationship(
-        back_populates="user"
-    )
+    #Relacion de user con quest
+    quests: Mapped[list["Quest"]] = relationship(back_populates="user")
 
     def serialize(self):
         return {
