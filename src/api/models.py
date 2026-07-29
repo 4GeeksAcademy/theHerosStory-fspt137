@@ -1,16 +1,23 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, Boolean, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 db = SQLAlchemy()
 
 
 class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(String(20), unique=True, nullable=False)
-    email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    username: Mapped[str] = mapped_column(
+        String(20), unique=True, nullable=False)
+    email: Mapped[str] = mapped_column(
+        String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
+    
+#relacion de user con ques
+    quests: Mapped[list["Quest"]] = relationship(
+        back_populates="user"
+    )
 
     def serialize(self):
         return {
@@ -45,8 +52,9 @@ class Quest(db.Model):
     description: Mapped[str] = mapped_column(String(500), nullable=False)
     status: Mapped[str] = mapped_column(
         String(30), nullable=False, default="pending")
-    user_id: Mapped[int] = mapped_column(nullable=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=True)
     habit_id: Mapped[int] = mapped_column(nullable=True)
+    user: Mapped["User"] = relationship(back_populates="quests")
 
     def serialize(self):
         return {
