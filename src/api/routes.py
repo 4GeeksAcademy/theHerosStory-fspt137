@@ -199,6 +199,14 @@ def create_quest():
 
     if not body.get("description"):
         return jsonify({"msg": "Description is required"}), 400
+    
+    if not body.get("user_id"):
+        return jsonify({"msg": "User ID is required"}), 400
+    user = User.query.get(body["user_id"])
+
+    if user is None:
+        return jsonify({"msg": "User not found"}), 404
+    
 
     new_quest = Quest(
         title=body["title"],
