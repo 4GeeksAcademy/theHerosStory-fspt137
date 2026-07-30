@@ -22,6 +22,8 @@ import { EditQuest } from "./pages/EditQuest";
 import { Habits } from "./pages/Habits";
 import { CreateHabit } from "./pages/CreateHabit";
 import { EditHabit } from "./pages/EditHabit";
+import { MentorLogIn } from "./pages/MentorLogIn";
+
 
 
 export const router = createBrowserRouter(
@@ -52,6 +54,7 @@ export const router = createBrowserRouter(
       <Route path="/habits" element={<Habits />} />
       <Route path="/habits/new" element={<CreateHabit />} />
       <Route path="/habits/edit/:habit_id" element={<EditHabit />} />
+      <Route path="/mentors/login" element={<MentorLogIn />} />
     </Route>
   )
 )
