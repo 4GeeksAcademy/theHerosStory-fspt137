@@ -19,6 +19,9 @@ import { CreateChat } from "./pages/CreateChat";
 import { Quests } from "./pages/Quests";
 import { CreateQuest } from "./pages/CreateQuest";
 import { EditQuest } from "./pages/EditQuest";
+import { Habits } from "./pages/Habits";
+import { CreateHabit } from "./pages/CreateHabit";
+import { EditHabit } from "./pages/EditHabit";
 
 
 export const router = createBrowserRouter(
@@ -46,6 +49,9 @@ export const router = createBrowserRouter(
       <Route path="/quests" element={<Quests />} />
       <Route path="/quests/new" element={<CreateQuest />} />
       <Route path="/quests/edit/:quest_id" element={<EditQuest />} />
+      <Route path="/habits" element={<Habits />} />
+      <Route path="/habits/new" element={<CreateHabit />} />
+      <Route path="/habits/edit/:habit_id" element={<EditHabit />} />
     </Route>
   )
 )
