@@ -19,6 +19,9 @@ import { CreateChat } from "./pages/CreateChat";
 import { Quests } from "./pages/Quests";
 import { CreateQuest } from "./pages/CreateQuest";
 import { EditQuest } from "./pages/EditQuest";
+import { Users } from "./pages/Users"
+import { AddUser } from "./pages/AddUser"
+import { EditUser } from "./pages/EditUser"
 import { Habits } from "./pages/Habits";
 import { CreateHabit } from "./pages/CreateHabit";
 import { EditHabit } from "./pages/EditHabit";
@@ -42,6 +45,7 @@ export const router = createBrowserRouter(
       <Route path="/" element={<Home />} />
       <Route path="/single/:theId" element={<Single />} />  {/* Dynamic route for single items */}
       <Route path="/demo" element={<Demo />} />
+      <Route path="/users" element={<Users />} />
       <Route path="/mentors" element={<Mentors />} />
       <Route path="/mentors/:mentorId" element={<SingleMentor />} />
       <Route path="/new_mentor" element={<NewMentor />} />
@@ -52,6 +56,8 @@ export const router = createBrowserRouter(
       <Route path="/quests" element={<Quests />} />
       <Route path="/quests/new" element={<CreateQuest />} />
       <Route path="/quests/edit/:quest_id" element={<EditQuest />} />
+      <Route path="/add-user" element={<AddUser />} />
+      <Route path="/edit-user/:id" element={<EditUser />} />
       <Route path="/habits" element={<Habits />} />
       <Route path="/habits/new" element={<CreateHabit />} />
       <Route path="/habits/edit/:habit_id" element={<EditHabit />} />
