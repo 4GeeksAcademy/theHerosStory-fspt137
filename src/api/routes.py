@@ -1,8 +1,9 @@
 """
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
+from datetime import datetime
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Mentor, Quest, Chat, ChatMessage, Habit
+from api.models import db, User, Mentor, Quest, Chat, ChatMessage, Habit, QuestTracking
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
@@ -200,14 +201,13 @@ def create_quest():
 
     if not body.get("description"):
         return jsonify({"msg": "Description is required"}), 400
-    
+
     if not body.get("user_id"):
         return jsonify({"msg": "User ID is required"}), 400
     user = User.query.get(body["user_id"])
 
     if user is None:
         return jsonify({"msg": "User not found"}), 404
-    
 
     new_quest = Quest(
         title=body["title"],
@@ -258,7 +258,6 @@ def delete_quest(quest_id):
     db.session.commit()
 
     return jsonify({"msg": f"Quest with ID {quest_id} succesfully deleted"}), 200
-
 
 #Habit Methods
 #READ
@@ -362,7 +361,7 @@ def get_all_chats():
     return jsonify([chat.serialize() for chat in chats]), 200
 
 
-#CREATE 
+# CREATE
 @api.route('/chats', methods=['POST'])
 def create_chat():
     body = request.get_json()
@@ -381,7 +380,8 @@ def create_chat():
     if not user_exists or not mentor_exists:
         return jsonify({"msg": "User or Mentor does not exist"}), 400
 
-    existing_chat = Chat.query.filter_by(user_id=user_id, mentor_id=mentor_id).first()
+    existing_chat = Chat.query.filter_by(
+        user_id=user_id, mentor_id=mentor_id).first()
     if existing_chat:
         return jsonify({
             "msg": "Chat already exists between this user and mentor",
@@ -398,7 +398,7 @@ def create_chat():
     }), 201
 
 
-#POST MESSAGE
+# POST MESSAGE
 @api.route('/chats/message', methods=['POST'])
 def send_message():
     body = request.get_json()
@@ -407,7 +407,7 @@ def send_message():
         return jsonify({"msg": "Request body is required"}), 400
 
     chat_id = body.get("chat_id")
-    sender = body.get("sender")     #"user" OR "mentor"
+    sender = body.get("sender")  # "user" OR "mentor"
     content = body.get("content")
 
     if not all([chat_id, sender, content]):
@@ -435,7 +435,7 @@ def send_message():
     }), 201
 
 
-#GET MESSAGES
+# GET MESSAGES
 @api.route('/chats/<int:chat_id>/messages', methods=['GET'])
 def get_chat_messages(chat_id):
     chat = Chat.query.get(chat_id)
@@ -443,7 +443,8 @@ def get_chat_messages(chat_id):
     if chat is None:
         return jsonify({"msg": "Chat not found"}), 404
 
-    messages = ChatMessage.query.filter_by(chat_id=chat_id).order_by(ChatMessage.created_at.asc()).all()
+    messages = ChatMessage.query.filter_by(
+        chat_id=chat_id).order_by(ChatMessage.created_at.asc()).all()
     messages_serialized = [msg.serialize() for msg in messages]
 
     return jsonify({
@@ -453,137 +454,143 @@ def get_chat_messages(chat_id):
         "messages": messages_serialized
     }), 200
 
+# QuestTracking Methods
+# READ
 
 
+@api.route('/quest-trackings', methods=['GET'])
+def getall_quest_tracking():
+    trackings = QuestTracking.query.all()
 
-    
+    return jsonify([
+        tracking.serialize()
+        for tracking in trackings
+    ]), 200
 
+# READ ID
 
 
+@api.route('/quest-trackings/<int:tracking_id>', methods=['GET'])
+def get_quest_tracking(tracking_id):
+    tracking = db.session.get(QuestTracking, tracking_id)
 
+    if tracking is None:
+        return jsonify({
+            "msg": "Quest tracking not found"
+        }), 404
 
+    return jsonify(tracking.serialize()), 200
 
+# CREATE
 
 
+@api.route('/quest-trackings', methods=['POST'])
+def create_quest_tracking():
+    body = request.get_json()
 
+    if body is None:
+        return jsonify({"msg": "Request body is required"}), 400
 
+    quest_id = body.get("quest_id")
+    date_string = body.get("date")
+    comment = body.get("comment")
+    status = body.get("status")
 
+    if not quest_id or not date_string or not comment or not status:
+        return jsonify({"msg": "quest_id, date, comment, status are required"}), 400
 
+    quest = db.session.get(Quest, quest_id)
 
+    if quest is None:
+        return jsonify({"msg": "Quest not found"}), 404
 
+    try:
+        tracking_date = datetime.strptime(
+            date_string,
+            "%Y-%m-%d"
+        ).date()
+    except ValueError:
+        return jsonify({
+            "msg": "Date must use YYYY-MM-DD format"
+        }), 400
 
+    new_tracking = QuestTracking(
+        quest_id=quest_id,
+        date=tracking_date,
+        comment=comment,
+        status=status,
 
+    )
 
+    db.session.add(new_tracking)
+    db.session.commit()
 
+    return jsonify(new_tracking.serialize()), 201
 
+# UPDATE
 
 
+@api.route('/quest-trackings/<int:tracking_id>', methods=['PUT'])
+def update_quest_tracking(tracking_id):
+    body = request.get_json()
 
+    if body is None:
+        return jsonify({"msg": "Request body is required"}), 400
 
+    tracking = db.session.get(QuestTracking, tracking_id)
 
+    if tracking is None:
+        return jsonify({
+            "msg": "Quest tracking not found"
+        }), 404
 
+    quest_id = body.get("quest_id")
+    date_string = body.get("date")
+    comment = body.get("comment")
+    status = body.get("status")
 
+    if quest_id is not None:
+        quest = db.session.get(Quest, quest_id)
 
+        if quest is None:
+            return jsonify({
+                "msg": "Quest not found"
+            }), 404
 
+        tracking.quest_id = quest_id
 
+    if date_string is not None:
+        try:
+            tracking.date = datetime.strptime(
+                date_string,
+                "%Y-%m-%d"
+            ).date()
+        except ValueError:
+            return jsonify({
+                "msg": "Date must use YYYY-MM-DD format"
+            }), 400
 
+    if comment is not None:
+        tracking.comment = comment
 
+    if status is not None:
+        tracking.status = status
 
+    db.session.commit()
 
+    return jsonify(tracking.serialize()), 200
 
+# DELETE
 
 
+@api.route('/quest-trackings/<int:tracking_id>', methods=['DELETE'])
+def delete_quest_tracking(tracking_id):
+    tracking = db.session.get(QuestTracking, tracking_id)
 
+    if tracking is None:
+        return jsonify({"msg": "Quest tracking not found"}), 404
 
+    db.session.delete(tracking)
+    db.session.commit()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@api.route('/hello', methods=['POST', 'GET'])
-def handle_hello():
-
-    response_body = {
-        "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
-    }
-
-    return jsonify(response_body), 200
+    return jsonify({"msg": "Quest tracking deleted succesfully "}), 200

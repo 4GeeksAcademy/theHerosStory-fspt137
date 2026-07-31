@@ -19,6 +19,9 @@ import { CreateChat } from "./pages/CreateChat";
 import { Quests } from "./pages/Quests";
 import { CreateQuest } from "./pages/CreateQuest";
 import { EditQuest } from "./pages/EditQuest";
+import { CreateQuestTracking } from "./pages/CreateQuestTracking";
+import { EditQuestTracking } from "./pages/EditQuestTracking";
+import { QuestTracking } from "./pages/QuestTracking";
 import { Users } from "./pages/Users"
 import { AddUser } from "./pages/AddUser"
 import { EditUser } from "./pages/EditUser"
@@ -55,6 +58,9 @@ export const router = createBrowserRouter(
       <Route path="/quests" element={<Quests />} />
       <Route path="/quests/new" element={<CreateQuest />} />
       <Route path="/quests/edit/:quest_id" element={<EditQuest />} />
+      <Route path="/quest-trackings" element={<QuestTracking />} />
+      <Route path="/quest-trackings/new" element={<CreateQuestTracking />} />
+      <Route path="/quest-trackings/:tracking_id/edit" element={<EditQuestTracking />} />
       <Route path="/add-user" element={<AddUser />} />
       <Route path="/edit-user/:id" element={<EditUser />} />
       <Route path="/habits" element={<Habits />} />
