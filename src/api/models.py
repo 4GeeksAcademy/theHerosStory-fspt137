@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import String, Boolean, ForeignKey, DateTime, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 db = SQLAlchemy()
 
@@ -20,6 +20,9 @@ class User(db.Model):
     
     #Relacion de user con quest
     quests: Mapped[list["Quest"]] = relationship(back_populates="user")
+
+    # Relacion de user con habits
+    habits: Mapped[list["Habit"]] = relationship(back_populates="user", cascade="all, delete-orphan")
 
     def serialize(self):
         return {
@@ -66,6 +69,25 @@ class Quest(db.Model):
             "status": self.status,
             "user_id": self.user_id,
             "habit_id": self.habit_id,
+        }
+
+
+class Habit(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    title: Mapped[str] = mapped_column(String(100), nullable=False)
+    description: Mapped[str] = mapped_column(String(500), nullable=False)
+    status: Mapped[str] = mapped_column(String(30), nullable=False, default="pending")
+
+    user: Mapped["User"] = relationship(back_populates="habits")
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "status": self.status,
+            "user_id": self.user_id,
         }
 
 
