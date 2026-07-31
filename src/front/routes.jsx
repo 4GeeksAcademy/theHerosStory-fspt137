@@ -4,8 +4,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-} 
-from "react-router-dom";
+} from "react-router-dom";
 import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
 import { Single } from "./pages/Single";
@@ -23,6 +22,15 @@ import { EditQuest } from "./pages/EditQuest";
 import { CreateQuestTracking } from "./pages/CreateQuestTracking";
 import { EditQuestTracking } from "./pages/EditQuestTracking";
 import { QuestTracking } from "./pages/QuestTracking";
+import { Users } from "./pages/Users"
+import { AddUser } from "./pages/AddUser"
+import { EditUser } from "./pages/EditUser"
+import { Habits } from "./pages/Habits";
+import { CreateHabit } from "./pages/CreateHabit";
+import { EditHabit } from "./pages/EditHabit";
+
+
+
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -39,6 +47,7 @@ export const router = createBrowserRouter(
       <Route path="/" element={<Home />} />
       <Route path="/single/:theId" element={<Single />} />  {/* Dynamic route for single items */}
       <Route path="/demo" element={<Demo />} />
+      <Route path="/users" element={<Users />} />
       <Route path="/mentors" element={<Mentors />} />
       <Route path="/mentors/:mentorId" element={<SingleMentor />} />
       <Route path="/new_mentor" element={<NewMentor />} />
@@ -52,6 +61,11 @@ export const router = createBrowserRouter(
       <Route path="/quest-trackings" element={<QuestTracking />} />
       <Route path="/quest-trackings/new" element={<CreateQuestTracking />} />
       <Route path="/quest-trackings/:tracking_id/edit" element={<EditQuestTracking />} />
+      <Route path="/add-user" element={<AddUser />} />
+      <Route path="/edit-user/:id" element={<EditUser />} />
+      <Route path="/habits" element={<Habits />} />
+      <Route path="/habits/new" element={<CreateHabit />} />
+      <Route path="/habits/edit/:habit_id" element={<EditHabit />} />
     </Route>
   )
 )
