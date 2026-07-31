@@ -4,9 +4,6 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
 } from "react-router-dom";
 import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
@@ -25,6 +22,13 @@ import { EditQuest } from "./pages/EditQuest";
 import { Users } from "./pages/Users"
 import { AddUser } from "./pages/AddUser"
 import { EditUser } from "./pages/EditUser"
+import { Habits } from "./pages/Habits";
+import { CreateHabit } from "./pages/CreateHabit";
+import { EditHabit } from "./pages/EditHabit";
+
+
+
+
 export const router = createBrowserRouter(
     createRoutesFromElements(
     // CreateRoutesFromElements function allows you to build route elements declaratively.
@@ -52,6 +56,9 @@ export const router = createBrowserRouter(
       <Route path="/quests/edit/:quest_id" element={<EditQuest />} />
       <Route path="/add-user" element={<AddUser />} />
       <Route path="/edit-user/:id" element={<EditUser />} />
+      <Route path="/habits" element={<Habits />} />
+      <Route path="/habits/new" element={<CreateHabit />} />
+      <Route path="/habits/edit/:habit_id" element={<EditHabit />} />
     </Route>
   )
 )

@@ -2,9 +2,10 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Mentor, Quest, Chat, ChatMessage
+from api.models import db, User, Mentor, Quest, Chat, ChatMessage, Habit
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+
 
 api = Blueprint('api', __name__)
 
@@ -259,6 +260,99 @@ def delete_quest(quest_id):
     return jsonify({"msg": f"Quest with ID {quest_id} succesfully deleted"}), 200
 
 
+#Habit Methods
+#READ
+@api.route('/habits', methods=['GET'])
+def get_habits():
+    habits = Habit.query.all()
+
+    habits_serialized = [habit.serialize() for habit in habits]
+
+    return jsonify(habits_serialized), 200
+
+
+#READ ID
+@api.route('/habits/<int:habit_id>', methods=['GET'])
+def get_habit(habit_id):
+    habit = Habit.query.get(habit_id)
+
+    if habit is None:
+        return jsonify({"msg": "Habit not found"}), 404
+
+    return jsonify(habit.serialize()), 200
+
+
+#CREATE
+@api.route('/habits', methods=['POST'])
+def create_habit():
+    body = request.get_json()
+
+    if body is None:
+        return jsonify({"msg": "Request body is required"}), 400
+
+    if not body.get("title"):
+        return jsonify({"msg": "Title is required"}), 400
+
+    if not body.get("description"):
+        return jsonify({"msg": "Description is required"}), 400
+    
+    if not body.get("user_id"):
+        return jsonify({"msg": "User ID is required"}), 400
+    user = User.query.get(body["user_id"])
+
+    if user is None:
+        return jsonify({"msg": "User not found"}), 404
+    
+
+    new_habit = Habit(
+        title=body["title"],
+        description=body["description"],
+        status=body.get("status", "pending"),
+        user_id=body.get("user_id"),
+    )
+
+    db.session.add(new_habit)
+    db.session.commit()
+
+    return jsonify(new_habit.serialize()), 201
+
+
+#UPDATE
+@api.route('/habits/<int:habit_id>', methods=['PUT'])
+def update_habit(habit_id):
+    body = request.get_json()
+
+    if body is None:
+        return jsonify({"msg": "Request body is required"}), 400
+
+    habit = Habit.query.get(habit_id)
+
+    if not habit:
+        return jsonify({"msg": "Habit not found"}), 404
+
+    habit.title = body['title']
+    habit.description = body['description']
+    habit.status = body['status']
+
+    db.session.commit()
+
+    return jsonify(habit.serialize()), 200
+
+
+#DELETE
+@api.route('/habits/<int:habit_id>', methods=['DELETE'])
+def delete_habit(habit_id):
+    habit = Habit.query.get(habit_id)
+
+    if not habit:
+        return jsonify({"msg": "Habit not found"}), 404
+
+    db.session.delete(habit)
+    db.session.commit()
+
+    return jsonify({"msg": f"Habit with ID {habit_id} succesfully deleted"}), 200
+
+
 
 #CHAT METHODS 
 #READ ALL
@@ -359,6 +453,10 @@ def get_chat_messages(chat_id):
         "messages": messages_serialized
     }), 200
 
+
+
+
+    
 
 
 
