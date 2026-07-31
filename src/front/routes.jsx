@@ -22,7 +22,7 @@ import { CreateQuest } from "./pages/CreateQuest";
 import { EditQuest } from "./pages/EditQuest";
 import { CreateQuestTracking } from "./pages/CreateQuestTracking";
 import { EditQuestTracking } from "./pages/EditQuestTracking";
-import { QuestTracking } from "./pages/QuestTracking,jsx";
+import { QuestTracking } from "./pages/QuestTracking";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
