@@ -41,9 +41,7 @@ setup_admin(app)
 # add the admin
 setup_commands(app)
 
-# Setup the flask-JWT-Extended extension
-app.config["JWT_SECRET_KEY"] = "super-mega-hyper-secret" #Change this!
-jwt = JWTManager(app)
+
 
 # Add all endpoints form the API with a "api" prefix
 app.register_blueprint(api, url_prefix='/api')
