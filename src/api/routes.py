@@ -6,10 +6,6 @@ from api.models import db, User, Mentor, Quest, Chat, ChatMessage, Habit
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
-from flask_jwt_extended import create_access_token
-from flask_jwt_extended import get_jwt_identity
-from flask_jwt_extended import jwt_required
-from flask_jwt_extended import JWTManager
 
 api = Blueprint('api', __name__)
 
@@ -457,21 +453,7 @@ def get_chat_messages(chat_id):
         "messages": messages_serialized
     }), 200
 
-@api.route("/mentors/login", methods=["POST"])
-def mentor_login():
-    email = request.json.get("email", None)
-    password = request.json.get("password", None)
 
-    mentor = Mentor.query.filter_by(email=email).first()
-
-    if mentor is None:
-        return jsonify({"msg": "Bad username or password"}), 401
-
-    if password != mentor.password: 
-        return jsonify({"msg": "Bad username or password"}), 401
-
-    access_token = create_access_token(identity=email)
-    return jsonify(access_token=access_token)
 
 
     
