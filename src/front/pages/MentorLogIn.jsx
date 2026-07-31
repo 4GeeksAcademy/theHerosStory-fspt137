@@ -25,7 +25,7 @@ export const MentorLogIn = () => {
         fetch(backendUrl + '/api/mentors/login', requestOptions)
             .then(response => {
                 if (response.status === 200) {
-                    dispatch({ type: 'set_auth', payload: true });
+                    dispatch({ type: 'set_mentor_auth', payload: true });
                 } else {
                     console.error("Error en las credenciales");
                 }
@@ -43,7 +43,7 @@ export const MentorLogIn = () => {
 
     return (
         <div>
-            {store.auth ? (
+            {store.mentorAuth ? (
                 <h2>Logged In go to MentorDashboard</h2>
             ) : (
                 <form onSubmit={sendData}>

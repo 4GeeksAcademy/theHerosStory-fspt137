@@ -13,7 +13,7 @@ export const initialStore=()=>{
         background: null,
       }
     ],
-    auth: false
+    mentorAuth: false
   }
 }
 
@@ -25,10 +25,10 @@ export default function storeReducer(store, action = {}) {
         message: action.payload
       };
 
-      case 'set_auth':
+      case 'set_mentor_auth':
       return {
         ...store,
-        auth: action.payload
+        mentorAuth: action.payload
       };
 
       
