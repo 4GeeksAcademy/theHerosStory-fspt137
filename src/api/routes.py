@@ -3,9 +3,10 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 from datetime import datetime
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Mentor, Quest, Chat, ChatMessage, Habit, QuestTracking
+from api.models import db, User, Mentor, Quest, Chat, ChatMessage, Habit, QuestTracking, Administrator
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+from werkzeug.security import generate_password_hash
 
 
 api = Blueprint('api', __name__)
@@ -54,8 +55,14 @@ def get_user(user_id):
 
     return jsonify(user.serialize()), 200
 
+    if mentor is None:
+        return jsonify({"error": "Mentor not found"}), 404
+
+    return jsonify(mentor.serialize()), 200
 
 # UPDATE
+
+
 @api.route('/users/<int:id>', methods=['PUT'])
 def update_user(id):
     body = request.get_json()
@@ -86,9 +93,10 @@ def delete_user(id):
 
     return jsonify({"msg": f"User with ID {id} succesfully deleted"}), 200
 
-
 # Mentor Methods
 # CREATE
+
+
 @api.route('/mentors', methods=['POST'])
 def create_mentor():
     body = request.get_json(silent=True) or {}
@@ -130,8 +138,9 @@ def get_mentor(mentor_id):
 
     return jsonify(mentor.serialize()), 200
 
-
 # UPDATE
+
+
 @api.route('/mentors/<int:id>', methods=['PUT'])
 def update_mentor(id):
     body = request.get_json()
@@ -259,8 +268,10 @@ def delete_quest(quest_id):
 
     return jsonify({"msg": f"Quest with ID {quest_id} succesfully deleted"}), 200
 
-#Habit Methods
-#READ
+# Habit Methods
+# READ
+
+
 @api.route('/habits', methods=['GET'])
 def get_habits():
     habits = Habit.query.all()
@@ -270,7 +281,7 @@ def get_habits():
     return jsonify(habits_serialized), 200
 
 
-#READ ID
+# READ ID
 @api.route('/habits/<int:habit_id>', methods=['GET'])
 def get_habit(habit_id):
     habit = Habit.query.get(habit_id)
@@ -281,7 +292,7 @@ def get_habit(habit_id):
     return jsonify(habit.serialize()), 200
 
 
-#CREATE
+# CREATE
 @api.route('/habits', methods=['POST'])
 def create_habit():
     body = request.get_json()
@@ -294,14 +305,13 @@ def create_habit():
 
     if not body.get("description"):
         return jsonify({"msg": "Description is required"}), 400
-    
+
     if not body.get("user_id"):
         return jsonify({"msg": "User ID is required"}), 400
     user = User.query.get(body["user_id"])
 
     if user is None:
         return jsonify({"msg": "User not found"}), 404
-    
 
     new_habit = Habit(
         title=body["title"],
@@ -316,7 +326,7 @@ def create_habit():
     return jsonify(new_habit.serialize()), 201
 
 
-#UPDATE
+# UPDATE
 @api.route('/habits/<int:habit_id>', methods=['PUT'])
 def update_habit(habit_id):
     body = request.get_json()
@@ -338,7 +348,7 @@ def update_habit(habit_id):
     return jsonify(habit.serialize()), 200
 
 
-#DELETE
+# DELETE
 @api.route('/habits/<int:habit_id>', methods=['DELETE'])
 def delete_habit(habit_id):
     habit = Habit.query.get(habit_id)
@@ -352,9 +362,8 @@ def delete_habit(habit_id):
     return jsonify({"msg": f"Habit with ID {habit_id} succesfully deleted"}), 200
 
 
-
-#CHAT METHODS 
-#READ ALL
+# CHAT METHODS
+# READ ALL
 @api.route('/chats', methods=['GET'])
 def get_all_chats():
     chats = Chat.query.all()
@@ -594,3 +603,119 @@ def delete_quest_tracking(tracking_id):
     db.session.commit()
 
     return jsonify({"msg": "Quest tracking deleted succesfully "}), 200
+
+# Administrator Methods
+# READ
+
+
+@api.route('/administrators', methods=['GET'])
+def ge_tall_administrator():
+    admin = Administrator.query.all()
+
+    return jsonify([
+        admin.serialize()
+        for admin in admin
+    ]), 200
+
+# READ ID
+
+
+@api.route('/administrators/<int:admin_id>', methods=['GET'])
+def get_administrator(admin_id):
+    admin = db.session.get(Administrator, admin_id)
+
+    if admin is None:
+        return jsonify({
+            "msg": "Administrator not found"
+        }), 404
+
+    return jsonify(admin.serialize()), 200
+
+# POST
+
+
+@api.route('/administrators', methods=['POST'])
+def create_administrators():
+    body = request.get_json()
+
+    if body is None:
+        return jsonify({"msg": "Request body is required"}), 400
+
+    name = body.get("name")
+    email = body.get("email")
+    password = body.get("password")
+
+    if not name or not email or not password:
+        return jsonify({"msg": "name, email and password required"}), 400
+
+    existing_administrator = Administrator.query.filter_by(email=email).first()
+
+    if existing_administrator is not None:
+        return jsonify({"msg": "Email already exists"}), 409
+
+    new_administrator = Administrator(
+        name=name,
+        email=email,
+        password=generate_password_hash(password)
+    )
+
+    db.session.add(new_administrator)
+    db.session.commit()
+
+    return jsonify(new_administrator.serialize()), 201
+
+# UPDATE
+
+
+@api.route('/administrators/<int:admin_id>', methods=['PUT'])
+def update_administrator(admin_id):
+    body = request.get_json()
+
+    if body is None:
+        return jsonify({"msg": "Request body is required"}), 400
+
+    admin = db.session.get(Administrator, admin_id)
+
+    if admin is None:
+        return jsonify({"msg": "Administrator not found"}), 404
+
+    name = body.get("name")
+    email = body.get("email")
+    password = body.get("password")
+
+    if name is not None:
+        admin.name = name
+
+    if email is not None:
+        existing_admin = Administrator.query.filter(
+            Administrator.email == email,
+            Administrator.id != admin_id
+        ).first()
+
+        if existing_admin is not None:
+            return jsonify({
+                "msg": "Email already exists"
+            }), 409
+
+        admin.email = email
+    if password is not None:
+        admin, password = generate_password_hash(password)
+
+    db.session.commit()
+
+    return jsonify(admin.serialize()), 200
+
+# DELETE
+
+
+@api.route('/administrators/<int:admin_id>', methods=['DELETE'])
+def delete_admin(admin_id):
+    admin = db.session.get(Administrator, admin_id)
+
+    if not admin:
+        return jsonify({"msg": "Administrator not found"}), 404
+
+    db.session.delete(admin)
+    db.session.commit()
+
+    return jsonify({"msg": f"Administrator with ID {admin_id} successfully deleted"}), 200
