@@ -6,7 +6,8 @@ from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User, Mentor, Quest, Chat, ChatMessage, Habit, QuestTracking, Administrator
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_jwt_extended import create_access_token, JWTManager
 
 
 api = Blueprint('api', __name__)
@@ -699,7 +700,7 @@ def update_administrator(admin_id):
 
         admin.email = email
     if password is not None:
-        admin, password = generate_password_hash(password)
+        admin.password = generate_password_hash(password)
 
     db.session.commit()
 
@@ -719,3 +720,43 @@ def delete_admin(admin_id):
     db.session.commit()
 
     return jsonify({"msg": f"Administrator with ID {admin_id} successfully deleted"}), 200
+
+# Login-Admin Methods
+# POST
+
+
+@api.route('/admin/login', methods=['POST'])
+def admin_login():
+    body = request.get_json()
+
+    if body is None:
+        return jsonify({"msg": "Request body is required"}), 400
+
+    email = body.get("email")
+    password = body.get("password")
+
+    if not email or not password:
+        return jsonify({"msg": "email and password required"}), 400
+
+    administrator = Administrator.query.filter_by(email=email).first()
+
+    if administrator is None:
+        return jsonify({"msg": "Invalid email or password"}), 401
+
+    if not check_password_hash(
+       administrator.password, password
+       ):
+        return jsonify({"msg": "Invalid email or password"}), 401
+
+    access_token = create_access_token(
+        identity=str(administrator.id),
+        additional_claims={
+            "role": "administrator"
+        }
+    )
+
+    return jsonify({
+        "msg": "Administrator login successful",
+        "token": access_token,
+        "administrator": administrator.serialize()
+    }), 200

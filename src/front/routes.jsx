@@ -31,12 +31,15 @@ import { EditHabit } from "./pages/EditHabit";
 import { Administrators } from "./pages/Administrators";
 import { CreateAdministrator } from "./pages/CreateAdministrator";
 import { EditAdministrator } from "./pages/EditAdministrator";
+import { AdminLogin } from "./pages/AdminLogin";
+import { AdminDashboard } from "./pages/AdminDashboard";
+import { PrivateRoute } from "./components/PrivateRoute";
 
 
 
 
 export const router = createBrowserRouter(
-    createRoutesFromElements(
+  createRoutesFromElements(
     // CreateRoutesFromElements function allows you to build route elements declaratively.
     // Create your routes here, if you want to keep the Navbar and Footer in all views, add your new routes inside the containing Route.
     // Root, on the contrary, create a sister Route, if you have doubts, try it!
@@ -72,6 +75,8 @@ export const router = createBrowserRouter(
       <Route path="/administrators" element={<Administrators />} />
       <Route path="/administrators/new" element={<CreateAdministrator />} />
       <Route path="/administrators/:admin_id/edit" element={<EditAdministrator />} />
+      <Route path="/admin-login" element={<AdminLogin />} />
+      <Route path="/admin-dashboard" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"> <AdminDashboard /> </PrivateRoute>} />
     </Route>
   )
 )
