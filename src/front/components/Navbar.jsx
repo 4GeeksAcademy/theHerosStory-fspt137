@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 
 export const Navbar = () => {
+	const mentorId = localStorage.getItem("mentor_id");
+	const dashboardPath = mentorId ? `/mentors/dashboard/${mentorId}` : "/mentors/login";
 
 	return (
 		<nav className="navbar navbar-light bg-light">
@@ -22,8 +24,11 @@ export const Navbar = () => {
 						<button className="btn btn-primary">Habits</button>
 					</Link>
 					<Link to="/mentors/login">
-                        <button className="btn btn-primary">Mentor Log In</button>
-                    </Link>
+						<button className="btn btn-primary">Mentor Log In</button>
+					</Link>
+					<Link to={dashboardPath}>
+						<button className="btn btn-primary">Mentor Dashboard</button>
+					</Link>
 				</div>
 			</div>
 		</nav>

@@ -205,14 +205,13 @@ def create_quest():
 
     if not body.get("description"):
         return jsonify({"msg": "Description is required"}), 400
-    
+
     if not body.get("user_id"):
         return jsonify({"msg": "User ID is required"}), 400
     user = User.query.get(body["user_id"])
 
     if user is None:
         return jsonify({"msg": "User not found"}), 404
-    
 
     new_quest = Quest(
         title=body["title"],
@@ -265,8 +264,8 @@ def delete_quest(quest_id):
     return jsonify({"msg": f"Quest with ID {quest_id} succesfully deleted"}), 200
 
 
-#Habit Methods
-#READ
+# Habit Methods
+# READ
 @api.route('/habits', methods=['GET'])
 def get_habits():
     habits = Habit.query.all()
@@ -276,7 +275,7 @@ def get_habits():
     return jsonify(habits_serialized), 200
 
 
-#READ ID
+# READ ID
 @api.route('/habits/<int:habit_id>', methods=['GET'])
 def get_habit(habit_id):
     habit = Habit.query.get(habit_id)
@@ -287,7 +286,7 @@ def get_habit(habit_id):
     return jsonify(habit.serialize()), 200
 
 
-#CREATE
+# CREATE
 @api.route('/habits', methods=['POST'])
 def create_habit():
     body = request.get_json()
@@ -300,14 +299,13 @@ def create_habit():
 
     if not body.get("description"):
         return jsonify({"msg": "Description is required"}), 400
-    
+
     if not body.get("user_id"):
         return jsonify({"msg": "User ID is required"}), 400
     user = User.query.get(body["user_id"])
 
     if user is None:
         return jsonify({"msg": "User not found"}), 404
-    
 
     new_habit = Habit(
         title=body["title"],
@@ -322,7 +320,7 @@ def create_habit():
     return jsonify(new_habit.serialize()), 201
 
 
-#UPDATE
+# UPDATE
 @api.route('/habits/<int:habit_id>', methods=['PUT'])
 def update_habit(habit_id):
     body = request.get_json()
@@ -344,7 +342,7 @@ def update_habit(habit_id):
     return jsonify(habit.serialize()), 200
 
 
-#DELETE
+# DELETE
 @api.route('/habits/<int:habit_id>', methods=['DELETE'])
 def delete_habit(habit_id):
     habit = Habit.query.get(habit_id)
@@ -358,16 +356,15 @@ def delete_habit(habit_id):
     return jsonify({"msg": f"Habit with ID {habit_id} succesfully deleted"}), 200
 
 
-
-#CHAT METHODS 
-#READ ALL
+# CHAT METHODS
+# READ ALL
 @api.route('/chats', methods=['GET'])
 def get_all_chats():
     chats = Chat.query.all()
     return jsonify([chat.serialize() for chat in chats]), 200
 
 
-#CREATE 
+# CREATE
 @api.route('/chats', methods=['POST'])
 def create_chat():
     body = request.get_json()
@@ -386,7 +383,8 @@ def create_chat():
     if not user_exists or not mentor_exists:
         return jsonify({"msg": "User or Mentor does not exist"}), 400
 
-    existing_chat = Chat.query.filter_by(user_id=user_id, mentor_id=mentor_id).first()
+    existing_chat = Chat.query.filter_by(
+        user_id=user_id, mentor_id=mentor_id).first()
     if existing_chat:
         return jsonify({
             "msg": "Chat already exists between this user and mentor",
@@ -403,7 +401,7 @@ def create_chat():
     }), 201
 
 
-#POST MESSAGE
+# POST MESSAGE
 @api.route('/chats/message', methods=['POST'])
 def send_message():
     body = request.get_json()
@@ -412,7 +410,7 @@ def send_message():
         return jsonify({"msg": "Request body is required"}), 400
 
     chat_id = body.get("chat_id")
-    sender = body.get("sender")     #"user" OR "mentor"
+    sender = body.get("sender")  # "user" OR "mentor"
     content = body.get("content")
 
     if not all([chat_id, sender, content]):
@@ -440,7 +438,7 @@ def send_message():
     }), 201
 
 
-#GET MESSAGES
+# GET MESSAGES
 @api.route('/chats/<int:chat_id>/messages', methods=['GET'])
 def get_chat_messages(chat_id):
     chat = Chat.query.get(chat_id)
@@ -448,7 +446,8 @@ def get_chat_messages(chat_id):
     if chat is None:
         return jsonify({"msg": "Chat not found"}), 404
 
-    messages = ChatMessage.query.filter_by(chat_id=chat_id).order_by(ChatMessage.created_at.asc()).all()
+    messages = ChatMessage.query.filter_by(
+        chat_id=chat_id).order_by(ChatMessage.created_at.asc()).all()
     messages_serialized = [msg.serialize() for msg in messages]
 
     return jsonify({
@@ -459,122 +458,49 @@ def get_chat_messages(chat_id):
     }), 200
 
 
-#Mentor Login
+# Mentor Login
 @api.route("/mentors/login", methods=["POST"])
 def mentor_login():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
 
-
     mentor = Mentor.query.filter_by(email=email).first()
-
 
     if mentor is None:
         return jsonify({"msg": "Bad username or password"}), 401
 
-
     if password != mentor.password:
         return jsonify({"msg": "Bad username or password"}), 401
 
-
-    access_token = create_access_token(identity=email)
-    return jsonify(access_token=access_token)
-
-
-
-
-
+    access_mentor_token = create_access_token(identity=email)
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return jsonify({
+        "access_mentor_token": access_mentor_token,
+        "mentor_id": mentor.id
+    }), 200
+
+
+# Mentor Private Dashboard
+@api.route("/mentors/dashboard/<int:mentor_id>", methods=["GET"])
+@jwt_required() 
+def get_mentor_dashboard(mentor_id):
+    current_mentor_email = get_jwt_identity()
+
+    token_owner = Mentor.query.filter_by(email=current_mentor_email).first()
+
+    if not token_owner:
+        return jsonify({"msg": "Invalid session"}), 401
+
+    if token_owner.id != mentor_id:
+        return jsonify({"msg": "Access denied: Not allowed to see this dashboard"}), 403
+
+    return jsonify({
+        "msg": "Acceso allowed",
+        "mentor": {
+            "id": token_owner.id,
+            "email": token_owner.email
+        }
+    }), 200
 
 
 
