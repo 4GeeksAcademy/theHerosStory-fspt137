@@ -172,3 +172,25 @@ class QuestTracking(db.Model):
             "comment": self.comment,
             "status": self.status
         }
+
+class Administrator(db.Model):
+    __tablename__ = "admin"
+
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(
+            String(50), unique=True, nullable=False)
+    email: Mapped[str] = mapped_column(
+            String(120), unique=True, nullable=False)
+    password: Mapped[str] = mapped_column(
+        String(250), nullable=False)
+
+    def serialize(self):
+        return{
+            "id": self.id,
+            "name": self.name,
+            "email": self.email
+        }
+
+def __str__(self):
+    return f"{self.name} - {self.email}"

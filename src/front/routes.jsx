@@ -28,6 +28,9 @@ import { EditUser } from "./pages/EditUser"
 import { Habits } from "./pages/Habits";
 import { CreateHabit } from "./pages/CreateHabit";
 import { EditHabit } from "./pages/EditHabit";
+import { Administrators } from "./pages/Administrators";
+import { CreateAdministrator } from "./pages/CreateAdministrator";
+import { EditAdministrator } from "./pages/EditAdministrator";
 
 
 
@@ -66,6 +69,9 @@ export const router = createBrowserRouter(
       <Route path="/habits" element={<Habits />} />
       <Route path="/habits/new" element={<CreateHabit />} />
       <Route path="/habits/edit/:habit_id" element={<EditHabit />} />
+      <Route path="/administrators" element={<Administrators />} />
+      <Route path="/administrators/new" element={<CreateAdministrator />} />
+      <Route path="/administrators/:admin_id/edit" element={<EditAdministrator />} />
     </Route>
   )
 )
