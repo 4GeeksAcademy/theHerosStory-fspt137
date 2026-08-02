@@ -43,6 +43,9 @@ class Mentor(db.Model):
     #Relación para acceder a los chats del mentor
     chats: Mapped[list["Chat"]] = relationship(back_populates="mentor", cascade="all, delete-orphan")
 
+    #Relacion de Services con mentor
+    services: Mapped[list["Service"]] = relationship(back_populates="mentor")
+
     def serialize(self):
         return {
             "id": self.id,
@@ -131,4 +134,23 @@ class ChatMessage(db.Model):
             "sender": self.sender,
             "content": self.content,
             "created_at": self.created_at.isoformat(),
+        }
+
+
+class Service(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    title: Mapped[str] = mapped_column(String(100), nullable=False)
+    description: Mapped[str] = mapped_column(String(500), nullable=False)
+    price: Mapped[int] = mapped_column(nullable=False)
+
+    mentor_id: Mapped[int] = mapped_column(ForeignKey("mentor.id"), nullable=True)
+    mentor: Mapped["Mentor"] = relationship(back_populates="services")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "mentor_id": self.mentor_id,
+            "price": self.price,
         }

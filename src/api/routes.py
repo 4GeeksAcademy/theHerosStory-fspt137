@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Mentor, Quest, Chat, ChatMessage, Habit
+from api.models import db, User, Mentor, Quest, Chat, ChatMessage, Habit, Service
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
@@ -495,12 +495,112 @@ def get_mentor_dashboard(mentor_id):
         return jsonify({"msg": "Access denied: Not allowed to see this dashboard"}), 403
 
     return jsonify({
-        "msg": "Acceso allowed",
+        "msg": "Access allowed",
         "mentor": {
             "id": token_owner.id,
             "email": token_owner.email
         }
     }), 200
+
+
+
+# Service Methods
+
+# 1. READ (Obtener todos los servicios)
+@api.route('/services', methods=['GET'])
+def get_services():
+    services = Service.query.all()
+    services_serialized = [service.serialize() for service in services]
+    return jsonify(services_serialized), 200
+
+
+# 2. READ ID (Obtener un servicio específico por ID)
+@api.route('/services/<int:service_id>', methods=['GET'])
+def get_service(service_id):
+    service = Service.query.get(service_id)
+    if service is None:
+        return jsonify({"msg": "Service not found"}), 404
+    return jsonify(service.serialize()), 200
+
+
+# 3. CREATE (Crear servicio asociando el mentor_id manualmente)
+@api.route('/services', methods=['POST'])
+def create_service():
+    body = request.get_json()
+
+    if body is None:
+        return jsonify({"msg": "Request body is required"}), 400
+
+    if not body.get("title"):
+        return jsonify({"msg": "Title is required"}), 400
+
+    if not body.get("description"):
+        return jsonify({"msg": "Description is required"}), 400
+
+    if not body.get("mentor_id"):
+        return jsonify({"msg": "Mentor ID is required"}), 400
+        
+    if body.get("price") is None:
+        return jsonify({"msg": "Price is required"}), 400
+
+    # Verificar que el mentor existal en la BD antes de asignarlo
+    mentor = Mentor.query.get(body["mentor_id"])
+    if mentor is None:
+        return jsonify({"msg": "Mentor not found"}), 404
+
+    # Crear el registro convirtiendo explícitamente el precio a entero
+    new_service = Service(
+        title=body["title"],
+        description=body["description"],
+        price=int(body["price"]),
+        mentor_id=body["mentor_id"]
+    )
+
+    db.session.add(new_service)
+    db.session.commit()
+
+    return jsonify(new_service.serialize()), 201
+
+
+# 4. UPDATE (Actualizar datos de un servicio existente)
+@api.route('/services/<int:service_id>', methods=['PUT'])
+def update_service(service_id):
+    body = request.get_json()
+
+    if body is None:
+        return jsonify({"msg": "Request body is required"}), 400
+
+    service = Service.query.get(service_id)
+    if not service:
+        return jsonify({"msg": "Service not found"}), 404
+
+    # Usamos .get() con un valor por defecto para no romper el código si el campo viene vacío
+    service.title = body.get('title', service.title)
+    service.description = body.get('description', service.description)
+    
+    if body.get('price') is not None:
+        service.price = int(body['price'])
+        
+    if body.get('mentor_id') is not None:
+        service.mentor_id = body['mentor_id']
+
+    db.session.commit()
+    return jsonify(service.serialize()), 200
+
+
+# 5. DELETE (Eliminar un servicio)
+@api.route('/services/<int:service_id>', methods=['DELETE'])
+def delete_service(service_id):
+    service = Service.query.get(service_id)
+
+    if not service:
+        return jsonify({"msg": "Service not found"}), 404
+
+    db.session.delete(service)
+    db.session.commit()
+
+    return jsonify({"msg": f"Service with ID {service_id} successfully deleted"}), 200
+
 
 
 
