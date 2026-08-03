@@ -18,6 +18,13 @@ CORS(api)
 
 # User Methods
 # CREATE
+@api.route("/hello", methods=["GET"])
+def handle_hello():
+    return jsonify({
+        "message": "Hello from the backend"
+    }), 200
+
+
 @api.route('/users', methods=['POST'])
 def create_user():
     body = request.get_json()
@@ -759,4 +766,22 @@ def admin_login():
         "msg": "Administrator login successful",
         "token": access_token,
         "administrator": administrator.serialize()
+    }), 200
+
+
+@api.route('/user/login', methods=['POST'])
+def login_user():
+    body = request.get_json()
+    
+    email = body.get('email')
+    password = body.get('password')
+    
+    user = User.query.filter_by(email=email).first()
+    
+    if not user or user.password != password:
+        return jsonify({"msg": "Correo o contraseña incorrectos"}), 401
+    access_token = create_access_token(identity=user.id)
+    return jsonify({
+        "access_token": access_token,
+        "user": user.serialize()
     }), 200
