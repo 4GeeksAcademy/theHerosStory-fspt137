@@ -36,7 +36,6 @@ import { AdminDashboard } from "./pages/AdminDashboard";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { LoginUser } from "./pages/LoginUser";
 import { DashboardShelter } from "./pages/DashboardShelter";
-import { Context } from "../store/appContext";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(

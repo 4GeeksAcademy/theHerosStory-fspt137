@@ -1,9 +1,7 @@
-import React, { useState, useContext } from "react";
-// import { Context } from "../store/appContext";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const LoginUser = () => {
-    const { store, actions } = useContext(Context);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -11,18 +9,30 @@ export const LoginUser = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        const success = await actions.login(email, password);
-        
-        if (success) {
-            navigate("/dashboard-shelter"); 
-        } else {
-            alert("Error al iniciar sesión. Comprueba tus datos.");
+        try {
+            const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                // Guarda el token que te devuelva tu backend
+                localStorage.setItem("shelterToken", data.access_token); 
+                navigate("/dashboard-shelter");
+            } else {
+                alert("Error al iniciar sesión. Comprueba tus datos.");
+            }
+        } catch (error) {
+            console.error("Error de red:", error);
+            alert("Hubo un error al conectar con el servidor.");
         }
     };
 
     return (
         <div className="container mt-5">
-            <h2>Iniciar Sesión (Refugio)</h2>
+            <h2>Iniciar Sesión (Login)</h2>
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label className="form-label">Correo Electrónico</label>
@@ -44,7 +54,7 @@ export const LoginUser = () => {
                         required 
                     />
                 </div>
-                <button type="submit" className="btn btn-primary">Entrar</button>
+                <button type="submit" className="btn btn-primary">Login</button>
             </form>
         </div>
     );

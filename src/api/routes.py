@@ -769,7 +769,7 @@ def admin_login():
     }), 200
 
 
-@api.route('/user/login', methods=['POST'])
+@api.route('/login', methods=['POST'])
 def login_user():
     body = request.get_json()
     
