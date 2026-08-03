@@ -122,9 +122,7 @@ def get_all_mentors():
 
     return jsonify(all_mentors_serialized), 200
 
-  # READ ID
-
-
+# READ ID
 @api.route('/mentors/<int:mentor_id>', methods=['GET'])
 def get_mentor(mentor_id):
     mentor = Mentor.query.get(mentor_id)
@@ -168,8 +166,6 @@ def delete_mentor(id):
 
 # Quest Methods
 # READ
-
-
 @api.route('/quests', methods=['GET'])
 def get_quests():
     quests = Quest.query.all()
@@ -179,8 +175,6 @@ def get_quests():
     return jsonify(quests_serialized), 200
 
 # READ ID
-
-
 @api.route('/quests/<int:quest_id>', methods=['GET'])
 def get_quest(quest_id):
     quest = Quest.query.get(quest_id)
@@ -191,8 +185,6 @@ def get_quest(quest_id):
     return jsonify(quest.serialize()), 200
 
 # CREATE
-
-
 @api.route('/quests', methods=['POST'])
 def create_quest():
     body = request.get_json()
@@ -249,8 +241,6 @@ def update_quest(quest_id):
     return jsonify(quest.serialize()), 200
 
 # DELETE
-
-
 @api.route('/quests/<int:quest_id>', methods=['DELETE'])
 def delete_quest(quest_id):
     quest = Quest.query.get(quest_id)
@@ -480,7 +470,7 @@ def mentor_login():
     }), 200
 
 
-# Mentor Private Dashboard
+#Mentor Private Dashboard
 @api.route("/mentors/dashboard/<int:mentor_id>", methods=["GET"])
 @jwt_required() 
 def get_mentor_dashboard(mentor_id):
@@ -504,9 +494,8 @@ def get_mentor_dashboard(mentor_id):
 
 
 
-# Service Methods
-
-# 1. READ (Obtener todos los servicios)
+#Service Methods
+#READ 
 @api.route('/services', methods=['GET'])
 def get_services():
     services = Service.query.all()
@@ -514,7 +503,7 @@ def get_services():
     return jsonify(services_serialized), 200
 
 
-# 2. READ ID (Obtener un servicio específico por ID)
+#READ ID
 @api.route('/services/<int:service_id>', methods=['GET'])
 def get_service(service_id):
     service = Service.query.get(service_id)
@@ -523,7 +512,7 @@ def get_service(service_id):
     return jsonify(service.serialize()), 200
 
 
-# 3. CREATE (Crear servicio asociando el mentor_id manualmente)
+#CREATE
 @api.route('/services', methods=['POST'])
 def create_service():
     body = request.get_json()
@@ -543,12 +532,10 @@ def create_service():
     if body.get("price") is None:
         return jsonify({"msg": "Price is required"}), 400
 
-    # Verificar que el mentor existal en la BD antes de asignarlo
     mentor = Mentor.query.get(body["mentor_id"])
     if mentor is None:
         return jsonify({"msg": "Mentor not found"}), 404
 
-    # Crear el registro convirtiendo explícitamente el precio a entero
     new_service = Service(
         title=body["title"],
         description=body["description"],
@@ -562,7 +549,7 @@ def create_service():
     return jsonify(new_service.serialize()), 201
 
 
-# 4. UPDATE (Actualizar datos de un servicio existente)
+#UPDATE
 @api.route('/services/<int:service_id>', methods=['PUT'])
 def update_service(service_id):
     body = request.get_json()
@@ -574,7 +561,6 @@ def update_service(service_id):
     if not service:
         return jsonify({"msg": "Service not found"}), 404
 
-    # Usamos .get() con un valor por defecto para no romper el código si el campo viene vacío
     service.title = body.get('title', service.title)
     service.description = body.get('description', service.description)
     
@@ -588,7 +574,7 @@ def update_service(service_id):
     return jsonify(service.serialize()), 200
 
 
-# 5. DELETE (Eliminar un servicio)
+#DELETE 
 @api.route('/services/<int:service_id>', methods=['DELETE'])
 def delete_service(service_id):
     service = Service.query.get(service_id)
