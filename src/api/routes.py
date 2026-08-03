@@ -24,7 +24,7 @@ CORS(api)
 @api.route("/hello", methods=["GET"])
 def handle_hello():
     return jsonify({
-        "mensage": "Hello from the backend"
+        "message": "Hello from the backend"
     }), 200
 
 # User Methods
