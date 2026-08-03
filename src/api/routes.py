@@ -16,8 +16,16 @@ api = Blueprint('api', __name__)
 CORS(api)
 
 
+@api.route("/hello", methods=["GET"])
+def handle_hello():
+    return jsonify({
+        "mensage": "Hello from the backend"
+    }), 200
+
 # User Methods
 # CREATE
+
+
 @api.route('/users', methods=['POST'])
 def create_user():
     body = request.get_json()
