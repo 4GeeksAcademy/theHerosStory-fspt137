@@ -17,8 +17,14 @@ export const initialStore = () => {
         background: null,
       },
     ],
+<<<<<<< HEAD
+    mentorAuth: false
+  }
+}
+=======
   };
 };
+>>>>>>> develop
 
 export default function storeReducer(store, action = {}) {
   switch (action.type) {
@@ -27,6 +33,18 @@ export default function storeReducer(store, action = {}) {
         ...store,
         message: action.payload,
       };
+<<<<<<< HEAD
+
+      case 'set_mentor_auth':
+      return {
+        ...store,
+        mentorAuth: action.payload
+      };
+
+      
+    case 'add_task':
+=======
+>>>>>>> develop
 
     case "add_task": {
       const { id, color } = action.payload;
