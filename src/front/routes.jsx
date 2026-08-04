@@ -39,6 +39,7 @@ import { EditAdministrator } from "./pages/EditAdministrator";
 import { AdminLogin } from "./pages/AdminLogin";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { PrivateRoute } from "./components/PrivateRoute";
+import { UserFlowRegister } from "./pages/UserFlowRegister";
 
 
 
@@ -87,6 +88,7 @@ export const router = createBrowserRouter(
       <Route path="/administrators/:admin_id/edit" element={<EditAdministrator />} />
       <Route path="/admin-login" element={<AdminLogin />} />
       <Route path="/admin-dashboard" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"> <AdminDashboard /> </PrivateRoute>} />
+      <Route path="/user-register" element={<UserFlowRegister />} />
     </Route>
   )
 )
