@@ -25,7 +25,7 @@ import { QuestTracking } from "./pages/QuestTracking";
 import { Users } from "./pages/Users"
 import { AddUser } from "./pages/AddUser"
 import { EditUser } from "./pages/EditUser"
-import { Habits } from "./pages/Habits";
+import { UserFlowHabits } from "./pages/UserFlowHabits";
 import { CreateHabit } from "./pages/CreateHabit";
 import { EditHabit } from "./pages/EditHabit";
 import { MentorLogIn } from "./pages/MentorLogIn";
@@ -42,6 +42,7 @@ import { PrivateRoute } from "./components/PrivateRoute";
 import { UserFlowRegister } from "./pages/UserFlowRegister";
 import { LoginUser } from "./pages/LoginUser";
 import { UserFlowDashboard } from "./pages/UserFlowDashboard";
+import { UserFlowQuests} from   "./pages/UserFlowQuests";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -74,7 +75,7 @@ export const router = createBrowserRouter(
       <Route path="/quest-trackings/:tracking_id/edit" element={<EditQuestTracking />} />
       <Route path="/add-user" element={<AddUser />} />
       <Route path="/edit-user/:id" element={<EditUser />} />
-      <Route path="/habits" element={<Habits />} />
+      <Route path="/habits/user/:user_id" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowHabits /> </PrivateRoute>} />
       <Route path="/habits/new" element={<CreateHabit />} />
       <Route path="/habits/edit/:habit_id" element={<EditHabit />} />
       <Route path="/mentors/login" element={<MentorLogIn />} />
@@ -90,6 +91,7 @@ export const router = createBrowserRouter(
       <Route path="/user-register" element={<UserFlowRegister />} />
       <Route path="/login-user" element={<LoginUser />} />
       <Route path="/user-dashboard" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowDashboard /> </PrivateRoute>} />
+      <Route path="/user-quests" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowQuests /> </PrivateRoute>} />
     </Route>
   )
 )

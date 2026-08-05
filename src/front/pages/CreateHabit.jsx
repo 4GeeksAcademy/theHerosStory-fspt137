@@ -17,7 +17,7 @@ export const CreateHabit = () => {
             title,
             description,
             status,
-            user_id: 1
+            user_id: localStorage.getItem('user_id')
         };
 
         fetch(`${import.meta.env.VITE_BACKEND_URL}/api/habits`, {
@@ -40,7 +40,8 @@ export const CreateHabit = () => {
             })
             .then((data) => {
                 console.log("habit created", data);
-                navigate("/habits");
+                const userId = localStorage.getItem('user_id');
+                navigate(`/habits/user/${userId}`);
             })
             .catch((error) => {
                 console.error("Error completo", error.message);

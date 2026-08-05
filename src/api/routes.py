@@ -191,6 +191,24 @@ def get_quests():
 
     return jsonify(quests_serialized), 200
 
+
+#FILTERED BY USER ID
+@api.route("/api/quests/user/<int:user_id>", methods=["GET"])
+def get_quests_by_user(user_id):
+    try:
+        quests = Quest.query.filter_by(user_id=user_id).all()
+        
+        if not quests:
+            return jsonify([]), 200
+            
+        quests_serialized = [quest.serialize() for quest in quests]
+        
+        return jsonify(quests_serialized), 200
+        
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"message": "Server error fetching quests"}), 500
+
 # READ ID
 @api.route('/quests/<int:quest_id>', methods=['GET'])
 def get_quest(quest_id):
@@ -215,26 +233,36 @@ def create_quest():
     if not body.get("description"):
         return jsonify({"msg": "Description is required"}), 400
 
-
     if not body.get("user_id"):
         return jsonify({"msg": "User ID is required"}), 400
-    user = User.query.get(body["user_id"])
+
+    # CAMBIO AQUÍ: Usar db.session.get para evitar fallos de compatibilidad
+    user = db.session.get(User, body["user_id"])
 
     if user is None:
         return jsonify({"msg": "User not found"}), 404
 
-    new_quest = Quest(
-        title=body["title"],
-        description=body["description"],
-        status=body.get("status", "pending"),
-        user_id=body.get("user_id"),
-        habit_id=body.get("habit_id")
-    )
+    try:
+        new_quest = Quest(
+            title=body["title"],
+            description=body["description"],
+            status=body.get("status", "pending"),
+            user_id=body.get("user_id"),
+            habit_id=body.get("habit_id") # Asegúrate de que si llega None, tu modelo lo acepte
+        )
 
-    db.session.add(new_quest)
-    db.session.commit()
+        db.session.add(new_quest)
+        db.session.commit()
 
-    return jsonify(new_quest.serialize()), 201
+        return jsonify(new_quest.serialize()), 201
+
+    except Exception as e:
+        # Esto limpiará la sesión fallida para que no bloquee futuras peticiones
+        db.session.rollback() 
+        # Crucial: esto te dirá en tu consola negra qué falló exactamente (ej. error de columna)
+        print("ERROR EN EL SERVIDOR AL CREAR QUEST:", str(e)) 
+        return jsonify({"msg": "Internal database error", "error": str(e)}), 500
+
 
 
 # UPDATE
@@ -273,8 +301,6 @@ def delete_quest(quest_id):
 
 # Habit Methods
 # READ
-
-
 @api.route('/habits', methods=['GET'])
 def get_habits():
     habits = Habit.query.all()
@@ -283,7 +309,23 @@ def get_habits():
 
     return jsonify(habits_serialized), 200
 
+#FILTERED BY USER ID
+@api.route("/api/habits/user/<int:user_id>", methods=["GET"])
+def get_habits_by_user(user_id):
+    try:
+        habits = Habit.query.filter_by(user_id=user_id).all()
 
+        if not habits:
+            return jsonify([]), 200
+            
+        habits_serialized = [habit.serialize() for habit in habits]
+        
+        return jsonify(habits_serialized), 200
+        
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"message": "Server error fetching habits"}), 500
+    
 #  READ ID
 @api.route('/habits/<int:habit_id>', methods=['GET'])
 def get_habit(habit_id):
@@ -309,26 +351,32 @@ def create_habit():
     if not body.get("description"):
         return jsonify({"msg": "Description is required"}), 400
 
-
     if not body.get("user_id"):
         return jsonify({"msg": "User ID is required"}), 400
-    user = User.query.get(body["user_id"])
+        
+    # CAMBIO: db.session.get evita errores de compatibilidad si usas SQLAlchemy moderno
+    user = db.session.get(User, body["user_id"])
 
     if user is None:
         return jsonify({"msg": "User not found"}), 404
 
-    new_habit = Habit(
-        title=body["title"],
-        description=body["description"],
-        status=body.get("status", "pending"),
-        user_id=body.get("user_id"),
-    )
+    try:
+        new_habit = Habit(
+            title=body["title"],
+            description=body["description"],
+            status=body.get("status", "pending"),
+            user_id=body["user_id"] # Asegúrate de mapear la columna exacta de tu modelo
+        )
 
-    db.session.add(new_habit)
-    db.session.commit()
+        db.session.add(new_habit)
+        db.session.commit()
 
-    return jsonify(new_habit.serialize()), 201
+        return jsonify(new_habit.serialize()), 201
 
+    except Exception as e:
+        db.session.rollback() # Limpia la transacción fallida para evitar bloqueos
+        print("🔥 ERROR CRÍTICO EN BASE DE DATOS AL CREAR HÁBITO:", str(e))
+        return jsonify({"msg": "Internal server database error", "error": str(e)}), 500
 
 #  UPDATE
 @api.route('/habits/<int:habit_id>', methods=['PUT'])

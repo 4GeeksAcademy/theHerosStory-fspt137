@@ -17,7 +17,7 @@ export const CreateQuest = () => {
             title,
             description,
             status,
-            user_id: 1
+            user_id: localStorage.getItem('user_id')
         };
 
         fetch(`${import.meta.env.VITE_BACKEND_URL}/api/quests`, {
@@ -28,7 +28,6 @@ export const CreateQuest = () => {
             body: JSON.stringify(questData)
         })
             .then(async (response) => {
-
                 const data = await response.json();
                 console.log("Status:", response.status);
                 console.log("Respuesta del backend", data);
@@ -40,7 +39,7 @@ export const CreateQuest = () => {
             })
             .then((data) => {
                 console.log("quest creada", data);
-                navigate("/quests");
+                navigate("/user-quests");
             })
             .catch((error) => {
                 console.error("Error completo", error.message);

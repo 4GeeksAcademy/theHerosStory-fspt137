@@ -1,11 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const UserFlowDashboard = () => {
     const navigate = useNavigate();
+    const userId = localStorage.getItem("user_id");
 
     const handleLogout = () => {
         localStorage.removeItem("user_token");
+        localStorage.removeItem("user_id");
         navigate("/login-user");
     };
 
@@ -14,8 +17,13 @@ export const UserFlowDashboard = () => {
             <div className="card shadow p-4">
                 <h1 className="text-success">User's private dashboard</h1>
                 <p className="lead">¡Bienvenido! Te has logueado con éxito.</p>
-                <hr />
-                <p>Aquí es donde irán todas las herramientas del login (crear quests, ver solicitudes, etc.).</p>
+                <Link to={`/habits/user/${userId}`}>
+                    <button className="btn btn-primary">Habits</button>
+                </Link>
+                <Link to="/user-quests">
+                    <button className="btn btn-primary">Quests</button>
+                </Link>
+
 
                 <button
                     onClick={handleLogout}

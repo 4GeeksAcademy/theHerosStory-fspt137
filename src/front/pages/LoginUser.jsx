@@ -20,6 +20,8 @@ export const LoginUser = () => {
                 const data = await response.json();
                 // Guarda el token que te devuelva tu backend
                 localStorage.setItem("user_token", data.access_token);
+                localStorage.setItem("user_id", data.user.id); 
+                console.log(data)
                 navigate("/user-dashboard");
             } else {
                 alert("Error al iniciar sesión. Comprueba tus datos.");
