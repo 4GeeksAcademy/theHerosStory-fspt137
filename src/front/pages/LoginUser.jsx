@@ -8,7 +8,7 @@ export const LoginUser = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         try {
             const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/login", {
                 method: "POST",
@@ -19,8 +19,8 @@ export const LoginUser = () => {
             if (response.ok) {
                 const data = await response.json();
                 // Guarda el token que te devuelva tu backend
-                localStorage.setItem("shelterToken", data.access_token); 
-                navigate("/dashboard-shelter");
+                localStorage.setItem("user_token", data.access_token);
+                navigate("/user-dashboard");
             } else {
                 alert("Error al iniciar sesión. Comprueba tus datos.");
             }
@@ -36,22 +36,22 @@ export const LoginUser = () => {
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label className="form-label">Correo Electrónico</label>
-                    <input 
-                        type="email" 
-                        className="form-control" 
-                        value={email} 
-                        onChange={(e) => setEmail(e.target.value)} 
-                        required 
+                    <input
+                        type="email"
+                        className="form-control"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
                     />
                 </div>
                 <div className="mb-3">
                     <label className="form-label">Contraseña</label>
-                    <input 
-                        type="password" 
-                        className="form-control" 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
-                        required 
+                    <input
+                        type="password"
+                        className="form-control"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
                     />
                 </div>
                 <button type="submit" className="btn btn-primary">Login</button>

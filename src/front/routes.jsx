@@ -40,11 +40,8 @@ import { AdminLogin } from "./pages/AdminLogin";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { UserFlowRegister } from "./pages/UserFlowRegister";
-
-
-
 import { LoginUser } from "./pages/LoginUser";
-import { DashboardShelter } from "./pages/DashboardShelter";
+import { UserFlowDashboard } from "./pages/UserFlowDashboard";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -92,7 +89,7 @@ export const router = createBrowserRouter(
       <Route path="/admin-dashboard" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"> <AdminDashboard /> </PrivateRoute>} />
       <Route path="/user-register" element={<UserFlowRegister />} />
       <Route path="/login-user" element={<LoginUser />} />
-      <Route path="/dashboard-shelter" element={<PrivateRoute tokenName="shelterToken" redirectTo="/login-user"> <DashboardShelter /> </PrivateRoute>} />
+      <Route path="/user-dashboard" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowDashboard /> </PrivateRoute>} />
     </Route>
   )
 )
