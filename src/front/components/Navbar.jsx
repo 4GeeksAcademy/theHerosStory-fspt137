@@ -20,6 +20,9 @@ export const Navbar = () => {
 					<Link to="/quests">
 						<button className="btn btn-primary">Quests</button>
 					</Link>
+					<Link to="/quest-trackings">
+						<button className="btn btn-primary">Quest tracking</button>
+					</Link>
 					<Link to="/habits">
 						<button className="btn btn-primary">Habits</button>
 					</Link>
@@ -31,6 +34,15 @@ export const Navbar = () => {
 					</Link>
 					<Link to={dashboardPath}>
 						<button className="btn btn-primary">Mentor Dashboard</button>
+					</Link>
+					<Link to="/administrators">
+						<button className="btn btn-primary">Administrator</button>
+					</Link>
+					<Link to="/admin-login">
+						<button className="btn btn-primary">Admin login</button>
+					</Link>
+					<Link to="/admin-dashboard">
+						<button className="btn btn-primary">Admin Dashboar</button>
 					</Link>
 				</div>
 			</div>

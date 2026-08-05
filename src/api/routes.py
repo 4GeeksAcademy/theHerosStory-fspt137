@@ -115,13 +115,31 @@ def delete_user(id):
 def create_mentor():
     body = request.get_json(silent=True) or {}
 
+    mentorname = body.get("mentorname")
+    email = body.get("email")
+    password = body.get("password")
+
     if not body.get('mentorname') or not body.get('email') or not body.get('password'):
         return jsonify({"msg": "mentorname, email and password are required"}), 400
 
+    existing_email = Mentor.query.filter_by(email=email).first()
+
+    if existing_email is not None:
+        return jsonify({
+            "msg": "Email already exists"
+        }), 409
+
+    existing_mentor = Mentor.query.filter_by(email=email).first()
+
+    if existing_mentor is not None:
+        return jsonify({
+            "msg": "Email already exists"
+        }), 409
+
     new_mentor = Mentor(
-        mentorname=body['mentorname'],
-        email=body['email'],
-        password=body['password'],
+        mentorname=mentorname,
+        email=email,
+        password=password,
         is_active=True
     )
 
@@ -141,6 +159,8 @@ def get_all_mentors():
     return jsonify(all_mentors_serialized), 200
 
 # READ ID
+
+
 @api.route('/mentors/<int:mentor_id>', methods=['GET'])
 def get_mentor(mentor_id):
     mentor = Mentor.query.get(mentor_id)
@@ -185,6 +205,8 @@ def delete_mentor(id):
 
 # Quest Methods
 # READ
+
+
 @api.route('/quests', methods=['GET'])
 def get_quests():
     quests = Quest.query.all()
@@ -194,6 +216,8 @@ def get_quests():
     return jsonify(quests_serialized), 200
 
 # READ ID
+
+
 @api.route('/quests/<int:quest_id>', methods=['GET'])
 def get_quest(quest_id):
     quest = Quest.query.get(quest_id)
@@ -204,6 +228,8 @@ def get_quest(quest_id):
     return jsonify(quest.serialize()), 200
 
 # CREATE
+
+
 @api.route('/quests', methods=['POST'])
 def create_quest():
     body = request.get_json()
@@ -216,7 +242,6 @@ def create_quest():
 
     if not body.get("description"):
         return jsonify({"msg": "Description is required"}), 400
-
 
     if not body.get("user_id"):
         return jsonify({"msg": "User ID is required"}), 400
@@ -261,6 +286,8 @@ def update_quest(quest_id):
     return jsonify(quest.serialize()), 200
 
 # DELETE
+
+
 @api.route('/quests/<int:quest_id>', methods=['DELETE'])
 def delete_quest(quest_id):
     quest = Quest.query.get(quest_id)
@@ -310,7 +337,6 @@ def create_habit():
 
     if not body.get("description"):
         return jsonify({"msg": "Description is required"}), 400
-
 
     if not body.get("user_id"):
         return jsonify({"msg": "User ID is required"}), 400
@@ -767,6 +793,8 @@ def admin_login():
     }), 200
 
 # Mentor Login
+
+
 @api.route("/mentors/login", methods=["POST"])
 def mentor_login():
     email = request.json.get("email", None)
@@ -781,16 +809,16 @@ def mentor_login():
         return jsonify({"msg": "Bad username or password"}), 401
 
     access_mentor_token = create_access_token(identity=email)
-    
+
     return jsonify({
         "access_mentor_token": access_mentor_token,
         "mentor_id": mentor.id
     }), 200
 
 
-#Mentor Private Dashboard
+# Mentor Private Dashboard
 @api.route("/mentors/dashboard/<int:mentor_id>", methods=["GET"])
-@jwt_required() 
+@jwt_required()
 def get_mentor_dashboard(mentor_id):
     current_mentor_email = get_jwt_identity()
 
@@ -811,9 +839,8 @@ def get_mentor_dashboard(mentor_id):
     }), 200
 
 
-
-#Service Methods
-#READ 
+# Service Methods
+# READ
 @api.route('/services', methods=['GET'])
 def get_services():
     services = Service.query.all()
@@ -821,7 +848,7 @@ def get_services():
     return jsonify(services_serialized), 200
 
 
-#READ ID
+# READ ID
 @api.route('/services/<int:service_id>', methods=['GET'])
 def get_service(service_id):
     service = Service.query.get(service_id)
@@ -830,7 +857,7 @@ def get_service(service_id):
     return jsonify(service.serialize()), 200
 
 
-#CREATE
+# CREATE
 @api.route('/services', methods=['POST'])
 def create_service():
     body = request.get_json()
@@ -846,7 +873,7 @@ def create_service():
 
     if not body.get("mentor_id"):
         return jsonify({"msg": "Mentor ID is required"}), 400
-        
+
     if body.get("price") is None:
         return jsonify({"msg": "Price is required"}), 400
 
@@ -867,7 +894,7 @@ def create_service():
     return jsonify(new_service.serialize()), 201
 
 
-#UPDATE
+# UPDATE
 @api.route('/services/<int:service_id>', methods=['PUT'])
 def update_service(service_id):
     body = request.get_json()
@@ -881,10 +908,10 @@ def update_service(service_id):
 
     service.title = body.get('title', service.title)
     service.description = body.get('description', service.description)
-    
+
     if body.get('price') is not None:
         service.price = int(body['price'])
-        
+
     if body.get('mentor_id') is not None:
         service.mentor_id = body['mentor_id']
 
@@ -892,7 +919,7 @@ def update_service(service_id):
     return jsonify(service.serialize()), 200
 
 
-#DELETE 
+# DELETE
 @api.route('/services/<int:service_id>', methods=['DELETE'])
 def delete_service(service_id):
     service = Service.query.get(service_id)
@@ -905,33 +932,264 @@ def delete_service(service_id):
 
     return jsonify({"msg": f"Service with ID {service_id} successfully deleted"}), 200
 
+# Service/Mentor Methods
 
 
+def get_logged_mentor():
+    mentor_email = get_jwt_identity()
+    return Mentor.query.filter_by(email=mentor_email).first()
+
+# READ
 
 
+@api.route("/mentors/services", methods=["GET"])
+@jwt_required()
+def get_logged_mentor_service():
+    mentor = get_logged_mentor()
+
+    if mentor is None:
+        return jsonify({"msg": "Invalid mentor session"}), 401
+
+    services = Service.query.filter_by(
+        mentor_id=mentor.id
+    ).all()
+
+    return jsonify([
+        service.serialize() for service in services
+    ]), 200
+
+# READ ID
 
 
+@api.route("/mentors/services/<int:service_id>", methods=["GET"])
+@jwt_required()
+def get_logged_mentor_service_id(service_id):
+    mentor = get_logged_mentor()
+
+    if mentor is None:
+        return jsonify({"msg": "Invalid mentor session"}), 401
+
+    service = Service.query.filter_by(
+        id=service_id,
+        mentor_id=mentor.id
+    ).first()
+
+    if service is None:
+        return jsonify({"msg": "Service not found"}), 404
+
+    return jsonify(service.serialize()), 200
 
 
+# CREATE
 
 
+@api.route('/mentors/services', methods=['POST'])
+@jwt_required()
+def create_logged_mentor_service():
+    mentor = get_logged_mentor()
+
+    if mentor is None:
+        return jsonify({"msg": "Invalid mentor session"}), 401
+
+    body = request.get_json(silent=True) or {}
+
+    title = body.get("title")
+    description = body.get("description")
+    price = body.get("price")
+
+    if not title:
+        return jsonify({"msg": "Title is required"}), 400
+
+    if not description:
+        return jsonify({"msg": "description is required"}), 400
+
+    if not price:
+        return jsonify({"msg": "price is required"}), 400
+
+    try:
+        price = int(price)
+    except (TypeError, ValueError):
+        return jsonify({"msg": "Price must be a number"}), 400
+
+    new_service = Service(
+        title=title,
+        description=description,
+        price=price,
+        mentor_id=mentor.id
+    )
+
+    db.session.add(new_service)
+    db.session.commit()
+
+    return jsonify(new_service.serialize()), 201
+
+# UPDATE
 
 
+@api.route('/mentors/services/<int:service_id>', methods=['PUT'])
+@jwt_required()
+def update_logged_mentor_service(service_id):
+    mentor = get_logged_mentor()
+
+    if mentor is None:
+        return jsonify({"msg": "Invalid mentor session"}), 401
+
+    body = request.get_json(silent=True) or {}
+
+    service = Service.query.filter_by(
+        id=service_id,
+        mentor_id=mentor.id
+    ).first()
+
+    if service is None:
+        return jsonify({"msg": "Service not found"}), 404
+
+    if body.get("title") is not None:
+        service.title = body["title"]
+
+    if body.get("description") is not None:
+        service.description = body["description"]
+
+    if body.get("price") is not None:
+        try:
+            service.price = int(body["price"])
+        except (TypeError, ValueError):
+            return jsonify({"msg": "Price must be a number"}), 400
+
+        db.session.commit()
+
+        return jsonify(service.serialize()), 200
+
+# DELETE
 
 
+@api.route('/mentors/services/<int:service_id>', methods=['DELETE'])
+@jwt_required()
+def delete_logged_mentor_service(service_id):
+    mentor = get_logged_mentor()
+
+    if mentor is None:
+        return jsonify({"msg": "Invalid mentor session"}), 401
+
+    body = request.get_json(silent=True) or {}
+
+    service = Service.query.filter_by(
+        id=service_id,
+        mentor_id=mentor.id
+    ).first()
+
+    if service is None:
+        return jsonify({"msg": "Service not found"}), 404
+
+    db.session.delete(service)
+    db.session.commit()
+
+    return jsonify({
+        "msg": f"Service with ID {service_id} successfully deleted"
+    })
+
+# Mentors-users methods
+# READ
 
 
+@api.route('/mentors/users', methods=['GET'])
+@jwt_required()
+def get_mentor_users():
+    mentor_email = get_jwt_identity()
+
+    mentor = Mentor.query.filter_by(email=mentor_email).first()
+
+    if mentor is None:
+        return jsonify({"msg": "Invalid mentor session"}), 401
+
+    chats = Chat.query.filter_by(
+        mentor_id=mentor.id
+    ).all()
+
+    users = []
+
+    for chat in chats:
+        users.append({
+            "id": chat.user.id,
+            "email": chat.user.email,
+            "chat_id": chat.id
+
+        })
+
+    return jsonify(users), 200
+
+# GET MESSAGES MENTOR/USERS
 
 
+@api.route('/mentors/chats/<int:chat_id>/messages', methods=['GET'])
+@jwt_required()
+def get_mentor_chat_messagess(chat_id):
+    mentor_email = get_jwt_identity()
+
+    mentor = Mentor.query.filter_by(email=mentor_email).first()
+
+    if mentor is None:
+        return jsonify({"msg": "Invalid mentor session"}), 401
+
+    chat = Chat.query.filter_by(
+        id=chat_id,
+        mentor_id=mentor.id
+    ).first()
+
+    if chat is None:
+        return jsonify({"msg": "Chat not found"}), 404
+
+    messages = ChatMessage.query.filter_by(
+        chat_id=chat_id).order_by(ChatMessage.created_at.asc()).all()
+
+    return jsonify({
+        "chat_id": chat.id,
+        "user_id": chat.user_id,
+        "mentor_id": chat.mentor_id,
+        "messages": [
+            message.serialize() for message in messages
+        ]
+    }), 200
+
+# POST MESSAGE MENTOR/USERS
 
 
+@api.route('/mentors/chats/<int:chat_id>/messages', methods=['POST'])
+@jwt_required()
+def send_mentor_chat_message(chat_id):
+    mentor_email = get_jwt_identity()
 
+    mentor = Mentor.query.filter_by(email=mentor_email).first()
 
+    if mentor is None:
+        return jsonify({"msg": "Invalid mentor session"}), 401
 
+    chat = Chat.query.filter_by(
+        id=chat_id,
+        mentor_id=mentor.id
+    ).first()
 
+    if chat is None:
+        return jsonify({
+            "msg": "Chat not found"
+        }), 404
 
+    body = request.get_json(silent=True) or {}
+    content = body.get("content")
 
+    if not content or not content.strip():
+        return jsonify({"msg": "Message content is required"}), 400
 
+    new_message = ChatMessage(
+        chat_id=chat.id,
+        sender="mentor",
+        content=content.strip()
+    )
 
+    db.session.add(new_message)
+    db.session.commit()
 
-
+    return jsonify({
+        "msg": "Message sent successfully",
+        "message": new_message.serialize()
+    }), 201

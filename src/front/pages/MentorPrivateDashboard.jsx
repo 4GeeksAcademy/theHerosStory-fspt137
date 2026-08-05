@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 
 export const MentorPrivateDashboard = () => {
@@ -8,25 +8,12 @@ export const MentorPrivateDashboard = () => {
     const { dispatch } = useGlobalReducer();
     const [mentorData, setMentorData] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
-    const [hasCheckedAuth, setHasCheckedAuth] = useState(false);
+    const [loading, setLoading] = useState(true);
+
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     useEffect(() => {
-        if (hasCheckedAuth) return;
-
-        if (!mentor_id || mentor_id === ":mentor_id") {
-            setErrorMessage("No valid mentor for this view");
-            return;
-        }
-
         const token = localStorage.getItem("mentor_token");
-
-        if (!token) {
-            setErrorMessage("Log in as a mentor to see this view");
-            dispatch({ type: "set_mentor_auth", payload: false });
-            setHasCheckedAuth(true);
-            return;
-        }
 
         fetch(`${backendUrl}/api/mentors/dashboard/${mentor_id}`, {
             headers: {
@@ -45,24 +32,104 @@ export const MentorPrivateDashboard = () => {
             .then((data) => {
                 setMentorData(data.mentor);
                 dispatch({ type: "set_mentor_auth", payload: true });
-                setHasCheckedAuth(true);
+
             })
             .catch((error) => {
-                console.error("Error loading dashboard:", error);
-                setErrorMessage(error.message || "Not allowed to enter");
-                dispatch({ type: "set_mentor_auth", payload: false });
-                setHasCheckedAuth(true);
-            });
-    }, [backendUrl, dispatch, hasCheckedAuth, mentor_id, navigate]);
+                console.error(error);
+                setErrorMessage(error.message);
 
-    if (errorMessage && !mentorData) {
-        return <div>{errorMessage}</div>;
+                dispatch({ type: "set_mentor_auth", payload: false });
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, []);
+
+    const logout = () => {
+        localStorage.removeItem("mentor_id");
+        localStorage.removeItem("mentor_token");
+
+        dispatch({
+            type: "set_mentor_auth",
+            payload: false
+        });
+        navigate("/mentors/login");
+    }
+
+    if (loading) {
+        return (
+            <div className="container py-5">
+                <p>Loading dashboard...</p>
+            </div>
+        );
+    }
+
+    if (errorMessage) {
+        return (
+            <div className="container py-5">
+                <div className="alert alert-danger">
+                    {errorMessage}
+                </div>
+            </div>
+        );
     }
 
     return (
-        <div>
-            <h2>Private Dashboard</h2>
-            <p>Mentor with email {mentorData?.email || "mentor@example.com"}</p>
+        <div className="container py-5">
+            <div className="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1>Mentor Dashboard</h1>
+                    <p className="mb-0">
+                        {mentorData?.email}
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    className="btn btn-outline-danger"
+                    onClick={logout}
+                >
+                    Logout
+                </button>
+            </div>
+
+            <div className="row g-3">
+                <div className="col-md-6 col-lg-3">
+                    <Link
+                        to="/mentors/services"
+                        className="btn btn-primary w-100"
+                    >
+                        My services
+                    </Link>
+                </div>
+
+                <div className="col-md-6 col-lg-3">
+                    <Link
+                        to="/mentors/services/new"
+                        className="btn btn-primary w-100"
+                    >
+                        Create services
+                    </Link>
+                </div>
+
+                <div className="col-md-6 col-lg-3">
+                    <Link
+                        to="/mentors/appointments"
+                        className="btn btn-primary w-100"
+                    >
+                        Requested appointments
+                    </Link>
+                </div>
+
+                <div className="col-md-6 col-lg-3">
+                    <Link
+                        to="/mentors/users"
+                        className="btn btn-primary w-100"
+                    >
+                        Contact users
+                    </Link>
+                </div>
+            </div>
         </div>
     );
 };
