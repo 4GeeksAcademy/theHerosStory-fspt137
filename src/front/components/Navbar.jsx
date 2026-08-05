@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 
 export const Navbar = () => {
+	const mentorId = localStorage.getItem("mentor_id");
+	const dashboardPath = mentorId ? `/mentors/dashboard/${mentorId}` : "/mentors/login";
 
     return (
         <nav className="navbar navbar-light bg-light">

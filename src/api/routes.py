@@ -3,9 +3,14 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 from datetime import datetime
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Mentor, Quest, Chat, ChatMessage, Habit, QuestTracking, Administrator
+from api.models import db, User, Mentor, Quest, Chat, ChatMessage, Habit, QuestTracking, Administrator, Service
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import JWTManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, JWTManager
 
@@ -15,6 +20,12 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
+
+@api.route("/hello", methods=["GET"])
+def handle_hello():
+    return jsonify({
+        "message": "Hello from the backend"
+    }), 200
 
 # User Methods
 # CREATE
@@ -134,9 +145,7 @@ def get_all_mentors():
 
     return jsonify(all_mentors_serialized), 200
 
-  # READ ID
-
-
+# READ ID
 @api.route('/mentors/<int:mentor_id>', methods=['GET'])
 def get_mentor(mentor_id):
     mentor = Mentor.query.get(mentor_id)
@@ -181,8 +190,6 @@ def delete_mentor(id):
 
 # Quest Methods
 # READ
-
-
 @api.route('/quests', methods=['GET'])
 def get_quests():
     quests = Quest.query.all()
@@ -192,8 +199,6 @@ def get_quests():
     return jsonify(quests_serialized), 200
 
 # READ ID
-
-
 @api.route('/quests/<int:quest_id>', methods=['GET'])
 def get_quest(quest_id):
     quest = Quest.query.get(quest_id)
@@ -204,8 +209,6 @@ def get_quest(quest_id):
     return jsonify(quest.serialize()), 200
 
 # CREATE
-
-
 @api.route('/quests', methods=['POST'])
 def create_quest():
     body = request.get_json()
@@ -218,6 +221,7 @@ def create_quest():
 
     if not body.get("description"):
         return jsonify({"msg": "Description is required"}), 400
+
 
     if not body.get("user_id"):
         return jsonify({"msg": "User ID is required"}), 400
@@ -262,8 +266,6 @@ def update_quest(quest_id):
     return jsonify(quest.serialize()), 200
 
 # DELETE
-
-
 @api.route('/quests/<int:quest_id>', methods=['DELETE'])
 def delete_quest(quest_id):
     quest = Quest.query.get(quest_id)
@@ -289,7 +291,7 @@ def get_habits():
     return jsonify(habits_serialized), 200
 
 
-# READ ID
+#  READ ID
 @api.route('/habits/<int:habit_id>', methods=['GET'])
 def get_habit(habit_id):
     habit = Habit.query.get(habit_id)
@@ -300,7 +302,7 @@ def get_habit(habit_id):
     return jsonify(habit.serialize()), 200
 
 
-# CREATE
+#  CREATE
 @api.route('/habits', methods=['POST'])
 def create_habit():
     body = request.get_json()
@@ -313,6 +315,7 @@ def create_habit():
 
     if not body.get("description"):
         return jsonify({"msg": "Description is required"}), 400
+
 
     if not body.get("user_id"):
         return jsonify({"msg": "User ID is required"}), 400
@@ -334,7 +337,7 @@ def create_habit():
     return jsonify(new_habit.serialize()), 201
 
 
-# UPDATE
+#  UPDATE
 @api.route('/habits/<int:habit_id>', methods=['PUT'])
 def update_habit(habit_id):
     body = request.get_json()
@@ -356,7 +359,7 @@ def update_habit(habit_id):
     return jsonify(habit.serialize()), 200
 
 
-# DELETE
+#  DELETE
 @api.route('/habits/<int:habit_id>', methods=['DELETE'])
 def delete_habit(habit_id):
     habit = Habit.query.get(habit_id)

@@ -48,6 +48,9 @@ class Mentor(db.Model):
     chats: Mapped[list["Chat"]] = relationship(
         back_populates="mentor", cascade="all, delete-orphan")
 
+    #Relacion de Services con mentor
+    services: Mapped[list["Service"]] = relationship(back_populates="mentor")
+
     def serialize(self):
         return {
             "id": self.id,
@@ -151,10 +154,8 @@ class ChatMessage(db.Model):
             "created_at": self.created_at.isoformat(),
         }
 
-
 class QuestTracking(db.Model):
     __tablename__ = "quest_tracking"
-
     id: Mapped[int] = mapped_column(primary_key=True)
     quest_id: Mapped[int] = mapped_column(
     ForeignKey("quest.id"), nullable=False)
@@ -165,7 +166,7 @@ class QuestTracking(db.Model):
     quest: Mapped["Quest"] = relationship(back_populates="trackings")
 
     def serialize(self):
-        return {
+        return{
             "id": self.id,
             "quest_id": self.quest_id,
             "date": self.date.isoformat() if self.date else None,
@@ -173,10 +174,10 @@ class QuestTracking(db.Model):
             "status": self.status
         }
 
+
+
 class Administrator(db.Model):
     __tablename__ = "admin"
-
-
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(
             String(50), unique=True, nullable=False)
@@ -194,3 +195,22 @@ class Administrator(db.Model):
 
 def __str__(self):
     return f"{self.name} - {self.email}"
+
+
+class Service(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    title: Mapped[str] = mapped_column(String(100), nullable=False)
+    description: Mapped[str] = mapped_column(String(500), nullable=False)
+    price: Mapped[int] = mapped_column(nullable=False)
+
+    mentor_id: Mapped[int] = mapped_column(ForeignKey("mentor.id"), nullable=True)
+    mentor: Mapped["Mentor"] = relationship(back_populates="services")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "mentor_id": self.mentor_id,
+            "price": self.price,
+        }

@@ -28,6 +28,11 @@ import { EditUser } from "./pages/EditUser"
 import { Habits } from "./pages/Habits";
 import { CreateHabit } from "./pages/CreateHabit";
 import { EditHabit } from "./pages/EditHabit";
+import { MentorLogIn } from "./pages/MentorLogIn";
+import { MentorPrivateDashboard } from "./pages/MentorPrivateDashboard";
+import { Services } from "./pages/Services";
+import { EditService } from "./pages/EditService";
+import { CreateService } from "./pages/CreateService";
 import { Administrators } from "./pages/Administrators";
 import { CreateAdministrator } from "./pages/CreateAdministrator";
 import { EditAdministrator } from "./pages/EditAdministrator";
@@ -71,6 +76,11 @@ export const router = createBrowserRouter(
       <Route path="/habits" element={<Habits />} />
       <Route path="/habits/new" element={<CreateHabit />} />
       <Route path="/habits/edit/:habit_id" element={<EditHabit />} />
+      <Route path="/mentors/login" element={<MentorLogIn />} />
+      <Route path="/mentors/dashboard/:mentor_id" element={<MentorPrivateDashboard />} />
+      <Route path="/services" element={<Services />} />
+      <Route path="/services/edit/:service_id" element={<EditService />} />
+      <Route path="/services/new" element={<CreateService />} />
       <Route path="/administrators" element={<Administrators />} />
       <Route path="/administrators/new" element={<CreateAdministrator />} />
       <Route path="/administrators/:admin_id/edit" element={<EditAdministrator />} />
