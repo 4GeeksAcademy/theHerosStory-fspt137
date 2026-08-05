@@ -83,7 +83,7 @@ class Quest(db.Model):
             "user_id": self.user_id,
             "habit_id": self.habit_id,
             "trackings": [
-                trackings.serialize()
+                tracking.serialize()
                 for tracking in self.trackings
             ]
         }

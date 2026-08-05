@@ -6,7 +6,8 @@ from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User, Mentor, Quest, Chat, ChatMessage, Habit, QuestTracking, Administrator, Service
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
-
+from functools import wraps
+from flask_jwt_extended import get_jwt
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
@@ -20,6 +21,18 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
+def admin_required():
+    def wrapper(fn):
+        @wraps(fn)
+        @jwt_required()
+        def decorator(*args, **kwargs):
+            claims = get_jwt()
+            if claims.get("role") != "administrator":
+                return jsonify({"msg": "Administrator access required"}), 403
+            return fn(*args, **kwargs)
+        return decorator
+    return wrapper
+
 
 @api.route("/hello", methods=["GET"])
 def handle_hello():
@@ -29,13 +42,10 @@ def handle_hello():
 
 # User Methods
 # CREATE
-@api.route("/hello", methods=["GET"])
-def handle_hello():
-    return jsonify({
-        "message": "Hello from the backend"
-    }), 200
 
 
+
+@admin_required()
 @api.route('/users', methods=['POST'])
 def create_user():
     body = request.get_json()
@@ -54,6 +64,7 @@ def create_user():
 
 
 # READ
+@admin_required()
 @api.route('/users', methods=['GET'])
 def get_all_users():
     users = User.query.all()
@@ -65,6 +76,7 @@ def get_all_users():
 # READ ID
 
 
+@admin_required()
 @api.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     user = User.query.get(user_id)
@@ -82,6 +94,7 @@ def get_user(user_id):
 # UPDATE
 
 
+@admin_required()
 @api.route('/users/<int:id>', methods=['PUT'])
 def update_user(id):
     body = request.get_json()
@@ -100,6 +113,7 @@ def update_user(id):
 
 
 # DELETE
+@admin_required()
 @api.route('/users/<int:id>', methods=['DELETE'])
 def delete_user(id):
     user = User.query.get(id)
@@ -116,6 +130,7 @@ def delete_user(id):
 # CREATE
 
 
+@admin_required()
 @api.route('/mentors', methods=['POST'])
 def create_mentor():
     body = request.get_json(silent=True) or {}
@@ -137,6 +152,7 @@ def create_mentor():
 
 
 # READ
+@admin_required()
 @api.route('/mentors', methods=['GET'])
 def get_all_mentors():
     mentors = Mentor.query.all()
@@ -146,6 +162,7 @@ def get_all_mentors():
     return jsonify(all_mentors_serialized), 200
 
 # READ ID
+@admin_required()
 @api.route('/mentors/<int:mentor_id>', methods=['GET'])
 def get_mentor(mentor_id):
     mentor = Mentor.query.get(mentor_id)
@@ -158,6 +175,7 @@ def get_mentor(mentor_id):
 # UPDATE
 
 
+@admin_required()
 @api.route('/mentors/<int:id>', methods=['PUT'])
 def update_mentor(id):
     body = request.get_json()
@@ -176,6 +194,7 @@ def update_mentor(id):
 
 
 # DELETE
+@admin_required()
 @api.route('/mentors/<int:id>', methods=['DELETE'])
 def delete_mentor(id):
     mentor = Mentor.query.get(id)
@@ -190,6 +209,7 @@ def delete_mentor(id):
 
 # Quest Methods
 # READ
+@admin_required()
 @api.route('/quests', methods=['GET'])
 def get_quests():
     quests = Quest.query.all()
@@ -199,6 +219,7 @@ def get_quests():
     return jsonify(quests_serialized), 200
 
 # READ ID
+@admin_required()
 @api.route('/quests/<int:quest_id>', methods=['GET'])
 def get_quest(quest_id):
     quest = Quest.query.get(quest_id)
@@ -209,6 +230,7 @@ def get_quest(quest_id):
     return jsonify(quest.serialize()), 200
 
 # CREATE
+@admin_required()
 @api.route('/quests', methods=['POST'])
 def create_quest():
     body = request.get_json()
@@ -245,6 +267,7 @@ def create_quest():
 
 
 # UPDATE
+@admin_required()
 @api.route('/quests/<int:quest_id>', methods=['PUT'])
 def update_quest(quest_id):
     body = request.get_json()
@@ -266,6 +289,7 @@ def update_quest(quest_id):
     return jsonify(quest.serialize()), 200
 
 # DELETE
+@admin_required()
 @api.route('/quests/<int:quest_id>', methods=['DELETE'])
 def delete_quest(quest_id):
     quest = Quest.query.get(quest_id)
@@ -282,6 +306,7 @@ def delete_quest(quest_id):
 # READ
 
 
+@admin_required()
 @api.route('/habits', methods=['GET'])
 def get_habits():
     habits = Habit.query.all()
@@ -292,6 +317,7 @@ def get_habits():
 
 
 #  READ ID
+@admin_required()
 @api.route('/habits/<int:habit_id>', methods=['GET'])
 def get_habit(habit_id):
     habit = Habit.query.get(habit_id)
@@ -303,6 +329,7 @@ def get_habit(habit_id):
 
 
 #  CREATE
+@admin_required()
 @api.route('/habits', methods=['POST'])
 def create_habit():
     body = request.get_json()
@@ -338,6 +365,7 @@ def create_habit():
 
 
 #  UPDATE
+@admin_required()
 @api.route('/habits/<int:habit_id>', methods=['PUT'])
 def update_habit(habit_id):
     body = request.get_json()
@@ -360,6 +388,7 @@ def update_habit(habit_id):
 
 
 #  DELETE
+@admin_required()
 @api.route('/habits/<int:habit_id>', methods=['DELETE'])
 def delete_habit(habit_id):
     habit = Habit.query.get(habit_id)
@@ -375,6 +404,7 @@ def delete_habit(habit_id):
 
 # CHAT METHODS
 # READ ALL
+@admin_required()
 @api.route('/chats', methods=['GET'])
 def get_all_chats():
     chats = Chat.query.all()
@@ -382,6 +412,7 @@ def get_all_chats():
 
 
 # CREATE
+@admin_required()
 @api.route('/chats', methods=['POST'])
 def create_chat():
     body = request.get_json()
@@ -419,6 +450,7 @@ def create_chat():
 
 
 # POST MESSAGE
+@admin_required()
 @api.route('/chats/message', methods=['POST'])
 def send_message():
     body = request.get_json()
@@ -456,6 +488,7 @@ def send_message():
 
 
 # GET MESSAGES
+@admin_required()
 @api.route('/chats/<int:chat_id>/messages', methods=['GET'])
 def get_chat_messages(chat_id):
     chat = Chat.query.get(chat_id)
@@ -478,6 +511,7 @@ def get_chat_messages(chat_id):
 # READ
 
 
+@admin_required()
 @api.route('/quest-trackings', methods=['GET'])
 def getall_quest_tracking():
     trackings = QuestTracking.query.all()
@@ -490,6 +524,7 @@ def getall_quest_tracking():
 # READ ID
 
 
+@admin_required()
 @api.route('/quest-trackings/<int:tracking_id>', methods=['GET'])
 def get_quest_tracking(tracking_id):
     tracking = db.session.get(QuestTracking, tracking_id)
@@ -504,6 +539,7 @@ def get_quest_tracking(tracking_id):
 # CREATE
 
 
+@admin_required()
 @api.route('/quest-trackings', methods=['POST'])
 def create_quest_tracking():
     body = request.get_json()
@@ -550,6 +586,7 @@ def create_quest_tracking():
 # UPDATE
 
 
+@admin_required()
 @api.route('/quest-trackings/<int:tracking_id>', methods=['PUT'])
 def update_quest_tracking(tracking_id):
     body = request.get_json()
@@ -603,6 +640,7 @@ def update_quest_tracking(tracking_id):
 # DELETE
 
 
+@admin_required()
 @api.route('/quest-trackings/<int:tracking_id>', methods=['DELETE'])
 def delete_quest_tracking(tracking_id):
     tracking = db.session.get(QuestTracking, tracking_id)
@@ -619,6 +657,7 @@ def delete_quest_tracking(tracking_id):
 # READ
 
 
+@admin_required()
 @api.route('/administrators', methods=['GET'])
 def ge_tall_administrator():
     admin = Administrator.query.all()
@@ -631,6 +670,7 @@ def ge_tall_administrator():
 # READ ID
 
 
+@admin_required()
 @api.route('/administrators/<int:admin_id>', methods=['GET'])
 def get_administrator(admin_id):
     admin = db.session.get(Administrator, admin_id)
@@ -645,6 +685,7 @@ def get_administrator(admin_id):
 # POST
 
 
+@admin_required()
 @api.route('/administrators', methods=['POST'])
 def create_administrators():
     body = request.get_json()
@@ -678,6 +719,7 @@ def create_administrators():
 # UPDATE
 
 
+@admin_required()
 @api.route('/administrators/<int:admin_id>', methods=['PUT'])
 def update_administrator(admin_id):
     body = request.get_json()
@@ -719,6 +761,7 @@ def update_administrator(admin_id):
 # DELETE
 
 
+@admin_required()
 @api.route('/administrators/<int:admin_id>', methods=['DELETE'])
 def delete_admin(admin_id):
     admin = db.session.get(Administrator, admin_id)
@@ -733,6 +776,7 @@ def delete_admin(admin_id):
 
 # Login-Admin Methods
 # POST
+
 
 
 @api.route('/admin/login', methods=['POST'])
@@ -770,6 +814,7 @@ def admin_login():
         "token": access_token,
         "administrator": administrator.serialize()
     }), 200
+
 
 
 @api.route('/login', methods=['POST'])

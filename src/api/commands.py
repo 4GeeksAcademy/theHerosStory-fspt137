@@ -2,6 +2,7 @@
 import click
 from api.models import db, User
 
+
 """
 In this file, you can add as many commands as you want using the @app.cli.command decorator
 Flask commands are usefull to run cronjobs or tasks outside of the API but sill in integration 
@@ -32,3 +33,22 @@ def setup_commands(app):
     @app.cli.command("insert-test-data")
     def insert_test_data():
         pass
+
+    @app.cli.command("insert-admin")
+    def insert_admin():
+        from api.models import Administrator
+        from werkzeug.security import generate_password_hash
+    
+        existing_admin = Administrator.query.filter_by(email="administrador@gmail.com").first()
+        if existing_admin:
+            print("El administrador ya existe en la base de datos.")
+            return
+
+        admin = Administrator()
+        admin.email = "administrador@gmail.com"
+        admin.password = generate_password_hash("123456")
+        admin.is_active = True
+    
+        db.session.add(admin)
+        db.session.commit()
+        print("Administrador creado con exito!")
