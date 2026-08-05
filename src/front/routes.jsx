@@ -43,6 +43,7 @@ import { MentorRegister } from "./pages/MentorRegister";
 import { MentorServices } from "./pages/MentorServices";
 import { CreateMentorsService } from "./pages/CreateMentorsService";
 import { EditMentorService } from "./pages/EditMentorService";
+import { MentorUsers } from "./pages/MentorUsers";
 
 
 
@@ -95,6 +96,7 @@ export const router = createBrowserRouter(
       <Route path="/mentors/services" element={<PrivateRoute tokenName="mentor_token" redirectTo="/mentors/login"> <MentorServices /> </PrivateRoute>} />
       <Route path="/mentors/services/new" element={<PrivateRoute tokenName="mentor_token" redirectTo="/mentors/login"> <CreateMentorsService /> </PrivateRoute>} />
       <Route path="/mentors/services/edit/:service_id" element={<PrivateRoute tokenName="mentor_token" redirectTo="/mentors/login"> <EditMentorService /> </PrivateRoute>} />
+      <Route path="/mentors/users" element={<PrivateRoute tokenName="mentor_token" redirectTo="/mentors/login"> <MentorUsers /> </PrivateRoute>} />
 
     </Route>
   )
