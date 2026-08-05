@@ -29,6 +29,11 @@ def handle_hello():
 
 # User Methods
 # CREATE
+@api.route("/hello", methods=["GET"])
+def handle_hello():
+    return jsonify({
+        "message": "Hello from the backend"
+    }), 200
 
 
 @api.route('/users', methods=['POST'])
@@ -766,172 +771,20 @@ def admin_login():
         "administrator": administrator.serialize()
     }), 200
 
-# Mentor Login
-@api.route("/mentors/login", methods=["POST"])
-def mentor_login():
-    email = request.json.get("email", None)
-    password = request.json.get("password", None)
 
-    mentor = Mentor.query.filter_by(email=email).first()
-
-    if mentor is None:
-        return jsonify({"msg": "Bad username or password"}), 401
-
-    if password != mentor.password:
-        return jsonify({"msg": "Bad username or password"}), 401
-
-    access_mentor_token = create_access_token(identity=email)
-    
-    return jsonify({
-        "access_mentor_token": access_mentor_token,
-        "mentor_id": mentor.id
-    }), 200
-
-
-#Mentor Private Dashboard
-@api.route("/mentors/dashboard/<int:mentor_id>", methods=["GET"])
-@jwt_required() 
-def get_mentor_dashboard(mentor_id):
-    current_mentor_email = get_jwt_identity()
-
-    token_owner = Mentor.query.filter_by(email=current_mentor_email).first()
-
-    if not token_owner:
-        return jsonify({"msg": "Invalid session"}), 401
-
-    if token_owner.id != mentor_id:
-        return jsonify({"msg": "Access denied: Not allowed to see this dashboard"}), 403
-
-    return jsonify({
-        "msg": "Access allowed",
-        "mentor": {
-            "id": token_owner.id,
-            "email": token_owner.email
-        }
-    }), 200
-
-
-
-#Service Methods
-#READ 
-@api.route('/services', methods=['GET'])
-def get_services():
-    services = Service.query.all()
-    services_serialized = [service.serialize() for service in services]
-    return jsonify(services_serialized), 200
-
-
-#READ ID
-@api.route('/services/<int:service_id>', methods=['GET'])
-def get_service(service_id):
-    service = Service.query.get(service_id)
-    if service is None:
-        return jsonify({"msg": "Service not found"}), 404
-    return jsonify(service.serialize()), 200
-
-
-#CREATE
-@api.route('/services', methods=['POST'])
-def create_service():
+@api.route('/login', methods=['POST'])
+def login_user():
     body = request.get_json()
-
-    if body is None:
-        return jsonify({"msg": "Request body is required"}), 400
-
-    if not body.get("title"):
-        return jsonify({"msg": "Title is required"}), 400
-
-    if not body.get("description"):
-        return jsonify({"msg": "Description is required"}), 400
-
-    if not body.get("mentor_id"):
-        return jsonify({"msg": "Mentor ID is required"}), 400
-        
-    if body.get("price") is None:
-        return jsonify({"msg": "Price is required"}), 400
-
-    mentor = Mentor.query.get(body["mentor_id"])
-    if mentor is None:
-        return jsonify({"msg": "Mentor not found"}), 404
-
-    new_service = Service(
-        title=body["title"],
-        description=body["description"],
-        price=int(body["price"]),
-        mentor_id=body["mentor_id"]
-    )
-
-    db.session.add(new_service)
-    db.session.commit()
-
-    return jsonify(new_service.serialize()), 201
-
-
-#UPDATE
-@api.route('/services/<int:service_id>', methods=['PUT'])
-def update_service(service_id):
-    body = request.get_json()
-
-    if body is None:
-        return jsonify({"msg": "Request body is required"}), 400
-
-    service = Service.query.get(service_id)
-    if not service:
-        return jsonify({"msg": "Service not found"}), 404
-
-    service.title = body.get('title', service.title)
-    service.description = body.get('description', service.description)
     
-    if body.get('price') is not None:
-        service.price = int(body['price'])
-        
-    if body.get('mentor_id') is not None:
-        service.mentor_id = body['mentor_id']
-
-    db.session.commit()
-    return jsonify(service.serialize()), 200
-
-
-#DELETE 
-@api.route('/services/<int:service_id>', methods=['DELETE'])
-def delete_service(service_id):
-    service = Service.query.get(service_id)
-
-    if not service:
-        return jsonify({"msg": "Service not found"}), 404
-
-    db.session.delete(service)
-    db.session.commit()
-
-    return jsonify({"msg": f"Service with ID {service_id} successfully deleted"}), 200
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    email = body.get('email')
+    password = body.get('password')
+    
+    user = User.query.filter_by(email=email).first()
+    
+    if not user or user.password != password:
+        return jsonify({"msg": "Correo o contraseña incorrectos"}), 401
+    access_token = create_access_token(identity=user.id)
+    return jsonify({
+        "access_token": access_token,
+        "user": user.serialize()
+    }), 200
