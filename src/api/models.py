@@ -24,7 +24,8 @@ class User(db.Model):
     quests: Mapped[list["Quest"]] = relationship(back_populates="user")
 
     # Relacion de user con habits
-    habits: Mapped[list["Habit"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    habits: Mapped[list["Habit"]] = relationship(
+        back_populates="user", cascade="all, delete-orphan")
 
     def serialize(self):
         return {
@@ -48,7 +49,7 @@ class Mentor(db.Model):
     chats: Mapped[list["Chat"]] = relationship(
         back_populates="mentor", cascade="all, delete-orphan")
 
-    #Relacion de Services con mentor
+    # Relacion de Services con mentor
     services: Mapped[list["Service"]] = relationship(back_populates="mentor")
 
     def serialize(self):
@@ -93,7 +94,8 @@ class Habit(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str] = mapped_column(String(100), nullable=False)
     description: Mapped[str] = mapped_column(String(500), nullable=False)
-    status: Mapped[str] = mapped_column(String(30), nullable=False, default="pending")
+    status: Mapped[str] = mapped_column(
+        String(30), nullable=False, default="pending")
 
     user: Mapped["User"] = relationship(back_populates="habits")
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
@@ -154,11 +156,12 @@ class ChatMessage(db.Model):
             "created_at": self.created_at.isoformat(),
         }
 
+
 class QuestTracking(db.Model):
     __tablename__ = "quest_tracking"
     id: Mapped[int] = mapped_column(primary_key=True)
     quest_id: Mapped[int] = mapped_column(
-    ForeignKey("quest.id"), nullable=False)
+        ForeignKey("quest.id"), nullable=False)
     date: Mapped[str] = mapped_column(Date, nullable=False)
     comment: Mapped[str] = mapped_column(String(500), nullable=False)
     status: Mapped[str] = mapped_column(String(50), nullable=False)
@@ -166,7 +169,7 @@ class QuestTracking(db.Model):
     quest: Mapped["Quest"] = relationship(back_populates="trackings")
 
     def serialize(self):
-        return{
+        return {
             "id": self.id,
             "quest_id": self.quest_id,
             "date": self.date.isoformat() if self.date else None,
@@ -175,23 +178,23 @@ class QuestTracking(db.Model):
         }
 
 
-
 class Administrator(db.Model):
     __tablename__ = "admin"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(
-            String(50), unique=True, nullable=False)
+        String(50), unique=True, nullable=False)
     email: Mapped[str] = mapped_column(
-            String(120), unique=True, nullable=False)
+        String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(
         String(250), nullable=False)
 
     def serialize(self):
-        return{
+        return {
             "id": self.id,
             "name": self.name,
             "email": self.email
         }
+
 
 def __str__(self):
     return f"{self.name} - {self.email}"
@@ -203,7 +206,8 @@ class Service(db.Model):
     description: Mapped[str] = mapped_column(String(500), nullable=False)
     price: Mapped[int] = mapped_column(nullable=False)
 
-    mentor_id: Mapped[int] = mapped_column(ForeignKey("mentor.id"), nullable=True)
+    mentor_id: Mapped[int] = mapped_column(
+        ForeignKey("mentor.id"), nullable=True)
     mentor: Mapped["Mentor"] = relationship(back_populates="services")
 
     def serialize(self):
