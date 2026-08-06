@@ -29,6 +29,11 @@ def handle_hello():
 
 # User Methods
 # CREATE
+@api.route("/hello", methods=["GET"])
+def handle_hello():
+    return jsonify({
+        "message": "Hello from the backend"
+    }), 200
 
 
 @api.route('/users', methods=['POST'])
@@ -1193,3 +1198,20 @@ def send_mentor_chat_message(chat_id):
         "msg": "Message sent successfully",
         "message": new_message.serialize()
     }), 201
+
+@api.route('/login', methods=['POST'])
+def login_user():
+    body = request.get_json()
+    
+    email = body.get('email')
+    password = body.get('password')
+    
+    user = User.query.filter_by(email=email).first()
+    
+    if not user or user.password != password:
+        return jsonify({"msg": "Correo o contraseña incorrectos"}), 401
+    access_token = create_access_token(identity=user.id)
+    return jsonify({
+        "access_token": access_token,
+        "user": user.serialize()
+    }), 200

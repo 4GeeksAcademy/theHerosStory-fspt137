@@ -44,6 +44,9 @@ export const Navbar = () => {
 					<Link to="/admin-dashboard">
 						<button className="btn btn-primary">Admin Dashboar</button>
 					</Link>
+					<Link to="/login-user">
+						<button className="btn btn-success ms-2">Login</button>
+					</Link>
 				</div>
 			</div>
 		</nav>

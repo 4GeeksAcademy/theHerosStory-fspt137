@@ -45,9 +45,8 @@ import { CreateMentorsService } from "./pages/CreateMentorsService";
 import { EditMentorService } from "./pages/EditMentorService";
 import { MentorUsers } from "./pages/MentorUsers";
 import { MentorChatWindow } from "./pages/MentorChatWindow";
-
-
-
+import { LoginUser } from "./pages/LoginUser";
+import { DashboardShelter } from "./pages/DashboardShelter";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -99,7 +98,8 @@ export const router = createBrowserRouter(
       <Route path="/mentors/services/edit/:service_id" element={<PrivateRoute tokenName="mentor_token" redirectTo="/mentors/login"> <EditMentorService /> </PrivateRoute>} />
       <Route path="/mentors/users" element={<PrivateRoute tokenName="mentor_token" redirectTo="/mentors/login"> <MentorUsers /> </PrivateRoute>} />
       <Route path="/mentors/chats/:chatId" element={<PrivateRoute tokenName="mentor_token" redirectTo="/mentors/login"> <MentorChatWindow /> </PrivateRoute>} />
-
+      <Route path="/login-user" element={<LoginUser />} />
+      <Route path="/dashboard-shelter" element={<PrivateRoute tokenName="shelterToken" redirectTo="/login-user"> <DashboardShelter /> </PrivateRoute>} />
     </Route>
   )
 )
