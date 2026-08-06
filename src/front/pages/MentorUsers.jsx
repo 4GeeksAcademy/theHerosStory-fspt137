@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 export const MentorUsers = () => {
-    const [services, setServices] = useState([]);
+    const [users, setUsers] = useState([]);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
 
@@ -32,7 +32,7 @@ export const MentorUsers = () => {
             })
             .catch((error) => {
                 console.error(error);
-                setErrorMessage(error.message);
+                setError(error.message);
 
             })
             .finally(() => {
@@ -72,9 +72,9 @@ export const MentorUsers = () => {
                 </p>
             ) : (
                 <div className="list-group">
-                    {users.map((users) => (
+                    {users.map((user) => (
                         <div
-                            key={user.chatt_id}
+                            key={user.chat_id}
                             className="list-group-item d-flex justify-content-between align-items-center"
                         >
                             <div>
@@ -82,7 +82,7 @@ export const MentorUsers = () => {
                                     User #{user.id}
                                 </h5>
 
-                                <p className="mb-0 ext-muted">
+                                <p className="mb-0 text-muted">
                                     {user.email}
                                 </p>
                             </div>

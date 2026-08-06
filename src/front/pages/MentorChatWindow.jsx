@@ -136,10 +136,46 @@ export const MentorChatWindow = () => {
                                     : "text-start mb-3"
                             }
                         >
+                            <div>
+                                <strong>
+                                    {message.sender === "mentor"
+                                        ? "Mentor"
+                                        : "User"}
+                                </strong>
+                            </div>
 
-
+                            <span
+                                className={
+                                    message.sender === "mentor"
+                                        ? "d-inline-block bg-primary text-white rounded px-3 py-2"
+                                        : "d-inline-block bg-white border rounded px-3 py-2"
+                                }
+                            >
+                                {message.content}
+                            </span>
                         </div>
+                    ))
+                )}
+            </div>
 
+            <form onSubmit={handleSubmit} >
 
-                    );
-}
+                <div className="input-group">
+                    <input
+                        type="text"
+                        className="form-control"
+                        value={content}
+                        onChange={(event) => setContent(event.target.value)}
+                        required
+                    />
+                    <button
+                        type="submit"
+                        className="btn btn-primary"
+                    >
+                        Send
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
+};
