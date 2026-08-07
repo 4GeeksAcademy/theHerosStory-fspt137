@@ -20,6 +20,13 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
+
+@api.route("/hello", methods=["GET"])
+def handle_hello():
+    return jsonify({
+        "message": "Hello from the backend"
+    }), 200
+
 #definir admin_required
 def admin_required(fn):
     @wraps(fn)
@@ -1272,119 +1279,3 @@ def login_user():
     }), 200
 
 
-# Service Methods
-# READ ALL
-@api.route('/services', methods=['GET'])
-def get_all_services():
-    services = Service.query.all()
-    return jsonify([service.serialize() for service in services]), 200
-
-
-# READ BY ID
-@api.route('/services/<int:service_id>', methods=['GET'])
-def get_service(service_id):
-    service = Service.query.get(service_id)
-
-    if service is None:
-        return jsonify({"msg": "Service not found"}), 404
-
-    return jsonify(service.serialize()), 200
-
-
-# READ BY MENTOR ID
-@api.route('/services/mentor/<int:mentor_id>', methods=['GET'])
-def get_services_by_mentor(mentor_id):
-    services = Service.query.filter_by(mentor_id=mentor_id).all()
-    return jsonify([service.serialize() for service in services]), 200
-
-
-# CREATE
-@api.route('/services', methods=['POST'])
-def create_service():
-    body = request.get_json()
-
-    if body is None:
-        return jsonify({"msg": "Request body is required"}), 400
-
-    title = body.get("title")
-    description = body.get("description")
-    price = body.get("price")
-    mentor_id = body.get("mentor_id")
-
-    if not title or not description or not price:
-        return jsonify({"msg": "title, description and price are required"}), 400
-
-    if mentor_id:
-        mentor = Mentor.query.get(mentor_id)
-        if mentor is None:
-            return jsonify({"msg": "Mentor not found"}), 404
-
-    try:
-        new_service = Service(
-            title=title,
-            description=description,
-            price=price,
-            mentor_id=mentor_id
-        )
-
-        db.session.add(new_service)
-        db.session.commit()
-
-        return jsonify(new_service.serialize()), 201
-
-    except Exception as e:
-        db.session.rollback()
-        print("ERROR creating service:", str(e))
-        return jsonify({"msg": "Internal server error", "error": str(e)}), 500
-
-
-# UPDATE
-@api.route('/services/<int:service_id>', methods=['PUT'])
-def update_service(service_id):
-    body = request.get_json()
-
-    if body is None:
-        return jsonify({"msg": "Request body is required"}), 400
-
-    service = Service.query.get(service_id)
-
-    if service is None:
-        return jsonify({"msg": "Service not found"}), 404
-
-    title = body.get("title")
-    description = body.get("description")
-    price = body.get("price")
-    mentor_id = body.get("mentor_id")
-
-    if title is not None:
-        service.title = title
-
-    if description is not None:
-        service.description = description
-
-    if price is not None:
-        service.price = price
-
-    if mentor_id is not None:
-        mentor = Mentor.query.get(mentor_id)
-        if mentor is None:
-            return jsonify({"msg": "Mentor not found"}), 404
-        service.mentor_id = mentor_id
-
-    db.session.commit()
-
-    return jsonify(service.serialize()), 200
-
-
-# DELETE
-@api.route('/services/<int:service_id>', methods=['DELETE'])
-def delete_service(service_id):
-    service = Service.query.get(service_id)
-
-    if service is None:
-        return jsonify({"msg": "Service not found"}), 404
-
-    db.session.delete(service)
-    db.session.commit()
-
-    return jsonify({"msg": f"Service with ID {service_id} successfully deleted"}), 200

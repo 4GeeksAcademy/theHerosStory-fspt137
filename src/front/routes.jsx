@@ -94,7 +94,6 @@ export const router = createBrowserRouter(
       <Route path="/quest-trackings/:tracking_id/edit" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><EditQuestTracking /></PrivateRoute>} />
       <Route path="/add-user" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><AddUser /></PrivateRoute>} />
       <Route path="/edit-user/:id" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><EditUser /></PrivateRoute>} />
-      <Route path="/habits" element={<Habits />} />
       <Route path="/habits/new" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><CreateHabit /></PrivateRoute>} />
       <Route path="/habits/edit/:habit_id" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><EditHabit /></PrivateRoute>} />
       <Route path="/mentors/login" element={<MentorLogIn />} />
@@ -103,7 +102,7 @@ export const router = createBrowserRouter(
       <Route path="/services/edit/:service_id" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><EditService /></PrivateRoute>} />
       <Route path="/services/new" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><CreateService /></PrivateRoute>} />
       <Route path="/administrators" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><Administrators /></PrivateRoute>} />
-      <Route path="/administrators/new" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><CreateAdministrator/></PrivateRoute>} />
+      <Route path="/administrators/new" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><CreateAdministrator /></PrivateRoute>} />
       <Route path="/administrators/:admin_id/edit" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><EditAdministrator /></PrivateRoute>} />
       <Route path="/admin-login" element={<AdminLogin />} />
       <Route path="/admin-dashboard" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"> <AdminDashboard /> </PrivateRoute>} />
