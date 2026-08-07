@@ -49,19 +49,23 @@ export const UserFlowServices = () => {
             ) : (
                 <div className="list-group">
                     {allServices.map((service) => (
-                        <div className="list-group-item d-flex justify-content-between align-items-start" key={service.id}>
-                            <div className="flex-grow-1">
+                        <div className="list-group-item d-flex justify-content-between align-items-center" key={service.id}>
+                            <div className="flex-grow-1 me-3">
                                 <h5 className="mb-1">{service.title}</h5>
                                 <p className="mb-2">{service.description}</p>
                                 <span className="badge text-bg-info">
                                     ${service.price}
                                 </span>
                             </div>
+                            <div>
+                                <Link to={`/user-book/${service.id}`} className="btn btn-primary text-nowrap">
+                                    Book Appointment
+                                </Link>
+                            </div>
                         </div>
                     ))}
                 </div>
-            )
-            }
+            )}
         </div>
     );
 };
