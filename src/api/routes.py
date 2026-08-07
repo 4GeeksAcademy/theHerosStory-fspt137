@@ -20,7 +20,9 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
-#definir admin_required
+# definir admin_required
+
+
 def admin_required(fn):
     @wraps(fn)
     @jwt_required()
@@ -33,6 +35,13 @@ def admin_required(fn):
 
 # User Methods
 # CREATE
+
+
+@api.route("/hello", methods=["GET"])
+def handle_hello():
+    return jsonify({
+        "message": "Hello from the backend"
+    }), 200
 
 
 @api.route('/users', methods=['POST'])
@@ -643,6 +652,7 @@ def delete_quest_tracking(tracking_id):
 # Administrator Methods
 # READ
 
+
 @admin_required
 @api.route('/administrators', methods=['GET'])
 def ge_tall_administrator():
@@ -654,6 +664,7 @@ def ge_tall_administrator():
     ]), 200
 
 # READ ID
+
 
 @admin_required
 @api.route('/administrators/<int:admin_id>', methods=['GET'])
@@ -668,6 +679,7 @@ def get_administrator(admin_id):
     return jsonify(admin.serialize()), 200
 
 # POST
+
 
 @admin_required
 @api.route('/administrators', methods=['POST'])
@@ -701,6 +713,7 @@ def create_administrators():
     return jsonify(new_administrator.serialize()), 201
 
 # UPDATE
+
 
 @admin_required
 @api.route('/administrators/<int:admin_id>', methods=['PUT'])
@@ -742,6 +755,7 @@ def update_administrator(admin_id):
     return jsonify(admin.serialize()), 200
 
 # DELETE
+
 
 @admin_required
 @api.route('/administrators/<int:admin_id>', methods=['DELETE'])
