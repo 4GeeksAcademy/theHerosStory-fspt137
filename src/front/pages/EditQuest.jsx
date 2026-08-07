@@ -9,6 +9,7 @@ export const EditQuest = () => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const navigate = useNavigate();
     const { quest_id } = useParams();
+    const userId = localStorage.getItem("user_id");
 
 
     useEffect(() => {
@@ -53,7 +54,11 @@ export const EditQuest = () => {
                 return response.json();
             })
             .then(() => {
-                navigate("/quests");
+                if (userId) {
+                    navigate("/user-quests");
+                } else {
+                    navigate("/login-user");
+                }
             })
             .catch((error) => {
                 console.error(error);

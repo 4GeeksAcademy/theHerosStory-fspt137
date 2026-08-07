@@ -67,8 +67,7 @@ class Quest(db.Model):
     description: Mapped[str] = mapped_column(String(500), nullable=False)
     status: Mapped[str] = mapped_column(
         String(30), nullable=False, default="pending")
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=True)
-    habit_id: Mapped[int] = mapped_column(nullable=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
     user: Mapped["User"] = relationship(back_populates="quests")
 
     # Relacion de quest con questTracking
@@ -82,9 +81,8 @@ class Quest(db.Model):
             "description": self.description,
             "status": self.status,
             "user_id": self.user_id,
-            "habit_id": self.habit_id,
             "trackings": [
-                trackings.serialize()
+                tracking.serialize()
                 for tracking in self.trackings
             ]
         }

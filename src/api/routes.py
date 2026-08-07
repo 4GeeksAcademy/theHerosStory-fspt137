@@ -33,11 +33,6 @@ def admin_required(fn):
 
 # User Methods
 # CREATE
-@api.route("/hello", methods=["GET"])
-def handle_hello():
-    return jsonify({
-        "message": "Hello from the backend"
-    }), 200
 
 
 @api.route('/users', methods=['POST'])
@@ -224,6 +219,24 @@ def get_quests():
 
     return jsonify(quests_serialized), 200
 
+
+# FILTERED BY USER ID
+@api.route("/api/quests/user/<int:user_id>", methods=["GET"])
+def get_quests_by_user(user_id):
+    try:
+        quests = Quest.query.filter_by(user_id=user_id).all()
+
+        if not quests:
+            return jsonify([]), 200
+
+        quests_serialized = [quest.serialize() for quest in quests]
+
+        return jsonify(quests_serialized), 200
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"message": "Server error fetching quests"}), 500
+
 # READ ID
 
 
@@ -241,10 +254,12 @@ def get_quest(quest_id):
 
 @api.route('/quests', methods=['POST'])
 def create_quest():
-    body = request.get_json()
+    body = request.get_json(silent=True) or {}
 
-    if body is None:
+    if not body:
         return jsonify({"msg": "Request body is required"}), 400
+
+    body.pop("habit_id", None)
 
     if not body.get("title"):
         return jsonify({"msg": "Title is required"}), 400
@@ -254,23 +269,29 @@ def create_quest():
 
     if not body.get("user_id"):
         return jsonify({"msg": "User ID is required"}), 400
-    user = User.query.get(body["user_id"])
+
+    user = db.session.get(User, body["user_id"])
 
     if user is None:
         return jsonify({"msg": "User not found"}), 404
 
-    new_quest = Quest(
-        title=body["title"],
-        description=body["description"],
-        status=body.get("status", "pending"),
-        user_id=body.get("user_id"),
-        habit_id=body.get("habit_id")
-    )
+    try:
+        new_quest = Quest(
+            title=body["title"],
+            description=body["description"],
+            status=body.get("status", "pending"),
+            user_id=body.get("user_id"),
+        )
 
-    db.session.add(new_quest)
-    db.session.commit()
+        db.session.add(new_quest)
+        db.session.commit()
 
-    return jsonify(new_quest.serialize()), 201
+        return jsonify(new_quest.serialize()), 201
+
+    except Exception as e:
+        db.session.rollback()
+        print("ERROR EN EL SERVIDOR AL CREAR QUEST:", str(e))
+        return jsonify({"msg": "Internal database error", "error": str(e)}), 500
 
 
 # UPDATE
@@ -321,8 +342,28 @@ def get_habits():
 
     return jsonify(habits_serialized), 200
 
+# FILTERED BY USER ID
+
+
+@api.route("/api/habits/user/<int:user_id>", methods=["GET"])
+def get_habits_by_user(user_id):
+    try:
+        habits = Habit.query.filter_by(user_id=user_id).all()
+
+        if not habits:
+            return jsonify([]), 200
+
+        habits_serialized = [habit.serialize() for habit in habits]
+
+        return jsonify(habits_serialized), 200
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"message": "Server error fetching habits"}), 500
 
 #  READ ID
+
+
 @api.route('/habits/<int:habit_id>', methods=['GET'])
 def get_habit(habit_id):
     habit = Habit.query.get(habit_id)
@@ -349,25 +390,35 @@ def create_habit():
 
     if not body.get("user_id"):
         return jsonify({"msg": "User ID is required"}), 400
-    user = User.query.get(body["user_id"])
+
+    # CAMBIO: db.session.get evita errores de compatibilidad si usas SQLAlchemy moderno
+    user = db.session.get(User, body["user_id"])
 
     if user is None:
         return jsonify({"msg": "User not found"}), 404
 
-    new_habit = Habit(
-        title=body["title"],
-        description=body["description"],
-        status=body.get("status", "pending"),
-        user_id=body.get("user_id"),
-    )
+    try:
+        new_habit = Habit(
+            title=body["title"],
+            description=body["description"],
+            status=body.get("status", "pending"),
+            # Asegúrate de mapear la columna exacta de tu modelo
+            user_id=body["user_id"]
+        )
 
-    db.session.add(new_habit)
-    db.session.commit()
+        db.session.add(new_habit)
+        db.session.commit()
 
-    return jsonify(new_habit.serialize()), 201
+        return jsonify(new_habit.serialize()), 201
 
+    except Exception as e:
+        db.session.rollback()  # Limpia la transacción fallida para evitar bloqueos
+        print("🔥 ERROR CRÍTICO EN BASE DE DATOS AL CREAR HÁBITO:", str(e))
+        return jsonify({"msg": "Internal server database error", "error": str(e)}), 500
 
 #  UPDATE
+
+
 @api.route('/habits/<int:habit_id>', methods=['PUT'])
 def update_habit(habit_id):
     body = request.get_json()
@@ -1206,12 +1257,12 @@ def send_mentor_chat_message(chat_id):
 @api.route('/login', methods=['POST'])
 def login_user():
     body = request.get_json()
-    
+
     email = body.get('email')
     password = body.get('password')
-    
+
     user = User.query.filter_by(email=email).first()
-    
+
     if not user or user.password != password:
         return jsonify({"msg": "Correo o contraseña incorrectos"}), 401
     access_token = create_access_token(identity=user.id)
@@ -1219,3 +1270,121 @@ def login_user():
         "access_token": access_token,
         "user": user.serialize()
     }), 200
+
+
+# Service Methods
+# READ ALL
+@api.route('/services', methods=['GET'])
+def get_all_services():
+    services = Service.query.all()
+    return jsonify([service.serialize() for service in services]), 200
+
+
+# READ BY ID
+@api.route('/services/<int:service_id>', methods=['GET'])
+def get_service(service_id):
+    service = Service.query.get(service_id)
+
+    if service is None:
+        return jsonify({"msg": "Service not found"}), 404
+
+    return jsonify(service.serialize()), 200
+
+
+# READ BY MENTOR ID
+@api.route('/services/mentor/<int:mentor_id>', methods=['GET'])
+def get_services_by_mentor(mentor_id):
+    services = Service.query.filter_by(mentor_id=mentor_id).all()
+    return jsonify([service.serialize() for service in services]), 200
+
+
+# CREATE
+@api.route('/services', methods=['POST'])
+def create_service():
+    body = request.get_json()
+
+    if body is None:
+        return jsonify({"msg": "Request body is required"}), 400
+
+    title = body.get("title")
+    description = body.get("description")
+    price = body.get("price")
+    mentor_id = body.get("mentor_id")
+
+    if not title or not description or not price:
+        return jsonify({"msg": "title, description and price are required"}), 400
+
+    if mentor_id:
+        mentor = Mentor.query.get(mentor_id)
+        if mentor is None:
+            return jsonify({"msg": "Mentor not found"}), 404
+
+    try:
+        new_service = Service(
+            title=title,
+            description=description,
+            price=price,
+            mentor_id=mentor_id
+        )
+
+        db.session.add(new_service)
+        db.session.commit()
+
+        return jsonify(new_service.serialize()), 201
+
+    except Exception as e:
+        db.session.rollback()
+        print("ERROR creating service:", str(e))
+        return jsonify({"msg": "Internal server error", "error": str(e)}), 500
+
+
+# UPDATE
+@api.route('/services/<int:service_id>', methods=['PUT'])
+def update_service(service_id):
+    body = request.get_json()
+
+    if body is None:
+        return jsonify({"msg": "Request body is required"}), 400
+
+    service = Service.query.get(service_id)
+
+    if service is None:
+        return jsonify({"msg": "Service not found"}), 404
+
+    title = body.get("title")
+    description = body.get("description")
+    price = body.get("price")
+    mentor_id = body.get("mentor_id")
+
+    if title is not None:
+        service.title = title
+
+    if description is not None:
+        service.description = description
+
+    if price is not None:
+        service.price = price
+
+    if mentor_id is not None:
+        mentor = Mentor.query.get(mentor_id)
+        if mentor is None:
+            return jsonify({"msg": "Mentor not found"}), 404
+        service.mentor_id = mentor_id
+
+    db.session.commit()
+
+    return jsonify(service.serialize()), 200
+
+
+# DELETE
+@api.route('/services/<int:service_id>', methods=['DELETE'])
+def delete_service(service_id):
+    service = Service.query.get(service_id)
+
+    if service is None:
+        return jsonify({"msg": "Service not found"}), 404
+
+    db.session.delete(service)
+    db.session.commit()
+
+    return jsonify({"msg": f"Service with ID {service_id} successfully deleted"}), 200
