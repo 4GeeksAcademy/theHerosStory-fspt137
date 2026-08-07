@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export const UserFlowQuests = () => {
     const [quests, setQuests] = useState([]);
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    const userId = localStorage.getItem("user_id");
+    const { user_id } = useParams();
+    const effectiveUserId = user_id || localStorage.getItem("user_id");
 
     const getQuests = () => {
         fetch(`${backendUrl}/api/quests`)
-            .then((response) => {
+            .then(async (response) => {
                 if (!response.ok) {
+                    const text = await response.text();
+                    console.error("Quest fetch failed:", response.status, text);
                     throw new Error("Error fetching quests");
                 }
                 return response.json();
@@ -41,7 +44,7 @@ export const UserFlowQuests = () => {
             });
     };
 
-    const userQuests = quests.filter((quest) => String(quest.user_id) === String(userId));
+    const userQuests = quests.filter((quest) => String(quest.user_id) === String(effectiveUserId));
 
     return (
         <div className="container py-5">

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export const LoginUser = () => {
     const [email, setEmail] = useState("");
@@ -18,9 +18,8 @@ export const LoginUser = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                // Guarda el token que te devuelva tu backend
                 localStorage.setItem("user_token", data.access_token);
-                localStorage.setItem("user_id", data.user.id); 
+                localStorage.setItem("user_id", data.user.id);
                 console.log(data)
                 navigate("/user-dashboard");
             } else {
@@ -57,6 +56,9 @@ export const LoginUser = () => {
                     />
                 </div>
                 <button type="submit" className="btn btn-primary">Login</button>
+                <Link to="/user-register" className="btn btn-outline-secondary ms-2">
+                    Register
+                </Link>
             </form>
         </div>
     );

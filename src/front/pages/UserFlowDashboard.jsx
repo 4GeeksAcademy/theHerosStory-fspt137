@@ -23,7 +23,12 @@ export const UserFlowDashboard = () => {
                 <Link to="/user-quests">
                     <button className="btn btn-primary">Quests</button>
                 </Link>
-
+                <Link to="/user-mentors">
+                    <button className="btn btn-primary">Mentors</button>
+                </Link>
+                <Link to="/user-services">
+                    <button className="btn btn-primary">Services</button>
+                </Link>
 
                 <button
                     onClick={handleLogout}

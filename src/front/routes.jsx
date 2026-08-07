@@ -42,7 +42,10 @@ import { PrivateRoute } from "./components/PrivateRoute";
 import { UserFlowRegister } from "./pages/UserFlowRegister";
 import { LoginUser } from "./pages/LoginUser";
 import { UserFlowDashboard } from "./pages/UserFlowDashboard";
-import { UserFlowQuests} from   "./pages/UserFlowQuests";
+import { UserFlowQuests } from "./pages/UserFlowQuests";
+import { UserFlowMentors } from "./pages/UserFlowMentors";
+import { UserFlowChat } from "./pages/UserFlowChat";
+import { UserFlowServices } from "./pages/UserFlowServices";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -68,16 +71,16 @@ export const router = createBrowserRouter(
       <Route path="/chats/:chatId" element={<ChatWindow />} />
       <Route path="/create-chat" element={<CreateChat />} />
       <Route path="/quests" element={<Quests />} />
-      <Route path="/quests/new" element={<CreateQuest />} />
-      <Route path="/quests/edit/:quest_id" element={<EditQuest />} />
+      <Route path="/quests/new" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <CreateQuest /> </PrivateRoute>} />
+      <Route path="/quests/edit/:quest_id" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <EditQuest /> </PrivateRoute>} />
       <Route path="/quest-trackings" element={<QuestTracking />} />
       <Route path="/quest-trackings/new" element={<CreateQuestTracking />} />
       <Route path="/quest-trackings/:tracking_id/edit" element={<EditQuestTracking />} />
       <Route path="/add-user" element={<AddUser />} />
       <Route path="/edit-user/:id" element={<EditUser />} />
       <Route path="/habits/user/:user_id" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowHabits /> </PrivateRoute>} />
-      <Route path="/habits/new" element={<CreateHabit />} />
-      <Route path="/habits/edit/:habit_id" element={<EditHabit />} />
+      <Route path="/habits/new" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <CreateHabit /> </PrivateRoute>} />
+      <Route path="/habits/edit/:habit_id" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <EditHabit /> </PrivateRoute>} />
       <Route path="/mentors/login" element={<MentorLogIn />} />
       <Route path="/mentors/dashboard/:mentor_id" element={<MentorPrivateDashboard />} />
       <Route path="/services" element={<Services />} />
@@ -92,6 +95,9 @@ export const router = createBrowserRouter(
       <Route path="/login-user" element={<LoginUser />} />
       <Route path="/user-dashboard" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowDashboard /> </PrivateRoute>} />
       <Route path="/user-quests" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowQuests /> </PrivateRoute>} />
+      <Route path="/user-mentors" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowMentors /> </PrivateRoute>} />
+      <Route path="/user-chat/:mentorId" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowChat /> </PrivateRoute>} />
+      <Route path="/user-services" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowServices /> </PrivateRoute>} />
     </Route>
   )
 )
