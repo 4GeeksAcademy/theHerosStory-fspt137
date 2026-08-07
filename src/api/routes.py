@@ -6,10 +6,10 @@ from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User, Mentor, Quest, Chat, ChatMessage, Habit, QuestTracking, Administrator, Service
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
-
+from functools import wraps
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt
 from flask_jwt_extended import JWTManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, JWTManager
@@ -20,12 +20,16 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
-
-@api.route("/hello", methods=["GET"])
-def handle_hello():
-    return jsonify({
-        "message": "Hello from the backend"
-    }), 200
+#definir admin_required
+def admin_required(fn):
+    @wraps(fn)
+    @jwt_required()
+    def wrapper(*args, **kwargs):
+        claims = get_jwt()
+        if claims.get("role") != "administrator":
+            return jsonify({"msg": "Acceso denegado: Se requiere rol de administrador"}), 403
+        return fn(*args, **kwargs)
+    return wrapper
 
 # User Methods
 # CREATE
@@ -639,7 +643,7 @@ def delete_quest_tracking(tracking_id):
 # Administrator Methods
 # READ
 
-
+@admin_required
 @api.route('/administrators', methods=['GET'])
 def ge_tall_administrator():
     admin = Administrator.query.all()
@@ -651,7 +655,7 @@ def ge_tall_administrator():
 
 # READ ID
 
-
+@admin_required
 @api.route('/administrators/<int:admin_id>', methods=['GET'])
 def get_administrator(admin_id):
     admin = db.session.get(Administrator, admin_id)
@@ -665,7 +669,7 @@ def get_administrator(admin_id):
 
 # POST
 
-
+@admin_required
 @api.route('/administrators', methods=['POST'])
 def create_administrators():
     body = request.get_json()
@@ -698,7 +702,7 @@ def create_administrators():
 
 # UPDATE
 
-
+@admin_required
 @api.route('/administrators/<int:admin_id>', methods=['PUT'])
 def update_administrator(admin_id):
     body = request.get_json()
@@ -739,7 +743,7 @@ def update_administrator(admin_id):
 
 # DELETE
 
-
+@admin_required
 @api.route('/administrators/<int:admin_id>', methods=['DELETE'])
 def delete_admin(admin_id):
     admin = db.session.get(Administrator, admin_id)
