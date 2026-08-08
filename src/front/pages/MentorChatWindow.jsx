@@ -6,7 +6,7 @@ export const MentorChatWindow = () => {
 
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
-    const [messages, setErrorMessages] = useState([]);
+    const [messages, setMessages] = useState([]); 
     const [content, setContent] = useState("");
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -32,12 +32,10 @@ export const MentorChatWindow = () => {
             })
             .then((data) => {
                 setMessages(data.messages || []);
-
             })
             .catch((error) => {
                 console.error(error);
                 setError(error.message);
-
             })
             .finally(() => {
                 setLoading(false);
@@ -46,7 +44,7 @@ export const MentorChatWindow = () => {
 
     useEffect(() => {
         getMessages();
-    }, [chaId]);
+    }, [chatId]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -61,7 +59,7 @@ export const MentorChatWindow = () => {
         fetch(`${backendUrl}/api/mentors/chats/${chatId}/messages`, {
             method: "POST",
             headers: {
-                "Content-Type": "applications/json",
+                "Content-Type": "application/json", 
                 Authorization: `Bearer ${mentorToken}`
             },
             body: JSON.stringify({
@@ -85,6 +83,7 @@ export const MentorChatWindow = () => {
                 setError(error.message);
             });
     };
+
     if (loading) {
         return (
             <div className="container py-5">
@@ -94,53 +93,42 @@ export const MentorChatWindow = () => {
     }
 
     return (
-        <div className="container py-5"
-            style={{ maxWidth: "700px" }}
-        >
+        <div className="container py-5" style={{ maxWidth: "700px" }}>
             <div className="d-flex justify-content-between align-items-center mb-4">
-
                 <h1>Chat #{chatId}</h1>
-                <Link
-                    to={`/mentors/users`}
-                    className="btn btn-outline-secondary"
-                >
-                    Back to Users
-                </Link>
+                <div className="d-flex gap-2">
+                    {/* Botón amarillo integrado */}
+                    <button 
+                        className="btn btn-warning btn-sm" 
+                        onClick={getMessages}
+                        title="Refresh messages"
+                    >
+                         Refresh
+                    </button>
+                    <Link to={`/mentors/users`} className="btn btn-outline-secondary">
+                        Back to Users
+                    </Link>
+                </div>
             </div>
+            
             {error && (
                 <div className="alert alert-danger">
                     {error}
                 </div>
             )}
 
-            <div
-                className="border rounded p-3 mb-3 bg-light"
-                style={{
-                    height: "350px",
-                    overflowY: "auto"
-                }}
-            >
-
+            <div className="border rounded p-3 mb-3 bg-light" style={{ height: "350px", overflowY: "auto" }}>
                 {messages.length === 0 ? (
-                    <p className="text-muted">
-                        There are no messages yet.
-                    </p>
+                    <p className="text-muted">There are no messages yet.</p>
                 ) : (
-
-                    messages.map((messages) => (
+                    messages.map((message) => ( 
                         <div
-                            key={messages.id}
-                            className={
-                                message.sender === "mentor"
-                                    ? "text-end mb-3"
-                                    : "text-start mb-3"
-                            }
+                            key={message.id}
+                            className={message.sender === "mentor" ? "text-end mb-3" : "text-start mb-3"}
                         >
                             <div>
                                 <strong>
-                                    {message.sender === "mentor"
-                                        ? "Mentor"
-                                        : "User"}
+                                    {message.sender === "mentor" ? "Mentor" : "User"}
                                 </strong>
                             </div>
 
@@ -158,8 +146,7 @@ export const MentorChatWindow = () => {
                 )}
             </div>
 
-            <form onSubmit={handleSubmit} >
-
+            <form onSubmit={handleSubmit}>
                 <div className="input-group">
                     <input
                         type="text"
@@ -168,10 +155,7 @@ export const MentorChatWindow = () => {
                         onChange={(event) => setContent(event.target.value)}
                         required
                     />
-                    <button
-                        type="submit"
-                        className="btn btn-primary"
-                    >
+                    <button type="submit" className="btn btn-primary">
                         Send
                     </button>
                 </div>
