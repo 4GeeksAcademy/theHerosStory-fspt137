@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { socket } from "../../socket";
 
 export const UserFlowChat = () => {
     const { mentorId } = useParams();
@@ -68,7 +69,24 @@ export const UserFlowChat = () => {
     }, [backendUrl, mentorId, userId]);
 
     useEffect(() => {
+        if (!chatId) return;
+        
         getMessages();
+
+        socket.emit("join_chat", { chat_id: chatId });
+
+        socket.on("receive_message", (newMessage) => {
+            if (Number(newMessage.chat_id) === Number(chatId)) {
+                setMessages((prevMessages) => {
+                    if (prevMessages.some(msg => msg.id === newMessage.id)) return prevMessages;
+                    return [...prevMessages, newMessage];
+                });
+            }
+        });
+
+        return () => {
+            socket.off("receive_message");
+        };
     }, [chatId]);
 
     const handleSend = (event) => {
@@ -85,9 +103,12 @@ export const UserFlowChat = () => {
             })
         })
             .then((response) => response.json())
-            .then(() => {
+            .then((data) => {
                 setContent("");
-                getMessages();
+                
+                const creado = data.message || data;
+                
+                socket.emit("send_message", creado);
             })
             .catch((error) => console.error(error));
     };

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { socket } from "../../socket";
 
 export const MentorChatWindow = () => {
     const { chatId } = useParams();
@@ -43,7 +44,24 @@ export const MentorChatWindow = () => {
     };
 
     useEffect(() => {
+        if (!chatId) return;
+        
         getMessages();
+
+        socket.emit("join_chat", { chat_id: chatId });
+
+        socket.on("receive_message", (newMessage) => {
+            if (Number(newMessage.chat_id) === Number(chatId)) {
+                setMessages((prevMessages) => {
+                    if (prevMessages.some(msg => msg.id === newMessage.id)) return prevMessages;
+                    return [...prevMessages, newMessage];
+                });
+            }
+        });
+
+        return () => {
+            socket.off("receive_message");
+        };
     }, [chatId]);
 
     const handleSubmit = (event) => {
@@ -76,7 +94,10 @@ export const MentorChatWindow = () => {
             })
             .then((data) => {
                 setContent("");
-                getMessages();
+                
+                const creado = data.message || data;
+                
+                socket.emit("send_message", creado);
             })
             .catch((error) => {
                 console.error(error);
@@ -97,7 +118,6 @@ export const MentorChatWindow = () => {
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h1>Chat #{chatId}</h1>
                 <div className="d-flex gap-2">
-                    {/* Botón amarillo integrado */}
                     <button 
                         className="btn btn-warning btn-sm" 
                         onClick={getMessages}
