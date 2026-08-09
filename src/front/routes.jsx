@@ -25,7 +25,7 @@ import { QuestTracking } from "./pages/QuestTracking";
 import { Users } from "./pages/Users"
 import { AddUser } from "./pages/AddUser"
 import { EditUser } from "./pages/EditUser"
-import { Habits } from "./pages/Habits";
+import { UserFlowHabits } from "./pages/UserFlowHabits";
 import { CreateHabit } from "./pages/CreateHabit";
 import { EditHabit } from "./pages/EditHabit";
 import { MentorLogIn } from "./pages/MentorLogIn";
@@ -39,6 +39,7 @@ import { EditAdministrator } from "./pages/EditAdministrator";
 import { AdminLogin } from "./pages/AdminLogin";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { PrivateRoute } from "./components/PrivateRoute";
+import { UserFlowRegister } from "./pages/UserFlowRegister";
 import { MentorRegister } from "./pages/MentorRegister";
 import { MentorServices } from "./pages/MentorServices";
 import { CreateMentorsService } from "./pages/CreateMentorsService";
@@ -46,7 +47,12 @@ import { EditMentorService } from "./pages/EditMentorService";
 import { MentorUsers } from "./pages/MentorUsers";
 import { MentorChatWindow } from "./pages/MentorChatWindow";
 import { LoginUser } from "./pages/LoginUser";
-import { DashboardShelter } from "./pages/DashboardShelter";
+import { UserFlowDashboard } from "./pages/UserFlowDashboard";
+import { UserFlowQuests } from "./pages/UserFlowQuests";
+import { UserFlowMentors } from "./pages/UserFlowMentors";
+import { UserFlowChat } from "./pages/UserFlowChat";
+import { UserFlowServices } from "./pages/UserFlowServices";
+import { MentorProfile } from "./pages/MentorProfile";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -72,26 +78,27 @@ export const router = createBrowserRouter(
       <Route path="/chats/:chatId" element={<ChatWindow />} />
       <Route path="/create-chat" element={<CreateChat />} />
       <Route path="/quests" element={<Quests />} />
-      <Route path="/quests/new" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><CreateQuest /></PrivateRoute>} />
-      <Route path="/quests/edit/:quest_id" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><EditQuest /></PrivateRoute>} />
-      <Route path="/quest-trackings" element={<QuestTracking />} />
+      <Route path="/quests/new" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <CreateQuest /> </PrivateRoute>} />
+      <Route path="/quests/edit/:quest_id" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <EditQuest /> </PrivateRoute>} />
+      <Route path="/quest-trackings" element={<QuestTracking />} />      
+      <Route path="/habits/user/:user_id" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowHabits /> </PrivateRoute>} />
+      <Route path="/habits/new" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <CreateHabit /> </PrivateRoute>} />
+      <Route path="/habits/edit/:habit_id" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <EditHabit /> </PrivateRoute>} />      
       <Route path="/quest-trackings/new" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><CreateQuestTracking /></PrivateRoute>} />
       <Route path="/quest-trackings/:tracking_id/edit" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><EditQuestTracking /></PrivateRoute>} />
       <Route path="/add-user" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><AddUser /></PrivateRoute>} />
-      <Route path="/edit-user/:id" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><EditUser /></PrivateRoute>} />
-      <Route path="/habits" element={<Habits />} />
-      <Route path="/habits/new" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><CreateHabit /></PrivateRoute>} />
-      <Route path="/habits/edit/:habit_id" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><EditHabit /></PrivateRoute>} />
+      <Route path="/edit-user/:id" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><EditUser /></PrivateRoute>} />     
       <Route path="/mentors/login" element={<MentorLogIn />} />
       <Route path="/mentors/dashboard/:mentor_id" element={<PrivateRoute tokenName="mentor_token" redirectTo="/mentors/login"> <MentorPrivateDashboard /> </PrivateRoute>} />
       <Route path="/services" element={<Services />} />
       <Route path="/services/edit/:service_id" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><EditService /></PrivateRoute>} />
       <Route path="/services/new" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><CreateService /></PrivateRoute>} />
       <Route path="/administrators" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><Administrators /></PrivateRoute>} />
-      <Route path="/administrators/new" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><CreateAdministrator/></PrivateRoute>} />
+      <Route path="/administrators/new" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><CreateAdministrator /></PrivateRoute>} />
       <Route path="/administrators/:admin_id/edit" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><EditAdministrator /></PrivateRoute>} />
       <Route path="/admin-login" element={<AdminLogin />} />
       <Route path="/admin-dashboard" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"> <AdminDashboard /> </PrivateRoute>} />
+      <Route path="/user-register" element={<UserFlowRegister />} />
       <Route path="/mentors/register" element={<MentorRegister />} />
       <Route path="/mentors/services" element={<PrivateRoute tokenName="mentor_token" redirectTo="/mentors/login"> <MentorServices /> </PrivateRoute>} />
       <Route path="/mentors/services/new" element={<PrivateRoute tokenName="mentor_token" redirectTo="/mentors/login"> <CreateMentorsService /> </PrivateRoute>} />
@@ -99,7 +106,12 @@ export const router = createBrowserRouter(
       <Route path="/mentors/users" element={<PrivateRoute tokenName="mentor_token" redirectTo="/mentors/login"> <MentorUsers /> </PrivateRoute>} />
       <Route path="/mentors/chats/:chatId" element={<PrivateRoute tokenName="mentor_token" redirectTo="/mentors/login"> <MentorChatWindow /> </PrivateRoute>} />
       <Route path="/login-user" element={<LoginUser />} />
-      <Route path="/dashboard-shelter" element={<PrivateRoute tokenName="shelterToken" redirectTo="/login-user"> <DashboardShelter /> </PrivateRoute>} />
+      <Route path="/user-dashboard" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowDashboard /> </PrivateRoute>} />
+      <Route path="/user-quests" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowQuests /> </PrivateRoute>} />
+      <Route path="/user-mentors" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowMentors /> </PrivateRoute>} />
+      <Route path="/user-chat/:mentorId" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowChat /> </PrivateRoute>} />
+      <Route path="/user-services" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowServices /> </PrivateRoute>} />
+      <Route path="/mentor/profile" element={<PrivateRoute tokenName="mentor_token" redirectTo="/mentors/login"> <MentorProfile /> </PrivateRoute>} />
     </Route>
   )
 )

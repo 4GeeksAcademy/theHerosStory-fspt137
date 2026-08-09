@@ -84,13 +84,19 @@ export const MentorPrivateDashboard = () => {
                     </p>
                 </div>
 
-                <button
-                    type="button"
-                    className="btn btn-outline-danger"
-                    onClick={logout}
-                >
-                    Logout
-                </button>
+                <div className="d-flex gap-2">
+                    <Link to="/mentor/profile" className="btn btn-primary">
+                        My profile
+                    </Link>
+
+                    <button
+                        type="button"
+                        className="btn btn-outline-danger"
+                        onClick={logout}
+                    >
+                        Logout
+                    </button>
+                </div>
             </div>
 
             <div className="row g-3">

@@ -1,0 +1,131 @@
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
+export const UserFlowChat = () => {
+    const { mentorId } = useParams();
+    const [messages, setMessages] = useState([]);
+    const [content, setContent] = useState("");
+    const [chatId, setChatId] = useState(null);
+    const [mentorName, setMentorName] = useState("");
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    const navigate = useNavigate();
+    const userId = localStorage.getItem("user_id");
+
+    const getMessages = () => {
+        if (!chatId || !backendUrl) return;
+
+        fetch(`${backendUrl}/api/chats/${chatId}/messages`)
+            .then(async (response) => {
+                if (!response.ok) {
+                    const text = await response.text();
+                    console.error("Chat messages fetch failed:", response.status, text);
+                    return;
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (data?.messages) {
+                    setMessages(data.messages);
+                }
+            })
+            .catch((error) => console.error(error));
+    };
+
+    useEffect(() => {
+        const ensureChat = async () => {
+            if (!backendUrl || !userId || !mentorId) return;
+
+            try {
+                const response = await fetch(`${backendUrl}/api/chats`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ user_id: Number(userId), mentor_id: Number(mentorId) })
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.msg || "Could not create chat");
+                }
+
+                const nextChatId = data.chat?.id || data.chat_id;
+                if (nextChatId) {
+                    setChatId(nextChatId);
+                }
+
+                if (data.chat?.mentor_id) {
+                    const mentorResponse = await fetch(`${backendUrl}/api/mentors/${data.chat.mentor_id}`);
+                    const mentorData = await mentorResponse.json();
+                    if (mentorResponse.ok) {
+                        setMentorName(mentorData.mentorname || "Mentor");
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        ensureChat();
+    }, [backendUrl, mentorId, userId]);
+
+    useEffect(() => {
+        getMessages();
+    }, [chatId]);
+
+    const handleSend = (event) => {
+        event.preventDefault();
+        if (!content.trim() || !chatId) return;
+
+        fetch(`${backendUrl}/api/chats/message`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                chat_id: Number(chatId),
+                sender: "user",
+                content
+            })
+        })
+            .then((response) => response.json())
+            .then(() => {
+                setContent("");
+                getMessages();
+            })
+            .catch((error) => console.error(error));
+    };
+
+    return (
+        <div className="container py-5" style={{ maxWidth: "700px" }}>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+                <h1>Chat with {mentorName || "mentor"}</h1>
+                <button className="btn btn-outline-secondary btn-sm" onClick={() => navigate("/user-mentors")}>Back</button>
+            </div>
+
+            <div className="border rounded p-3 mb-3 bg-light" style={{ height: "320px", overflowY: "auto" }}>
+                {messages.length === 0 ? (
+                    <p className="text-muted">Start the conversation.</p>
+                ) : (
+                    messages.map((message) => (
+                        <div key={message.id} className={message.sender === "user" ? "text-start" : "text-end"}>
+                            <p className={`d-inline-block rounded px-3 py-2 mb-2 ${message.sender === "user" ? "bg-primary text-white" : "bg-success text-white"}`}>
+                                {message.content}
+                            </p>
+                        </div>
+                    ))
+                )}
+            </div>
+
+            <form onSubmit={handleSend}>
+                <div className="input-group">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Write a message..."
+                        value={content}
+                        onChange={(event) => setContent(event.target.value)}
+                        required
+                    />
+                    <button type="submit" className="btn btn-primary">Send</button>
+                </div>
+            </form>
+        </div>
+    );
+};

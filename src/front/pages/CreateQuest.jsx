@@ -9,7 +9,6 @@ export const CreateQuest = () => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const navigate = useNavigate();
 
-
     const handleSubmit = (event) => {
         event.preventDefault();
 
@@ -17,10 +16,10 @@ export const CreateQuest = () => {
             title,
             description,
             status,
-            user_id: 1
+            user_id: localStorage.getItem("user_id")
         };
 
-        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/quests`, {
+        fetch(`${backendUrl}/api/quests`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -28,8 +27,7 @@ export const CreateQuest = () => {
             body: JSON.stringify(questData)
         })
             .then(async (response) => {
-
-                const data = await response.json();
+                const data = await response.json().catch(() => ({}));
                 console.log("Status:", response.status);
                 console.log("Respuesta del backend", data);
 
@@ -40,7 +38,7 @@ export const CreateQuest = () => {
             })
             .then((data) => {
                 console.log("quest creada", data);
-                navigate("/quests");
+                navigate("/user-quests");
             })
             .catch((error) => {
                 console.error("Error completo", error.message);

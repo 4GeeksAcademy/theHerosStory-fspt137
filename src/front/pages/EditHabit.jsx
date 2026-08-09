@@ -9,6 +9,7 @@ export const EditHabit = () => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const navigate = useNavigate();
     const { habit_id } = useParams();
+    const userId = localStorage.getItem("user_id");
 
 
     useEffect(() => {
@@ -53,7 +54,11 @@ export const EditHabit = () => {
                 return response.json();
             })
             .then(() => {
-                navigate("/habits");
+                if (userId) {
+                    navigate(`/habits/user/${userId}`);
+                } else {
+                    navigate("/login-user");
+                }
             })
             .catch((error) => {
                 console.error(error);
