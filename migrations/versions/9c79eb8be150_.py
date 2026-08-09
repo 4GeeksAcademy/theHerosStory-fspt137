@@ -1,14 +1,8 @@
 """empty message
 
-<<<<<<<< HEAD:migrations/versions/db4b22b0a33f_.py
-Revision ID: db4b22b0a33f
+Revision ID: 9c79eb8be150
 Revises: 
-Create Date: 2026-08-05 12:45:25.451979
-========
-Revision ID: 4e5b6c580ffe
-Revises: 
-Create Date: 2026-08-05 10:05:15.315776
->>>>>>>> develop:migrations/versions/4e5b6c580ffe_.py
+Create Date: 2026-08-07 18:24:33.127004
 
 """
 from alembic import op
@@ -16,11 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-<<<<<<<< HEAD:migrations/versions/db4b22b0a33f_.py
-revision = 'db4b22b0a33f'
-========
-revision = '4e5b6c580ffe'
->>>>>>>> develop:migrations/versions/4e5b6c580ffe_.py
+revision = '9c79eb8be150'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -80,8 +70,7 @@ def upgrade():
     sa.Column('title', sa.String(length=100), nullable=False),
     sa.Column('description', sa.String(length=500), nullable=False),
     sa.Column('status', sa.String(length=30), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.Column('habit_id', sa.Integer(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -90,6 +79,7 @@ def upgrade():
     sa.Column('title', sa.String(length=100), nullable=False),
     sa.Column('description', sa.String(length=500), nullable=False),
     sa.Column('price', sa.Integer(), nullable=False),
+    sa.Column('is_reserved', sa.Boolean(), nullable=False),
     sa.Column('mentor_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['mentor_id'], ['mentor.id'], ),
     sa.PrimaryKeyConstraint('id')

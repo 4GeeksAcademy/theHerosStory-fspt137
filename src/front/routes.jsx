@@ -52,6 +52,7 @@ import { UserFlowQuests } from "./pages/UserFlowQuests";
 import { UserFlowMentors } from "./pages/UserFlowMentors";
 import { UserFlowChat } from "./pages/UserFlowChat";
 import { UserFlowServices } from "./pages/UserFlowServices";
+import { UserFlowBook } from "./pages/UserFlowBook";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -119,6 +120,7 @@ export const router = createBrowserRouter(
       <Route path="/user-mentors" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowMentors /> </PrivateRoute>} />
       <Route path="/user-chat/:mentorId" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowChat /> </PrivateRoute>} />
       <Route path="/user-services" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowServices /> </PrivateRoute>} />
+      <Route path="/user-book/:serviceId" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"> <UserFlowBook /> </PrivateRoute>} />
     </Route>
   )
 )
