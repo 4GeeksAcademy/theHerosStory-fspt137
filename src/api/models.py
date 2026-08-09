@@ -221,4 +221,11 @@ class Service(db.Model):
             "description": self.description,
             "mentor_id": self.mentor_id,
             "price": self.price,
+            "mentor": {
+                "id": self.mentor.id,
+                "mentorname": self.mentor.mentorname,
+                "address": self.mentor.address,
+                "latitude": self.mentor.latitude,
+                "longitude": self.mentor.longitude
+            } if self.mentor else None
         }

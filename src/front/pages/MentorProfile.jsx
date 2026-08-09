@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 export const MentorProfile = () => {
     const navigate = useNavigate();
     const autocompleteContainerRef = useRef(null);
+    const mapContainerRef = useRef(null);
 
     const token = localStorage.getItem("mentor_token");
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -143,7 +144,7 @@ export const MentorProfile = () => {
                 document.head.appendChild(script);
 
                 await new Promise((resolve) => {
-                    script.onload = revolve;
+                    script.onload = resolve;
                 });
             }
 
@@ -175,6 +176,48 @@ export const MentorProfile = () => {
 
     }, []);
 
+    useEffect(() => {
+        const loadMap = async () => {
+            if (
+                !window.google ||
+                !mapContainerRef.current ||
+                !formData.latitude ||
+                !formData.longitude
+            ) {
+                return;
+            }
+            const { Map: GoogleMap } = await google.maps.importLibrary("maps");
+            const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+            const position = {
+                lat: Number(formData.latitude),
+                lng: Number(formData.longitude)
+            };
+
+            const map = new GoogleMap(mapContainerRef.current, {
+                center: position,
+                zoom: 15,
+                mapId: "DEMO_MAP_ID"
+            });
+            const marker = new AdvancedMarkerElement({
+                map: map,
+                position: position,
+                gmpDraggable: true,
+                title: "Drag marker to adjust location"
+            });
+
+            marker.addListener("dragend", () => {
+                const newPosition = marker.position;
+
+                setFormData((prev) => ({
+                    ...prev,
+                    latitude: newPosition.lat,
+                    longitude: newPosition.lng
+                }));
+            });
+        };
+        loadMap();
+    }, [formData.address]);
+
     return (
         <div className="container py-4">
             <div className="row justify-content-center">
@@ -200,14 +243,27 @@ export const MentorProfile = () => {
                                         </div>
                                     )}
                                 </div>
+
                                 <div className="mb-3">
-                                    <label className="form-label">Latitude:</label>
-                                    <input className="form-control" type="number" step="any" name="latitude" value={formData.latitude} onChange={handleChange} />
+                                   
+                                    <input className="form-control" type="hidden" step="any" name="latitude" value={formData.latitude} onChange={handleChange} />
                                 </div>
                                 <div className="mb-3">
-                                    <label className="form-label">Longitude:</label>
-                                    <input className="form-control" type="number" step="any" name="longitude" value={formData.longitude} onChange={handleChange} />
+                                    
+                                    <input className="form-control" type="hidden" step="any" name="longitude" value={formData.longitude} onChange={handleChange} />
                                 </div>
+                                {formData.latitude && formData.longitude && (
+                                    <div
+                                        ref={mapContainerRef}
+                                        style={{
+                                            width: "100%",
+                                            height: "300px",
+                                            marginTop: "15px",
+                                            marginBottom: "15px"
+                                        }}
+                                    >
+                                    </div>
+                                )}
                                 <div className="d-grid gap-2">
                                     <button className="btn btn-primary" type="submit">Save change</button>
                                     <button className="btn btn-outline-secondary" type="button" onClick={() => navigate(`/mentors/dashboard/${localStorage.getItem("mentor_id")}`)}>Back to Dashboard</button>
