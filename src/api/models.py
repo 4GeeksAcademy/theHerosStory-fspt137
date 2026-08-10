@@ -209,6 +209,7 @@ class Service(db.Model):
     title: Mapped[str] = mapped_column(String(100), nullable=False)
     description: Mapped[str] = mapped_column(String(500), nullable=False)
     price: Mapped[int] = mapped_column(nullable=False)
+    is_reserved: Mapped[bool] = mapped_column(Boolean(), nullable=False)
 
     mentor_id: Mapped[int] = mapped_column(
         ForeignKey("mentor.id"), nullable=True)
@@ -228,4 +229,5 @@ class Service(db.Model):
                 "latitude": self.mentor.latitude,
                 "longitude": self.mentor.longitude
             } if self.mentor else None
+            "is_reserved": self.is_reserved
         }

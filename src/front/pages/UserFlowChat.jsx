@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { socket } from "../../socket";
 
 export const UserFlowChat = () => {
     const { mentorId } = useParams();
@@ -68,7 +69,24 @@ export const UserFlowChat = () => {
     }, [backendUrl, mentorId, userId]);
 
     useEffect(() => {
+        if (!chatId) return;
+        
         getMessages();
+
+        socket.emit("join_chat", { chat_id: chatId });
+
+        socket.on("receive_message", (newMessage) => {
+            if (Number(newMessage.chat_id) === Number(chatId)) {
+                setMessages((prevMessages) => {
+                    if (prevMessages.some(msg => msg.id === newMessage.id)) return prevMessages;
+                    return [...prevMessages, newMessage];
+                });
+            }
+        });
+
+        return () => {
+            socket.off("receive_message");
+        };
     }, [chatId]);
 
     const handleSend = (event) => {
@@ -81,13 +99,16 @@ export const UserFlowChat = () => {
             body: JSON.stringify({
                 chat_id: Number(chatId),
                 sender: "user",
-                content
+                content: content.trim()
             })
         })
             .then((response) => response.json())
-            .then(() => {
+            .then((data) => {
                 setContent("");
-                getMessages();
+                
+                const creado = data.message || data;
+                
+                socket.emit("send_message", creado);
             })
             .catch((error) => console.error(error));
     };
@@ -95,19 +116,44 @@ export const UserFlowChat = () => {
     return (
         <div className="container py-5" style={{ maxWidth: "700px" }}>
             <div className="d-flex justify-content-between align-items-center mb-3">
-                <h1>Chat with {mentorName || "mentor"}</h1>
-                <button className="btn btn-outline-secondary btn-sm" onClick={() => navigate("/user-mentors")}>Back</button>
+                <h1>Chat with {mentorName || "Mentor"}</h1>
+                <div className="d-flex gap-2">
+                    <button 
+                        className="btn btn-warning btn-sm" 
+                        onClick={getMessages}
+                        title="Refresh messages"
+                    >
+                         Refresh
+                    </button>
+                    <button className="btn btn-outline-secondary btn-sm" onClick={() => navigate("/user-mentors")}>
+                        Back
+                    </button>
+                </div>
             </div>
 
-            <div className="border rounded p-3 mb-3 bg-light" style={{ height: "320px", overflowY: "auto" }}>
+            <div className="border rounded p-3 mb-3 bg-light" style={{ height: "350px", overflowY: "auto" }}>
                 {messages.length === 0 ? (
                     <p className="text-muted">Start the conversation.</p>
                 ) : (
                     messages.map((message) => (
-                        <div key={message.id} className={message.sender === "user" ? "text-start" : "text-end"}>
-                            <p className={`d-inline-block rounded px-3 py-2 mb-2 ${message.sender === "user" ? "bg-primary text-white" : "bg-success text-white"}`}>
+                        <div 
+                            key={message.id} 
+                            className={message.sender === "user" ? "text-end mb-3" : "text-start mb-3"}
+                        >
+                            <div>
+                                <strong>
+                                    {message.sender === "user" ? "You" : mentorName || "Mentor"}
+                                </strong>
+                            </div>
+                            <span 
+                                className={
+                                    message.sender === "user" 
+                                        ? "d-inline-block bg-primary text-white rounded px-3 py-2" 
+                                        : "d-inline-block bg-white border rounded px-3 py-2"
+                                }
+                            >
                                 {message.content}
-                            </p>
+                            </span>
                         </div>
                     ))
                 )}

@@ -20,9 +20,14 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
-# definir admin_required
 
+@api.route("/hello", methods=["GET"])
+def handle_hello():
+    return jsonify({
+        "message": "Hello from the backend"
+    }), 200
 
+#definir admin_required
 def admin_required(fn):
     @wraps(fn)
     @jwt_required()
@@ -35,13 +40,6 @@ def admin_required(fn):
 
 # User Methods
 # CREATE
-
-
-@api.route("/hello", methods=["GET"])
-def handle_hello():
-    return jsonify({
-        "message": "Hello from the backend"
-    }), 200
 
 
 @api.route('/users', methods=['POST'])
@@ -1055,6 +1053,16 @@ def get_logged_mentor_service_id(service_id):
 
 
 # CREATE
+@api.route('/services/<int:service_id>/reserve', methods=['PUT'])
+def reserve_service(service_id):
+    service = Service.query.get(service_id)
+    if service is None:
+        return jsonify({"msg": "Service not found"}), 404
+        
+    service.is_reserved = True
+    db.session.commit()
+    
+    return jsonify(service.serialize()), 200
 
 
 @api.route('/mentors/services', methods=['POST'])
@@ -1326,3 +1334,4 @@ def update_mentor_profile():
     db.session.commit()
 
     return jsonify(mentor.serialize()), 200
+
