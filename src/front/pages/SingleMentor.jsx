@@ -18,13 +18,21 @@ export const SingleMentor = props => {
     function getMentor() {
 
         fetch(backendUrl + '/api/mentors/' + mentorId)
-            .then((response) => response.json())
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error: ${response.status}`);
+                }
+                return response.json();
+            })
             .then((data) => setMentor(data))
+            .catch((error) => {
+                console.error("Error loading mentor:", error);
+            });
     }
 
     useEffect(() => {
         getMentor()
-    }, [])
+    }, [mentorId])
 
     return (
         <div className="container text-center">

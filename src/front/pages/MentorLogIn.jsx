@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 
 export const MentorLogIn = () => {
@@ -42,26 +42,52 @@ export const MentorLogIn = () => {
                 alert(error.message || "No se pudo iniciar sesión");
             });
     }
-
     return (
-        <div>
-            <form onSubmit={sendData}>
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    required
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    required
-                />
-                <button type="submit">LogIn</button>
-            </form>
+        <div className="container py-5">
+            <div className="row justify-content-center">
+                <div className="col-md-6 col-lg-4">
+                    <h1 className="mb-4 text-center">Mentor Login</h1>
+
+                    <form onSubmit={sendData}>
+                        <div className="mb-3">
+                            <label htmlFor="email" className="form-label">
+                                Email
+                            </label>
+
+                            <input
+                                id="email"
+                                type="email"
+                                className="form-control"
+                                value={email}
+                                onChange={(event) => setEmail(event.target.value)}
+                                required
+                            >
+                            </input>
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="password" className="form-label">
+                                Password
+                            </label>
+
+                            <input
+                                id="password"
+                                type="password"
+                                className="form-control"
+                                value={password}
+                                onChange={(event) => setPassword(event.target.value)}
+                                required
+                            >
+                            </input>
+                        </div>
+
+                        <button type="submit" className="btn btn-primary">Login</button>
+                        <Link to="/mentors/register" className="btn btn-outline-secondary ms-2">
+                            Register
+                        </Link>
+                    </form>
+                </div>
+            </div>
         </div>
     );
 };

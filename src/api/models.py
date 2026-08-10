@@ -44,6 +44,9 @@ class Mentor(db.Model):
         String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(250), nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
+    address: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    latitude: Mapped[float | None] = mapped_column(nullable=True)
+    longitude: Mapped[float | None] = mapped_column(nullable=True)
 
     # Relación para acceder a los chats del mentor
     chats: Mapped[list["Chat"]] = relationship(
@@ -58,6 +61,9 @@ class Mentor(db.Model):
             "mentorname": self.mentorname,
             "email": self.email,
             "is_active": self.is_active,
+            "address": self.address,
+            "latitude": self.latitude,
+            "longitude": self.longitude
         }
 
 
@@ -216,5 +222,12 @@ class Service(db.Model):
             "description": self.description,
             "mentor_id": self.mentor_id,
             "price": self.price,
+            "mentor": {
+                "id": self.mentor.id,
+                "mentorname": self.mentor.mentorname,
+                "address": self.mentor.address,
+                "latitude": self.mentor.latitude,
+                "longitude": self.mentor.longitude
+            } if self.mentor else None
             "is_reserved": self.is_reserved
         }

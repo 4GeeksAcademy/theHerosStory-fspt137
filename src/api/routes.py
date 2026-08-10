@@ -706,6 +706,7 @@ def delete_quest_tracking(tracking_id):
 # Administrator Methods
 # READ
 
+
 @admin_required
 @api.route('/administrators', methods=['GET'])
 def ge_tall_administrator():
@@ -717,6 +718,7 @@ def ge_tall_administrator():
     ]), 200
 
 # READ ID
+
 
 @admin_required
 @api.route('/administrators/<int:admin_id>', methods=['GET'])
@@ -731,6 +733,7 @@ def get_administrator(admin_id):
     return jsonify(admin.serialize()), 200
 
 # POST
+
 
 @admin_required
 @api.route('/administrators', methods=['POST'])
@@ -764,6 +767,7 @@ def create_administrators():
     return jsonify(new_administrator.serialize()), 201
 
 # UPDATE
+
 
 @admin_required
 @api.route('/administrators/<int:admin_id>', methods=['PUT'])
@@ -805,6 +809,7 @@ def update_administrator(admin_id):
     return jsonify(admin.serialize()), 200
 
 # DELETE
+
 
 @admin_required
 @api.route('/administrators/<int:admin_id>', methods=['DELETE'])
@@ -1271,6 +1276,7 @@ def send_mentor_chat_message(chat_id):
         "message": new_message.serialize()
     }), 201
 
+
 @api.route('/login', methods=['POST'])
 def login_user():
     body = request.get_json()
@@ -1288,4 +1294,44 @@ def login_user():
         "user": user.serialize()
     }), 200
 
+# MENTOR PROFILE METHODS
+# READ
+
+
+@api.route("/mentor/profile", methods=["GET"])
+@jwt_required()
+def get_mentor_profile():
+    mentor_email = get_jwt_identity()
+
+    mentor = Mentor.query.filter_by(email=mentor_email).first()
+
+    if mentor is None:
+        return jsonify({"msg": "Mentor not found"}), 404
+
+    return jsonify(mentor.serialize()), 200
+
+# UPDATE
+
+
+@api.route('/mentor/profile', methods=['PUT'])
+@jwt_required()
+def update_mentor_profile():
+    mentor_email = get_jwt_identity()
+
+    mentor = Mentor.query.filter_by(email=mentor_email).first()
+
+    if not mentor:
+        return jsonify({"error": "Mentor not found"}), 404
+
+    data = request.get_json()
+
+    mentor.mentorname = data.get("mentorname", mentor.mentorname)
+    mentor.email = data.get("email", mentor.email)
+    mentor.address = data.get("address", mentor.address)
+    mentor.latitude = data.get("latitude", mentor.latitude)
+    mentor.longitude = data.get("longitude", mentor.longitude)
+
+    db.session.commit()
+
+    return jsonify(mentor.serialize()), 200
 
