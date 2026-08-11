@@ -27,7 +27,9 @@ def handle_hello():
         "message": "Hello from the backend"
     }), 200
 
-#definir admin_required
+# definir admin_required
+
+
 def admin_required(fn):
     @wraps(fn)
     @jwt_required()
@@ -1058,10 +1060,10 @@ def reserve_service(service_id):
     service = Service.query.get(service_id)
     if service is None:
         return jsonify({"msg": "Service not found"}), 404
-        
+
     service.is_reserved = True
     db.session.commit()
-    
+
     return jsonify(service.serialize()), 200
 
 
@@ -1288,7 +1290,7 @@ def login_user():
 
     if not user or user.password != password:
         return jsonify({"msg": "Correo o contraseña incorrectos"}), 401
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
     return jsonify({
         "access_token": access_token,
         "user": user.serialize()
@@ -1335,3 +1337,46 @@ def update_mentor_profile():
 
     return jsonify(mentor.serialize()), 200
 
+# USER PROFILE METHODS
+# READ
+
+
+@api.route("/user/profile", methods=["GET"])
+@jwt_required()
+def get_user_profile():
+    current_user_id = int(get_jwt_identity())
+
+    user = User.query.get(current_user_id)
+
+    if user is None:
+        return jsonify({"msg": "User not found"}), 404
+
+    return jsonify(user.serialize()), 200
+
+# UPDATE
+
+
+@api.route('/user/profile', methods=['PUT'])
+@jwt_required()
+def update_user_profile():
+    current_user_id = int(get_jwt_identity())
+
+    user = User.query.get(current_user_id)
+
+    if user is None:
+        return jsonify({"msg": "User not found"}), 404
+
+    data = request.get_json()
+
+    user.username = data.get("username", user.username)
+    user.email = data.get("email", user.email)
+    user.address = data.get("address", user.address)
+    user.latitude = data.get("latitude", user.latitude)
+    user.longitude = data.get("longitude", user.longitude)
+
+    db.session.commit()
+
+    return jsonify({
+        "msg": "User profile updated",
+        "user": user.serialize()
+    }), 200

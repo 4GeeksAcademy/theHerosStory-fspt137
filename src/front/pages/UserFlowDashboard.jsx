@@ -30,6 +30,10 @@ export const UserFlowDashboard = () => {
                     <button className="btn btn-primary">Services</button>
                 </Link>
 
+                <Link to="/user/profile" className="btn btn-primary">
+                    My profile
+                </Link>
+
                 <button
                     onClick={handleLogout}
                     className="btn btn-danger mt-3 w-25"
