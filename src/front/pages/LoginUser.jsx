@@ -21,7 +21,7 @@ export const LoginUser = () => {
                 localStorage.setItem("user_token", data.access_token);
                 localStorage.setItem("user_id", data.user.id);
                 console.log(data)
-                navigate("/user-dashboard");
+                navigate(`/user-dashboard/${data.user.id}`);
             } else {
                 alert("Error al iniciar sesión. Comprueba tus datos.");
             }

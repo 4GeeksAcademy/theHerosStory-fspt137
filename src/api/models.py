@@ -15,6 +15,9 @@ class User(db.Model):
         String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
+    address: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    latitude: Mapped[float | None] = mapped_column(nullable=True)
+    longitude: Mapped[float | None] = mapped_column(nullable=True)
 
     # Relación para acceder a los chats del usuario
     chats: Mapped[list["Chat"]] = relationship(
@@ -33,6 +36,9 @@ class User(db.Model):
             "username": self.username,
             "email": self.email,
             "is_active": self.is_active,
+            "address": self.address,
+            "latitude": self.latitude,
+            "longitude": self.longitude
         }
 
 
@@ -227,7 +233,7 @@ class Service(db.Model):
                 "mentorname": self.mentor.mentorname,
                 "address": self.mentor.address,
                 "latitude": self.mentor.latitude,
-                "longitude": self.mentor.longitude
+                "longitude": self.mentor.longitude,
             } if self.mentor else None
-            "is_reserved": self.is_reserved
+
         }
