@@ -13,6 +13,7 @@ from flask_jwt_extended import jwt_required, get_jwt
 from flask_jwt_extended import JWTManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, JWTManager
+from math import radians, sin, cos, sqrt, atan2
 
 
 api = Blueprint('api', __name__)
@@ -1099,6 +1100,7 @@ def create_logged_mentor_service():
         title=title,
         description=description,
         price=price,
+        is_reserved=False,
         mentor_id=mentor.id
     )
 
@@ -1380,3 +1382,67 @@ def update_user_profile():
         "msg": "User profile updated",
         "user": user.serialize()
     }), 200
+
+# MENTOR SEARCH METHODS
+# funcion para calcular distancia
+
+
+def calculate_distance(lat1, lon1, lat2, lon2):
+    earth_radius = 6371
+
+    lat1 = radians(float(lat1))
+    lon1 = radians(float(lon1))
+    lat2 = radians(float(lat2))
+    lon2 = radians(float(lon2))
+
+    difference_lat = lat2 - lat1
+    difference_lon = lon2 - lon1
+
+    a = (
+        sin(difference_lat / 2) ** 2
+        + cos(lat1) * cos(lat2) * sin(difference_lon / 2) ** 2
+    )
+
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+    return earth_radius * c
+
+
+# READ
+
+
+@api.route("/mentors/nearby", methods=["GET"])
+@jwt_required()
+def get_nearby_mentors():
+    current_user_id = int(get_jwt_identity())
+
+    user = User.query.get(current_user_id)
+
+    if user is None:
+        return jsonify({"msg": "User not found"}), 404
+
+    if user.latitude is None or user.longitude is None:
+        return jsonify({"msg": "User location not found"}), 400
+
+    mentors = Mentor.query.filter(
+        Mentor.latitude.isnot(None),
+        Mentor.longitude.isnot(None)
+    ).all()
+
+    nearby_mentors = []
+
+    for mentor in mentors:
+        distance = calculate_distance(
+            user.latitude,
+            user.longitude,
+            mentor.latitude,
+            mentor.longitude
+        )
+        mentor_data = mentor.serialize()
+        mentor_data["distance"] = round(distance, 2)
+
+        nearby_mentors.append(mentor_data)
+
+        nearby_mentors.sort(key=lambda mentor: mentor["distance"])
+
+    return jsonify(nearby_mentors), 200
