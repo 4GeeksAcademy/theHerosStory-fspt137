@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 
 export const Navbar = () => {
 	const mentorId = localStorage.getItem("mentor_id");
+	const userId = localStorage.getItem("user_id");
 	const dashboardPath = mentorId ? `/mentors/dashboard/${mentorId}` : "/mentors/login";
 
 	return (
@@ -23,8 +24,8 @@ export const Navbar = () => {
 					<Link to="/quest-trackings">
 						<button className="btn btn-primary">Quest tracking</button>
 					</Link>
-					<Link to="/habits">
-						<button className="btn btn-primary">Habits</button>
+					<Link to={userId ? `/habits/user/${userId}` : "/login-user"}>
+    					<button className="btn btn-primary">Habits</button>
 					</Link>
 					<Link to="/services">
 						<button className="btn btn-primary">Services</button>

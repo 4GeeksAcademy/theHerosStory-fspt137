@@ -5,18 +5,19 @@ export const EditQuest = () => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [status, setStatus] = useState("pending");
+    const [imageFile, setImageFile] = useState(null);
+    const [currentImage, setCurrentImage] = useState("");
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const navigate = useNavigate();
     const { quest_id } = useParams();
     const userId = localStorage.getItem("user_id");
 
-
     useEffect(() => {
         fetch(`${backendUrl}/api/quests/${quest_id}`)
             .then((response) => {
                 if (!response.ok) {
-                    throw new Error("Quest not found")
+                    throw new Error("Quest not found");
                 }
                 return response.json();
             })
@@ -24,13 +25,14 @@ export const EditQuest = () => {
                 setTitle(data.title);
                 setDescription(data.description);
                 setStatus(data.status);
+                setCurrentImage(data.image_url || "");
             })
             .catch((error) => {
                 console.error(error);
             });
     }, [backendUrl, quest_id]);
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         const questData = {
@@ -39,30 +41,45 @@ export const EditQuest = () => {
             status
         };
 
-
-        fetch(`${backendUrl}/api/quests/${quest_id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(questData)
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Error update quest");
-                }
-                return response.json();
-            })
-            .then(() => {
-                if (userId) {
-                    navigate("/user-quests");
-                } else {
-                    navigate("/login-user");
-                }
-            })
-            .catch((error) => {
-                console.error(error);
+        try {
+            // 1. Actualizamos los datos de texto de la quest
+            const response = await fetch(`${backendUrl}/api/quests/${quest_id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(questData)
             });
+
+            if (!response.ok) {
+                throw new Error("Error update quest");
+            }
+
+            // 2. Si el usuario ha seleccionado una imagen, la subimos
+            if (imageFile) {
+                const formData = new FormData();
+                formData.append("file", imageFile);
+
+                const imageResponse = await fetch(`${backendUrl}/api/quests/${quest_id}/image`, {
+                    method: "PUT",
+                    body: formData
+                });
+
+                if (!imageResponse.ok) {
+                    throw new Error("Error uploading quest image");
+                }
+            }
+
+            // 3. Redirección final
+            if (userId) {
+                navigate("/user-quests");
+            } else {
+                navigate("/login-user");
+            }
+
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
@@ -105,6 +122,25 @@ export const EditQuest = () => {
                         <option value="in_progress">In progress</option>
                         <option value="completed">Completed</option>
                     </select>
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">Quest Image</label>
+                    {currentImage && (
+                        <div className="mb-2">
+                            <img 
+                                src={currentImage} 
+                                alt="Current quest" 
+                                style={{ width: "80px", height: "80px", objectFit: "cover" }} 
+                                className="rounded shadow-sm"
+                            />
+                        </div>
+                    )}
+                    <input
+                        type="file"
+                        className="form-control"
+                        onChange={(event) => setImageFile(event.target.files[0])}
+                    />
                 </div>
 
                 <button type="submit" className="btn btn-primary">

@@ -6,6 +6,8 @@ export const EditService = () => {
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
     const [mentorId, setMentorId] = useState("");
+    const [imageFile, setImageFile] = useState(null);
+    const [currentImage, setCurrentImage] = useState("");
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const navigate = useNavigate();
@@ -24,13 +26,14 @@ export const EditService = () => {
                 setDescription(data.description);
                 setPrice(data.price);
                 setMentorId(data.mentor_id || "");
+                setCurrentImage(data.image_url || "");
             })
             .catch((error) => {
                 console.error(error);
             });
     }, [backendUrl, service_id]);
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         const serviceData = {
@@ -40,25 +43,41 @@ export const EditService = () => {
             mentor_id: mentorId ? Number(mentorId) : null
         };
 
-        fetch(`${backendUrl}/api/services/${service_id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(serviceData)
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Error updating service");
-                }
-                return response.json();
-            })
-            .then(() => {
-                navigate("/services");
-            })
-            .catch((error) => {
-                console.error(error);
+        try {
+            // 1. Actualizar los datos del servicio
+            const response = await fetch(`${backendUrl}/api/services/${service_id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(serviceData)
             });
+
+            if (!response.ok) {
+                throw new Error("Error updating service");
+            }
+
+            // 2. Si se seleccionó una imagen, subirla mediante FormData
+            if (imageFile) {
+                const formData = new FormData();
+                formData.append("file", imageFile);
+
+                const imageResponse = await fetch(`${backendUrl}/api/services/${service_id}/image`, {
+                    method: "PUT",
+                    body: formData
+                });
+
+                if (!imageResponse.ok) {
+                    throw new Error("Error uploading service image");
+                }
+            }
+
+            // 3. Redirección final
+            navigate("/services");
+
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
@@ -106,6 +125,25 @@ export const EditService = () => {
                         className="form-control"
                         value={mentorId}
                         onChange={(event) => setMentorId(event.target.value)}
+                    />
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">Service Image</label>
+                    {currentImage && (
+                        <div className="mb-2">
+                            <img 
+                                src={currentImage} 
+                                alt="Current service" 
+                                style={{ width: "80px", height: "80px", objectFit: "cover" }} 
+                                className="rounded shadow-sm"
+                            />
+                        </div>
+                    )}
+                    <input
+                        type="file"
+                        className="form-control"
+                        onChange={(event) => setImageFile(event.target.files[0])}
                     />
                 </div>
 

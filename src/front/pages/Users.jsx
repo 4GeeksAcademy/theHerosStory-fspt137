@@ -25,7 +25,7 @@ export const Users = props => {
             });
             if (!resp.ok) throw new Error("Error al eliminar el usuario");
             
-            // Actualizamos la lista localmente después de borrar
+            
             setUsers(users.filter(user => user.id !== id));
         } catch (error) {
             console.error("Error:", error);
@@ -58,7 +58,16 @@ export const Users = props => {
                             <div className="col-md-4 mb-3" key={user.id}>
                                 <div className="card shadow-sm">
                                     <div className="card-body">
-                                        <h5 className="card-title">Usuario #{user.id}</h5>
+                                        {/* Avatar añadido */}
+                                        <div className="text-center mb-3">
+                                            <img 
+                                                src={user.avatar_url || "https://res.cloudinary.com/x4zvzcsx/image/upload/f_auto,q_auto/307ce493-b254-4b2d-8ba4-d12c080d6651"} 
+                                                alt="Avatar" 
+                                                className="rounded-circle shadow-sm" 
+                                                style={{ width: "80px", height: "80px", objectFit: "cover" }}
+                                            />
+                                        </div>
+                                        <h5 className="card-title text-center">Usuario #{user.id}</h5>
                                         <p className="card-text">
                                             <strong>Email:</strong> {user.email}
                                         </p>

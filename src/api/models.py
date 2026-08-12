@@ -18,7 +18,7 @@ class User(db.Model):
     address: Mapped[str | None] = mapped_column(String(255), nullable=True)
     latitude: Mapped[float | None] = mapped_column(nullable=True)
     longitude: Mapped[float | None] = mapped_column(nullable=True)
-
+    avatar_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
     # Relación para acceder a los chats del usuario
     chats: Mapped[list["Chat"]] = relationship(
         back_populates="user", cascade="all, delete-orphan")
@@ -38,7 +38,8 @@ class User(db.Model):
             "is_active": self.is_active,
             "address": self.address,
             "latitude": self.latitude,
-            "longitude": self.longitude
+            "longitude": self.longitude,
+            "avatar_url": self.avatar_url
         }
 
 
@@ -79,6 +80,10 @@ class Quest(db.Model):
     description: Mapped[str] = mapped_column(String(500), nullable=False)
     status: Mapped[str] = mapped_column(
         String(30), nullable=False, default="pending")
+    
+    # --- CAMPO NUEVO AÑADIDO ---
+    image_url: Mapped[str] = mapped_column(String(255), nullable=True)
+
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
     user: Mapped["User"] = relationship(back_populates="quests")
 
@@ -93,19 +98,23 @@ class Quest(db.Model):
             "description": self.description,
             "status": self.status,
             "user_id": self.user_id,
+            "image_url": self.image_url,  # --- AÑADIDO AQUÍ ---
             "trackings": [
                 tracking.serialize()
                 for tracking in self.trackings
             ]
         }
 
-
 class Habit(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str] = mapped_column(String(100), nullable=False)
     description: Mapped[str] = mapped_column(String(500), nullable=False)
     status: Mapped[str] = mapped_column(
-        String(30), nullable=False, default="pending")
+        String(30), nullable=False, default="pending"
+    )
+    
+    # --- CAMPO NUEVO AÑADIDO ---
+    image_url: Mapped[str] = mapped_column(String(255), nullable=True)
 
     user: Mapped["User"] = relationship(back_populates="habits")
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
@@ -117,8 +126,8 @@ class Habit(db.Model):
             "description": self.description,
             "status": self.status,
             "user_id": self.user_id,
+            "image_url": self.image_url,  
         }
-
 
 class Chat(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -217,6 +226,9 @@ class Service(db.Model):
     price: Mapped[int] = mapped_column(nullable=False)
     is_reserved: Mapped[bool] = mapped_column(Boolean(), nullable=False)
 
+    # --- CAMPO NUEVO AÑADIDO ---
+    image_url: Mapped[str] = mapped_column(String(255), nullable=True)
+
     mentor_id: Mapped[int] = mapped_column(
         ForeignKey("mentor.id"), nullable=True)
     mentor: Mapped["Mentor"] = relationship(back_populates="services")
@@ -228,6 +240,7 @@ class Service(db.Model):
             "description": self.description,
             "mentor_id": self.mentor_id,
             "price": self.price,
+            "image_url": self.image_url,  # --- AÑADIDO AQUÍ ---
             "mentor": {
                 "id": self.mentor.id,
                 "mentorname": self.mentor.mentorname,

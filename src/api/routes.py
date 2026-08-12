@@ -1,6 +1,8 @@
 """
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
+import cloudinary.uploader
+
 from datetime import datetime
 from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User, Mentor, Quest, Chat, ChatMessage, Habit, QuestTracking, Administrator, Service
@@ -107,6 +109,34 @@ def update_user(id):
 
     return jsonify(user.serialize()), 200
 
+@api.route('/users/<int:id>/avatar', methods=['PUT'])
+def update_user_avatar(id):
+    user = User.query.get(id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part"}), 400
+    
+    file = request.files['file']
+
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+
+    try:
+        upload_result = cloudinary.uploader.upload(file)
+        avatar_url = upload_result.get('secure_url')
+
+        user.avatar_url = avatar_url
+        db.session.commit()
+
+        return jsonify({
+            "message": "Avatar updated successfully",
+            "user": user.serialize()
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # DELETE
 @api.route('/users/<int:id>', methods=['DELETE'])
@@ -325,6 +355,30 @@ def update_quest(quest_id):
 
     return jsonify(quest.serialize()), 200
 
+@api.route('/quests/<int:quest_id>/image', methods=['PUT'])
+def upload_quest_image(quest_id):
+    quest = Quest.query.get_or_404(quest_id)
+    
+    if 'file' not in request.files:
+        return jsonify({"error": "No se ha enviado ningún archivo"}), 400
+        
+    file = request.files['file']
+    
+    if file.filename == '':
+        return jsonify({"error": "El archivo no tiene nombre"}), 400
+
+    # Subimos la imagen a Cloudinary
+    upload_result = cloudinary.uploader.upload(file)
+    
+    # Guardamos la URL en la base de datos
+    quest.image_url = upload_result.get('secure_url')
+    db.session.commit()
+    
+    return jsonify({
+        "message": "Imagen de quest actualizada con éxito",
+        "quest": quest.serialize()
+    }), 200
+
 # DELETE
 
 
@@ -448,6 +502,30 @@ def update_habit(habit_id):
     db.session.commit()
 
     return jsonify(habit.serialize()), 200
+
+@api.route('/habits/<int:habit_id>/image', methods=['PUT'])
+def upload_habit_image(habit_id):
+    habit = Habit.query.get_or_404(habit_id)
+    
+    if 'file' not in request.files:
+        return jsonify({"error": "No se ha enviado ningún archivo"}), 400
+        
+    file = request.files['file']
+    
+    if file.filename == '':
+        return jsonify({"error": "El archivo no tiene nombre"}), 400
+
+    # Subimos la imagen a Cloudinary
+    upload_result = cloudinary.uploader.upload(file)
+    
+    # Guardamos la URL en la base de datos
+    habit.image_url = upload_result.get('secure_url')
+    db.session.commit()
+    
+    return jsonify({
+        "message": "Imagen de hábito actualizada con éxito",
+        "habit": habit.serialize()
+    }), 200
 
 
 #  DELETE
@@ -993,6 +1071,29 @@ def update_service(service_id):
     db.session.commit()
     return jsonify(service.serialize()), 200
 
+@api.route('/services/<int:service_id>/image', methods=['PUT'])
+def upload_service_image(service_id):
+    service = Service.query.get_or_404(service_id)
+    
+    if 'file' not in request.files:
+        return jsonify({"error": "No se ha enviado ningún archivo"}), 400
+        
+    file = request.files['file']
+    
+    if file.filename == '':
+        return jsonify({"error": "El archivo no tiene nombre"}), 400
+
+    # Subimos la imagen a Cloudinary
+    upload_result = cloudinary.uploader.upload(file)
+    
+    # Guardamos la URL en la base de datos
+    service.image_url = upload_result.get('secure_url')
+    db.session.commit()
+    
+    return jsonify({
+        "message": "Imagen de servicio actualizada con éxito",
+        "service": service.serialize()
+    }), 200
 
 # DELETE
 @api.route('/services/<int:service_id>', methods=['DELETE'])
