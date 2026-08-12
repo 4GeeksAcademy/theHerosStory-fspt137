@@ -105,6 +105,8 @@ export const UserFlowMentors = () => {
                                     <h5 className="mb-1">{mentor.mentorname}</h5>
                                     <p className="mb-1">{mentor.email}</p>
                                     <p className="mb-1">{mentor.address}</p>
+                                    <p className="mb-1">{mentor.category}</p>
+                                    <p className="mb-1">{mentor.tag}</p>
                                     <small className="text-muted" > {mentor.distance} km away</small>
                                 </div>
                                 <Link to={`/user-chat/${mentor.id}`} className="btn btn-primary btn-sm">

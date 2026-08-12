@@ -52,11 +52,6 @@ setup_commands(app)
 # Add all endpoints form the API with a "api" prefix
 app.register_blueprint(api, url_prefix='/api')
 
-# =========================================================================
-# EVENTOS DE SOCKET.IO PARA CHAT EN TIEMPO REAL
-# =========================================================================
-
-
 @socketio.on('join_chat')
 def handle_join_chat(data):
     """Event to join a specific room based on chat id."""
@@ -73,11 +68,9 @@ def handle_send_message(message_data):
     chat_id = message_data.get('chat_id')
     if chat_id:
         room = f"chat_{chat_id}"
-        # Se retransmite a la sala correspondiente para que impacte en los dos Reacts
         emit('receive_message', message_data, to=room)
         print(f"[SOCKETIO] Broadcasted message to room: {room}")
 
-# =========================================================================
 
 # Handle/serialize errors like a JSON object
 

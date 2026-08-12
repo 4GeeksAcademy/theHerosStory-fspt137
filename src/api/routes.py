@@ -151,10 +151,9 @@ def delete_user(id):
 
     return jsonify({"msg": f"User with ID {id} succesfully deleted"}), 200
 
+
 # Mentor Methods
 # CREATE
-
-
 @api.route('/mentors', methods=['POST'])
 def create_mentor():
     body = request.get_json(silent=True) or {}
@@ -162,28 +161,22 @@ def create_mentor():
     mentorname = body.get("mentorname")
     email = body.get("email")
     password = body.get("password")
+    category = body.get("category") 
+    tag = body.get("tag")           
 
-    if not body.get('mentorname') or not body.get('email') or not body.get('password'):
+    if not mentorname or not email or not password:
         return jsonify({"msg": "mentorname, email and password are required"}), 400
 
     existing_email = Mentor.query.filter_by(email=email).first()
-
     if existing_email is not None:
-        return jsonify({
-            "msg": "Email already exists"
-        }), 409
-
-    existing_mentor = Mentor.query.filter_by(email=email).first()
-
-    if existing_mentor is not None:
-        return jsonify({
-            "msg": "Email already exists"
-        }), 409
+        return jsonify({"msg": "Email already exists"}), 409
 
     new_mentor = Mentor(
         mentorname=mentorname,
         email=email,
         password=password,
+        category=category, 
+        tag=tag,            
         is_active=True
     )
 
@@ -193,44 +186,39 @@ def create_mentor():
     return jsonify(new_mentor.serialize()), 201
 
 
-# READ
+# READ ALL
 @api.route('/mentors', methods=['GET'])
 def get_all_mentors():
     mentors = Mentor.query.all()
-
     all_mentors_serialized = [mentor.serialize() for mentor in mentors]
-
     return jsonify(all_mentors_serialized), 200
 
-# READ ID
 
-
+# READ BY ID
 @api.route('/mentors/<int:mentor_id>', methods=['GET'])
 def get_mentor(mentor_id):
     mentor = Mentor.query.get(mentor_id)
-
     if mentor is None:
         return jsonify({"error": "Mentor not found"}), 404
-
     return jsonify(mentor.serialize()), 200
 
+
 # UPDATE
-
-
 @api.route('/mentors/<int:id>', methods=['PUT'])
 def update_mentor(id):
-    body = request.get_json()
+    body = request.get_json(silent=True) or {}
     mentor = Mentor.query.get(id)
 
     if not mentor:
         return jsonify({"error": "Mentor not found"}), 404
 
-    mentor.mentorname = body['mentorname']
-    mentor.email = body['email']
-    mentor.password = body['password']
+    mentor.mentorname = body.get('mentorname', mentor.mentorname)
+    mentor.email = body.get('email', mentor.email)
+    mentor.password = body.get('password', mentor.password)
+    mentor.category = body.get('category', mentor.category)  
+    mentor.tag = body.get('tag', mentor.tag)     
 
     db.session.commit()
-
     return jsonify(mentor.serialize()), 200
 
 
@@ -238,14 +226,13 @@ def update_mentor(id):
 @api.route('/mentors/<int:id>', methods=['DELETE'])
 def delete_mentor(id):
     mentor = Mentor.query.get(id)
-
     if not mentor:
         return jsonify({"error": "Mentor not found"}), 404
 
     db.session.delete(mentor)
     db.session.commit()
+    return jsonify({"msg": f"Mentor with ID {id} successfully deleted"}), 200
 
-    return jsonify({"msg": f"Mentor with ID {id} succesfully deleted"}), 200
 
 # Quest Methods
 # READ
