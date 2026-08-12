@@ -55,6 +55,10 @@ class Mentor(db.Model):
     latitude: Mapped[float | None] = mapped_column(nullable=True)
     longitude: Mapped[float | None] = mapped_column(nullable=True)   
 
+    category: Mapped[str] = mapped_column(String(50), nullable=True)
+    tag: Mapped[str | None] = mapped_column(String(50), nullable=True)
+
+
     # Relación para acceder a los chats del mentor
     chats: Mapped[list["Chat"]] = relationship(
         back_populates="mentor", cascade="all, delete-orphan")
@@ -70,7 +74,9 @@ class Mentor(db.Model):
             "is_active": self.is_active,
             "address": self.address,
             "latitude": self.latitude,
-            "longitude": self.longitude
+            "longitude": self.longitude,
+            "category": self.category,
+            "tag": self.tag
         }
 
 

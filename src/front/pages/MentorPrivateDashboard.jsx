@@ -73,7 +73,6 @@ export const MentorPrivateDashboard = () => {
             </div>
         );
     }
-
     return (
         <div className="container py-5">
             <div className="d-flex justify-content-between align-items-center mb-4">

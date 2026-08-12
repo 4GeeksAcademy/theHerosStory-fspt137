@@ -40,6 +40,8 @@ export const SingleMentor = props => {
             <h1 className="display-4">Mentor: {mentorId}</h1>
             <h1 className="display-4">Name: {mentor.mentorname}</h1>
             <h1 className="display-4">Email: {mentor.email}</h1>
+            <h1 className="display-4">Category: {mentor.category}</h1>
+            <h1 className="display-4">Tag: {mentor.tag}</h1>
 
             <hr className="my-4" />  {/* A horizontal rule for visual separation. */}
 
