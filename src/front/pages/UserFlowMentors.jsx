@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, matchPath } from "react-router-dom";
+import { Link, matchPath, useLocation } from "react-router-dom";
 
 export const UserFlowMentors = () => {
     const [mentors, setMentors] = useState([]);
@@ -7,10 +7,17 @@ export const UserFlowMentors = () => {
     const token = localStorage.getItem("user_token");
     const userId = localStorage.getItem("user_id");
     const mapContainerRef = useRef(null);
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
+    const category = params.get("category");
+
+    const url = category
+        ? `${backendUrl}/api/mentors/nearby?category=${category}`
+        : `${backendUrl}/api/mentors/nearby`;
 
     const getMentors = async () => {
         try {
-            const response = await fetch(`${backendUrl}/api/mentors/nearby`,
+            const response = await fetch(url,
                 {
                     method: "GET",
                     headers: {
@@ -33,7 +40,7 @@ export const UserFlowMentors = () => {
 
     useEffect(() => {
         getMentors();
-    }, [backendUrl]);
+    }, [backendUrl, category]);
 
     useEffect(() => {
         const loadMap = async () => {

@@ -56,7 +56,7 @@ class Mentor(db.Model):
     longitude: Mapped[float | None] = mapped_column(nullable=True)   
 
     category: Mapped[str] = mapped_column(String(50), nullable=True)
-    tag: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    tag: Mapped[str | None] = mapped_column(String(150), nullable=True)
 
 
     # Relación para acceder a los chats del mentor

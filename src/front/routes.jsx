@@ -55,6 +55,7 @@ import { UserFlowServices } from "./pages/UserFlowServices";
 import { MentorProfile } from "./pages/MentorProfile";
 import { UserFlowBook } from "./pages/UserFlowBook";
 import { UserProfile } from "./pages/UserProfile";
+import { SurveySearchMentor } from "./pages/SurveySearchMentor";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -75,8 +76,8 @@ export const router = createBrowserRouter(
       <Route path="/services" element={<Services />} />
 
       {/* Admin Management Routes */}
-      <Route path="/new_mentor" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><NewMentor /></PrivateRoute>} />
-      <Route path="/edit_mentor/:mentorId" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><EditMentor /></PrivateRoute>} />
+      <Route path="/new_mentor" element={<NewMentor />} />
+      <Route path="/edit_mentor/:mentorId" element={<EditMentor /> } />
       <Route path="/admin-login" element={<AdminLogin />} />
       <Route path="/admin-dashboard" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><AdminDashboard /></PrivateRoute>} />
       
@@ -106,9 +107,11 @@ export const router = createBrowserRouter(
       <Route path="/mentors/chats/:chatId" element={<PrivateRoute tokenName="mentor_token" redirectTo="/mentors/login"><MentorChatWindow /></PrivateRoute>} />
       <Route path="/mentor/profile" element={<PrivateRoute tokenName="mentor_token" redirectTo="/mentors/login"><MentorProfile /></PrivateRoute>} />
 
+
       {/* User Flow Routes */}
       <Route path="/user-register" element={<UserFlowRegister />} />
       <Route path="/login-user" element={<LoginUser />} />
+      <Route path="/survey-search-mentor" element={<SurveySearchMentor />} />
       <Route path="/habits/user/:user_id" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"><UserFlowHabits /></PrivateRoute>} />
       <Route path="/user-dashboard/:user_id" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"><UserFlowDashboard /></PrivateRoute>} />
       <Route path="/user-quests" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"><UserFlowQuests /></PrivateRoute>} />

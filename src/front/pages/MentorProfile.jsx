@@ -16,7 +16,9 @@ export const MentorProfile = () => {
         password: "",
         address: "",
         latitude: "",
-        longitude: ""
+        longitude: "",
+        categoty: "",
+        tag: ""
 
     });
 
@@ -62,7 +64,9 @@ export const MentorProfile = () => {
                     password: "",
                     address: data.address || "",
                     latitude: data.latitude ?? "",
-                    longitude: data.longitude ?? ""
+                    longitude: data.longitude ?? "",
+                    categoty: data.category || "",
+                    tag: data.tag || ""
                 });
             } catch (error) {
                 console.error(error);
@@ -245,11 +249,11 @@ export const MentorProfile = () => {
                                 </div>
 
                                 <div className="mb-3">
-                                   
+
                                     <input className="form-control" type="hidden" step="any" name="latitude" value={formData.latitude} onChange={handleChange} />
                                 </div>
                                 <div className="mb-3">
-                                    
+
                                     <input className="form-control" type="hidden" step="any" name="longitude" value={formData.longitude} onChange={handleChange} />
                                 </div>
                                 {formData.latitude && formData.longitude && (
@@ -264,6 +268,34 @@ export const MentorProfile = () => {
                                     >
                                     </div>
                                 )}
+                                <div className="mb-3">
+                                    <label className="form-select">Category:</label>
+
+                                    <select
+                                        className="form-select"
+                                        name="category"
+                                        value={formData.categoty}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="">Select category</option>
+                                        <option value="career">Career growth</option>
+                                        <option value="personal-development">Personal development</option>
+                                        <option value="productivity">Productivity</option>
+                                        <option value="finance">Finance</option>
+                                        <option value="habits">Habits</option>
+                                    </select>
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Speciality:</label>
+
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        name="tag"
+                                        value={formData.tag}
+                                        onChange={handleChange}
+                                    ></input>
+                                </div>
                                 <div className="d-grid gap-2">
                                     <button className="btn btn-primary" type="submit">Save change</button>
                                     <button className="btn btn-outline-secondary" type="button" onClick={() => navigate(`/mentors/dashboard/${localStorage.getItem("mentor_id")}`)}>Back to Dashboard</button>

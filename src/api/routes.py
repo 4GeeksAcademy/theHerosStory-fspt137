@@ -109,6 +109,7 @@ def update_user(id):
 
     return jsonify(user.serialize()), 200
 
+
 @api.route('/users/<int:id>/avatar', methods=['PUT'])
 def update_user_avatar(id):
     user = User.query.get(id)
@@ -117,7 +118,7 @@ def update_user_avatar(id):
 
     if 'file' not in request.files:
         return jsonify({"error": "No file part"}), 400
-    
+
     file = request.files['file']
 
     if file.filename == '':
@@ -139,6 +140,8 @@ def update_user_avatar(id):
         return jsonify({"error": str(e)}), 500
 
 # DELETE
+
+
 @api.route('/users/<int:id>', methods=['DELETE'])
 def delete_user(id):
     user = User.query.get(id)
@@ -161,8 +164,8 @@ def create_mentor():
     mentorname = body.get("mentorname")
     email = body.get("email")
     password = body.get("password")
-    category = body.get("category") 
-    tag = body.get("tag")           
+    category = body.get("category")
+    tag = body.get("tag")
 
     if not mentorname or not email or not password:
         return jsonify({"msg": "mentorname, email and password are required"}), 400
@@ -175,8 +178,8 @@ def create_mentor():
         mentorname=mentorname,
         email=email,
         password=password,
-        category=category, 
-        tag=tag,            
+        category=category,
+        tag=tag,
         is_active=True
     )
 
@@ -215,8 +218,8 @@ def update_mentor(id):
     mentor.mentorname = body.get('mentorname', mentor.mentorname)
     mentor.email = body.get('email', mentor.email)
     mentor.password = body.get('password', mentor.password)
-    mentor.category = body.get('category', mentor.category)  
-    mentor.tag = body.get('tag', mentor.tag)     
+    mentor.category = body.get('category', mentor.category)
+    mentor.tag = body.get('tag', mentor.tag)
 
     db.session.commit()
     return jsonify(mentor.serialize()), 200
@@ -342,25 +345,26 @@ def update_quest(quest_id):
 
     return jsonify(quest.serialize()), 200
 
+
 @api.route('/quests/<int:quest_id>/image', methods=['PUT'])
 def upload_quest_image(quest_id):
     quest = Quest.query.get_or_404(quest_id)
-    
+
     if 'file' not in request.files:
         return jsonify({"error": "No se ha enviado ningún archivo"}), 400
-        
+
     file = request.files['file']
-    
+
     if file.filename == '':
         return jsonify({"error": "El archivo no tiene nombre"}), 400
 
     # Subimos la imagen a Cloudinary
     upload_result = cloudinary.uploader.upload(file)
-    
+
     # Guardamos la URL en la base de datos
     quest.image_url = upload_result.get('secure_url')
     db.session.commit()
-    
+
     return jsonify({
         "message": "Imagen de quest actualizada con éxito",
         "quest": quest.serialize()
@@ -490,25 +494,26 @@ def update_habit(habit_id):
 
     return jsonify(habit.serialize()), 200
 
+
 @api.route('/habits/<int:habit_id>/image', methods=['PUT'])
 def upload_habit_image(habit_id):
     habit = Habit.query.get_or_404(habit_id)
-    
+
     if 'file' not in request.files:
         return jsonify({"error": "No se ha enviado ningún archivo"}), 400
-        
+
     file = request.files['file']
-    
+
     if file.filename == '':
         return jsonify({"error": "El archivo no tiene nombre"}), 400
 
     # Subimos la imagen a Cloudinary
     upload_result = cloudinary.uploader.upload(file)
-    
+
     # Guardamos la URL en la base de datos
     habit.image_url = upload_result.get('secure_url')
     db.session.commit()
-    
+
     return jsonify({
         "message": "Imagen de hábito actualizada con éxito",
         "habit": habit.serialize()
@@ -1058,31 +1063,34 @@ def update_service(service_id):
     db.session.commit()
     return jsonify(service.serialize()), 200
 
+
 @api.route('/services/<int:service_id>/image', methods=['PUT'])
 def upload_service_image(service_id):
     service = Service.query.get_or_404(service_id)
-    
+
     if 'file' not in request.files:
         return jsonify({"error": "No se ha enviado ningún archivo"}), 400
-        
+
     file = request.files['file']
-    
+
     if file.filename == '':
         return jsonify({"error": "El archivo no tiene nombre"}), 400
 
     # Subimos la imagen a Cloudinary
     upload_result = cloudinary.uploader.upload(file)
-    
+
     # Guardamos la URL en la base de datos
     service.image_url = upload_result.get('secure_url')
     db.session.commit()
-    
+
     return jsonify({
         "message": "Imagen de servicio actualizada con éxito",
         "service": service.serialize()
     }), 200
 
 # DELETE
+
+
 @api.route('/services/<int:service_id>', methods=['DELETE'])
 def delete_service(service_id):
     service = Service.query.get(service_id)
@@ -1422,6 +1430,8 @@ def update_mentor_profile():
     mentor.address = data.get("address", mentor.address)
     mentor.latitude = data.get("latitude", mentor.latitude)
     mentor.longitude = data.get("longitude", mentor.longitude)
+    mentor.category = data.get("category", mentor.category)
+    mentor.tag = data.get("tag", mentor.tag)
 
     db.session.commit()
 
@@ -1512,10 +1522,17 @@ def get_nearby_mentors():
     if user.latitude is None or user.longitude is None:
         return jsonify({"msg": "User location not found"}), 400
 
-    mentors = Mentor.query.filter(
+    category = request.args.get("category")
+
+    query = Mentor.query.filter(
         Mentor.latitude.isnot(None),
         Mentor.longitude.isnot(None)
-    ).all()
+    )
+
+    if category:
+        query = query.filter(Mentor.category == category)
+
+    mentors = query.all()
 
     nearby_mentors = []
 
