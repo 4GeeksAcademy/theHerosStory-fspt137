@@ -7,57 +7,114 @@ export const SurveySearchMentor = () => {
     const [step, setStep] = useState(0);
     const [answers, setAnswers] = useState({});
     const [selectedCategory, setSelectedCategory] = useState("");
+    const [scores, setScores] = useState({
+        career: 0,
+        habits: 0,
+        productivity: 0,
+        finance: 0,
+        "personal-development": 0
+    });
 
     const questions = [
         {
             title: "what is your main goal?",
             options: [
-                { label: "Career growth", value: "career" },
-                { label: "Personal development", value: "personal-development" },
-                { label: "Productivity", value: "productivity" },
-                { label: "Finance", value: "finance" },
-                { label: "Habits", value: "habits" }
+                {
+                    label: "Improve my career",
+                    scores: { career: 2 }
+                },
+                {
+                    label: "Build better habits my career",
+                    scores: { habits: 2 }
+                },
+                {
+                    label: "Be more productive",
+                    scores: { productivity: 2 }
+                },
+                {
+                    label: "Improve my finances",
+                    scores: { finance: 2 }
+                },
+                {
+                    label: "Grow personally",
+                    scores: { "personal-development": 2 }
+                }
             ]
         },
         {
-            title: "what kind of support are you looking for?",
+            title: "what kind of support do you need?",
             options: [
-                { label: "Guidance", value: "guidance" },
-                { label: "Motivation", value: "motivation" },
-                { label: "Planning", value: "planningy" },
-                { label: "Accountability", value: "accountability" },
+                {
+                    label: "Help planning my next professional step",
+                    scores: { career: 1, productivity: 1 }
+                },
+                {
+                    label: "Help staying consistent",
+                    scores: { habits: 2 }
+                },
+                {
+                    label: "Help organizing my time",
+                    scores: { productivity: 2 }
+                },
+                {
+                    label: "Help managing money",
+                    scores: { finance: 2 }
+                },
+                {
+                    label: "Guidance and personal growth",
+                    scores: { "personal-development": 2 }
+                },
             ]
         },
         {
-            title: "How often would you like support?",
+            title: "What would make the biggest difference for you right now?",
             options: [
-                { label: "Daily", value: "daily" },
-                { label: "Weekly", value: "weekly" },
-                { label: "Occasionally", value: "occasionallyy" },
+                {
+                    label: "finding a better job or career direction",
+                    scores: { career: 2 }
+                },
+                {
+                    label: "Creating routines I can maintain",
+                    scores: { habits: 2 }
+                },
+                {
+                    label: "Getting more done with less stress",
+                    scores: { productivity: 2 }
+                },
+                {
+                    label: "Feeling more confident with money",
+                    scores: { finance: 2 }
+                },
+                {
+                    label: "Understanding mysef and my goals better",
+                    scores: { "personal-development": 2 }
+                },
             ]
         }
     ];
 
     const currentQuestion = questions[step];
 
-    const handleSelect = (value) => {
-        const newAnswers = {
-            ...answers,
-            [step]: value
-        };
+    const handleSelect = (option) => {
+        const newScores = { ...scores };
 
-        setAnswers(newAnswers);
+        Object.entries(option.scores).forEach(([category, points]) => {
+            newScores[category] += points;
+        });
+
+        setScores(newScores);
 
         if (step < questions.length - 1) {
             setStep(step + 1);
         } else {
-            const category = newAnswers[0];
+            const recommendedCategory = Object.keys(newScores).reduce(
+                (a, b) => newScores[a] > newScores[b] ? a : b
+            );
 
-            console.log("Survey completed");
-            console.log("Answers:", newAnswers);
-            console.log("Category:", category);
+            console.log("Final scores:", newScores);
+            console.log("Recommended category:", recommendedCategory);
 
-            navigate(`/user-mentors?category=${category}`);
+            navigate(`/user-mentors?category=${recommendedCategory}`);
         }
     };
 
@@ -99,11 +156,11 @@ export const SurveySearchMentor = () => {
 
                                 <div className="row g-3">
                                     {currentQuestion.options.map((option) => (
-                                        <div className="col-12 col-md-6" key={option.value}>
+                                        <div className="col-12 col-md-6" key={option.label}>
                                             <button
                                                 type="button"
                                                 className="btn btn-outline-primary w-100 p-4"
-                                                onClick={() => handleSelect(option.value)}
+                                                onClick={() => handleSelect(option)}
                                             >
                                                 {option.label}
                                             </button>
