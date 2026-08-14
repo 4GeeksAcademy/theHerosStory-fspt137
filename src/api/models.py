@@ -53,10 +53,10 @@ class Mentor(db.Model):
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
     address: Mapped[str | None] = mapped_column(String(255), nullable=True)
     latitude: Mapped[float | None] = mapped_column(nullable=True)
-    longitude: Mapped[float | None] = mapped_column(nullable=True)
+    longitude: Mapped[float | None] = mapped_column(nullable=True)   
 
     category: Mapped[str] = mapped_column(String(50), nullable=True)
-    tag: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    tag: Mapped[str | None] = mapped_column(String(150), nullable=True)
 
 
     # Relación para acceder a los chats del mentor

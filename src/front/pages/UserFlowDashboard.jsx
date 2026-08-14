@@ -60,17 +60,23 @@ export const UserFlowDashboard = () => {
                     <Link to="/user-quests">
                         <button className="btn btn-primary">Quests</button>
                     </Link>
-                    <Link to="/user-mentors">
+                    <Link to="/survey-search-mentor">
+                    <button className="btn btn-succes">
+                        Find my mentor
+                    </button>
+                </Link>
+                <Link to="/user-mentors">
                         <button className="btn btn-primary">Mentors</button>
                     </Link>
                     <Link to="/user-services">
                         <button className="btn btn-primary">Services</button>
                     </Link>
-                    <Link to="/user/profile" className="btn btn-primary">
-                        My profile
-                    </Link>
+                    <Link to="/user/profile">
+                    <button className="btn btn-primary">
+                            My profile
+                        </button>
+                </Link>
                 </div>
-
                 <button
                     onClick={handleLogout}
                     className="btn btn-danger mt-3 w-25"
