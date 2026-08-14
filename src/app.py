@@ -14,11 +14,16 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
 # Importación de Flask-SocketIO
 from flask_socketio import SocketIO, emit, join_room
+import os
+from groq import Groq 
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../dist/')
 app = Flask(__name__)
+
+groq_api_key = os.getenv("GROQ_API_KEY")
+app.groq_client = Groq(api_key=groq_api_key) if groq_api_key else None
 
 # Setup the flask-JWT-Extended extension
 app.config["JWT_SECRET_KEY"] = "super-mega-hyper-secret"  # Change this!

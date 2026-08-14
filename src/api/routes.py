@@ -16,6 +16,7 @@ from flask_jwt_extended import JWTManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, JWTManager
 from math import radians, sin, cos, sqrt, atan2
+from flask import current_app
 
 
 api = Blueprint('api', __name__)
@@ -1551,3 +1552,49 @@ def get_nearby_mentors():
         nearby_mentors.sort(key=lambda mentor: mentor["distance"])
 
     return jsonify(nearby_mentors), 200
+
+
+# AI RECOMENDATION
+@api.route('/recomendacion', methods=['POST'])
+def obtener_recomendacion():
+    data = request.get_json()
+    mensaje_usuario = data.get('mensajeUsuario')
+
+    if not mensaje_usuario:
+        return jsonify({'error': 'El mensaje no puede estar vacío.'}), 400
+
+    groq_client = current_app.groq_client
+    if not groq_client:
+        return jsonify({'error': 'La API Key de Groq no está configurada en el servidor.'}), 500
+
+    try:
+        completion = groq_client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "Eres una IA experta en desarrollo personal. "
+                        "El usuario te manda un mensaje describiendo su estado o inquietudes en busca de un Mentor. "
+                        "Analiza su mensaje y dale un consejo práctico seguido de la combinacion de una Category y un Tag que más se ajuste a sus necesidades. La Category y el Tag son cualidades de los Mentor que le servirán al User para elegir él. "
+                        "Para ello debes elegir OBLIGATORIAMENTE un elemento de cada una de estas listas, sin inventar, quitar ni añadir ninguno nuevo: "
+                        "Category: Salud mental y bienestar, Fitness y ejercicio, Nutrición y dietética, Desarrollo personal, Espiritualidad y meditación, Relaciones y familia, Productividad y rutinas, Gestión del tiempo, Finanzas personales, Moda y estilo, Belleza y cuidado de la piel, Diseño de interiores y decoración, Minimalismo y orden, Viajes y nomadismo, Gastronomía y cocina, Sostenibilidad y vida ecológica, Jardinería y plantas, Cuidado de mascotas, Ocio y entretenimiento, Fotografía de estilo de vida, Lectura y escritura, Maternidad y paternidad, Envejecimiento saludable, Manualidades y bricolaje (DIY), Café y coctelería, Turismo rural y aventura, Bienestar en el lugar de trabajo, Optimización del sueño y descanso, Creación y ruptura de hábitos, Estilo de vida para adultos mayores. "
+                        "Tag: Yoga, Mindfulness, Pilates, Calistenia, Vegano / Vegetariano, Comida real (Real Fooding), Ayuno intermitente, CrossFit, Meditación guiada, Escritura terapéutica (Journaling), Amor propio, Inteligencia emocional, Rutina de mañana, Productividad tóxica, Crianza respetuosa, Viajes de bajo presupuesto, Senderismo y trekking, Cocina por lotes (Batch Cooking), Cosmética natural, Armario cápsula, Cero residuos (Zero Waste), Inversión pasiva, Organización del hogar, Coaching de vida, Resiliencia, Estoicismo, Gestión del estrés, Jardinería urbana, Entrenamiento canino, Lectura rápida. "
+                        "Estructura tu respuesta en viñetas cortas con saltos de línea limpios, usa un tono entusiasta y amigable, y responde siempre en español. "
+                        "Al final de tu respuesta, añade siempre de forma clara y exacta: Category sugerida: [Nombre de la Category] | Tag sugerido: [Nombre del Tag]."
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": mensaje_usuario
+                }
+            ],
+            temperature=0.7
+        )
+
+        recomendacion_ia = completion.choices[0].message.content
+        return jsonify({'recomendacion': recomendacion_ia})
+
+    except Exception as e:
+        print(f"[GROQ ERROR]: {e}")
+        return jsonify({'error': 'Hubo un problema al procesar la recomendación con la IA.'}), 500

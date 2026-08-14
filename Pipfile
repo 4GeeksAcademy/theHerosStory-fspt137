@@ -21,6 +21,7 @@ sqlalchemy = "*"
 flask-jwt-extended = "*"
 flask-socketio = "*"
 cloudinary = "*"
+groq = "*"
 
 [requires]
 python_version = "3.13"
