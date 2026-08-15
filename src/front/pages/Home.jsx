@@ -1,6 +1,7 @@
 import React, { useEffect } from "react"
-import rigoImageUrl from "../assets/img/rigo-baby.jpg";
+import superImageUrl from "../assets/img/banner-illustration.svg";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
+import { Link } from "react-router-dom";
 
 export const Home = () => {
 
@@ -33,33 +34,66 @@ export const Home = () => {
 	}, [])
 
 	return (
-		<div className="text-center mt-5">
-			{/* START PAGE PRESENTATION AREA */}
-			<div className="training-course-banner-area">
-				<div className="container-fluid">
-					<div className="row align-items-center">
-						<div className="col-lg-7 col-md-12">
-							<h1 className="display-4">Improve your skills with discipline and connect with your enviroment</h1>
-						</div>
-						<div className="col-lg-5 col-md-12">
-							<p className="training-course-banner-image">
-								<img src={rigoImageUrl} className="img-fluid rounded-circle mb-3" alt="Rigo Baby" />
+	<div className="w-100" style={{ backgroundColor: "#F0F4FA", minHeight: "100vh" }}>
+		
+		{/* START PAGE PRESENTATION AREA */}
+		<div className="training-course-banner-area py-5 px-3 px-md-5">
+			<div className="container-fluid">
+				<div className="row align-items-center">
+					
+					<div className="col-lg-7 col-md-12">
+						<div className="training-course-banner-content text-start d-flex flex-column gap-4 pe-lg-5">
+							
+							<h1 className="display-3 fw-black m-0 lh-sm text-dark" style={{ letterSpacing: "-1px" }}>
+								Check out our <span className="text-danger fw-black">LMS courses</span> for employee training
+							</h1>
+							
+							<p className="m-0 text-muted fs-6 lh-base" style={{ maxWidth: "550px", color: "#6c757d" }}>
+								Curabitur arcu erat accumsan id imperdiet et porttitor at sem vivamus magna justo lacinia 
+								eget consectetur sed convallis at tellus pellentesque in ipsum id orci porta dapibus.
 							</p>
+							
+							<div className="btn-box">
+								<Link to="/users">
+									<button className="btn btn-danger rounded-0 text-white fw-bold px-4 py-3 d-inline-flex align-items-center gap-2 border-0" style={{ backgroundColor: "#FF1744" }}>
+										<span>↔</span> View All Courses
+									</button>
+								</Link>
+							</div>
 						</div>
 					</div>
+					
+					<div className="col-lg-5 col-md-12 text-center mt-5 mt-lg-0">
+						<p className="training-course-banner-image m-0">
+							<img 
+								src={superImageUrl} 
+								className="img-fluid w-100" 
+								alt="LMS Training Illustration" 
+								style={{ 
+									maxWidth: "650px",
+									height: "auto",    
+									objectFit: "contain" 
+								}} 
+							/>
+						</p>
+					</div>
+
 				</div>
 			</div>
-			{/* END PAGE PRESENTATION AREA */}
-			<div className="alert alert-info">
-				{store.message ? (
-					<span>{store.message}</span>
-				) : (
-					<span className="text-danger">
-						Loading message from the backend (make sure your python 🐍 backend is running)...
-					</span>
-				)}
-			</div>
 		</div>
-	);
+		{/* END PAGE PRESENTATION AREA */}
+
+		<div className="alert alert-info rounded-0 m-0 border-0 text-center py-2 small">
+			{store.message ? (
+				<span>{store.message}</span>
+			) : (
+				<span className="text-danger fw-semibold">
+					Loading message from the backend (make sure your python 🐍 backend is running)...
+				</span>
+			)}
+		</div>
+	</div>
+);
+
 }; 
 
