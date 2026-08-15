@@ -20,6 +20,8 @@ export const LoginUser = () => {
                 const data = await response.json();
                 localStorage.setItem("user_token", data.access_token);
                 localStorage.setItem("user_id", data.user.id);
+                localStorage.setItem("user_name", data.user.username);
+                localStorage.setItem("user_email", data.user.email);
                 console.log(data)
                 navigate(`/user-dashboard/${data.user.id}`);
             } else {

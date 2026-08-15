@@ -7,6 +7,7 @@ export const UserFlowServices = () => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const [selectedService, setselectedService] = useState(null);
     const mapRef = useRef(null);
+    const userId = localStorage.getItem("user_id");
 
     useEffect(() => {
         const getServices = async () => {
@@ -89,7 +90,7 @@ export const UserFlowServices = () => {
         <div className="container py-5">
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h1>Services</h1>
-                <Link to="/user-dashboard" className="btn btn-outline-secondary">
+                <Link to={`/user-dashboard/${userId}`} className="btn btn-outline-secondary">
                     Back to dashboard
                 </Link>
             </div>
