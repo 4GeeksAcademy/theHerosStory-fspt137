@@ -34,10 +34,22 @@ export const Home = () => {
 
 	return (
 		<div className="text-center mt-5">
-			<h1 className="display-4">Hello Rigo!!</h1>
-			<p className="lead">
-				<img src={rigoImageUrl} className="img-fluid rounded-circle mb-3" alt="Rigo Baby" />
-			</p>
+			{/* START PAGE PRESENTATION AREA */}
+			<div className="training-course-banner-area">
+				<div className="container-fluid">
+					<div className="row align-items-center">
+						<div className="col-lg-7 col-md-12">
+							<h1 className="display-4">Improve your skills with discipline and connect with your enviroment</h1>
+						</div>
+						<div className="col-lg-5 col-md-12">
+							<p className="training-course-banner-image">
+								<img src={rigoImageUrl} className="img-fluid rounded-circle mb-3" alt="Rigo Baby" />
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			{/* END PAGE PRESENTATION AREA */}
 			<div className="alert alert-info">
 				{store.message ? (
 					<span>{store.message}</span>
@@ -50,3 +62,4 @@ export const Home = () => {
 		</div>
 	);
 }; 
+
