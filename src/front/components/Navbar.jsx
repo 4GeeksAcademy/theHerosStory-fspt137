@@ -9,15 +9,12 @@ export const Navbar = () => {
 	<nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom py-3">
 		<div className="container-fluid px-md-5">
 			
-			{/* Título a la izquierda: Grande, tipografía limpia, compacta y sin logo */}
 			<Link to="/" className="navbar-brand fw-black fs-2 text-dark m-0" style={{ letterSpacing: "-1.5px", fontFamily: "'Inter', sans-serif" }}>
 				The Hero's Story
 			</Link>
 
-			{/* Enlaces de navegación alineados a la derecha de forma equidistante */}
 			<div className="d-flex align-items-center gap-4 ms-auto">
 				
-				{/* Enlaces simples */}
 				<Link to="/about-us" className="nav-link fw-semibold text-secondary hover-dark fs-6">
 					About us
 				</Link>
@@ -26,7 +23,6 @@ export const Navbar = () => {
 					Team
 				</Link>
 
-				{/* Dropdown de Bootstrap para los Logins */}
 				<div className="dropdown">
 					<button 
 						className="btn dropdown-toggle fw-semibold text-secondary fs-6 border-0 bg-transparent p-0 d-flex align-items-center gap-1"

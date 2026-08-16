@@ -36,7 +36,6 @@ export const Home = () => {
 	return (
 	<div className="w-100" style={{ backgroundColor: "#F0F4FA", minHeight: "100vh" }}>
 		
-		{/* START PAGE PRESENTATION AREA */}
 		<div className="training-course-banner-area py-5 px-3 px-md-5">
 			<div className="container-fluid">
 				<div className="row align-items-center">
@@ -49,8 +48,7 @@ export const Home = () => {
 							</h1>
 							
 							<p className="m-0 text-muted fs-6 lh-base" style={{ maxWidth: "550px", color: "#6c757d" }}>
-								Curabitur arcu erat accumsan id imperdiet et porttitor at sem vivamus magna justo lacinia 
-								eget consectetur sed convallis at tellus pellentesque in ipsum id orci porta dapibus.
+								The Hero's Story is an innovative learning platform designed to help you connect your scattered skills, master modern technology, and confidently build your own successful future.
 							</p>
 							
 							<div className="btn-box">
@@ -80,17 +78,6 @@ export const Home = () => {
 
 				</div>
 			</div>
-		</div>
-		{/* END PAGE PRESENTATION AREA */}
-
-		<div className="alert alert-info rounded-0 m-0 border-0 text-center py-2 small">
-			{store.message ? (
-				<span>{store.message}</span>
-			) : (
-				<span className="text-danger fw-semibold">
-					Loading message from the backend (make sure your python 🐍 backend is running)...
-				</span>
-			)}
 		</div>
 	</div>
 );
