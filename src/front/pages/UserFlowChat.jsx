@@ -70,7 +70,7 @@ export const UserFlowChat = () => {
 
     useEffect(() => {
         if (!chatId) return;
-        
+
         getMessages();
 
         socket.emit("join_chat", { chat_id: chatId });
@@ -105,9 +105,9 @@ export const UserFlowChat = () => {
             .then((response) => response.json())
             .then((data) => {
                 setContent("");
-                
+
                 const creado = data.message || data;
-                
+
                 socket.emit("send_message", creado);
             })
             .catch((error) => console.error(error));
@@ -118,12 +118,12 @@ export const UserFlowChat = () => {
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h1>Chat with {mentorName || "Mentor"}</h1>
                 <div className="d-flex gap-2">
-                    <button 
-                        className="btn btn-warning btn-sm" 
+                    <button
+                        className="btn btn-warning btn-sm"
                         onClick={getMessages}
                         title="Refresh messages"
                     >
-                         Refresh
+                        Refresh
                     </button>
                     <button className="btn btn-outline-secondary btn-sm" onClick={() => navigate("/user-mentors")}>
                         Back
@@ -136,8 +136,8 @@ export const UserFlowChat = () => {
                     <p className="text-muted">Start the conversation.</p>
                 ) : (
                     messages.map((message) => (
-                        <div 
-                            key={message.id} 
+                        <div
+                            key={message.id}
                             className={message.sender === "user" ? "text-end mb-3" : "text-start mb-3"}
                         >
                             <div>
@@ -145,10 +145,10 @@ export const UserFlowChat = () => {
                                     {message.sender === "user" ? "You" : mentorName || "Mentor"}
                                 </strong>
                             </div>
-                            <span 
+                            <span
                                 className={
-                                    message.sender === "user" 
-                                        ? "d-inline-block bg-primary text-white rounded px-3 py-2" 
+                                    message.sender === "user"
+                                        ? "d-inline-block bg-primary text-white rounded px-3 py-2"
                                         : "d-inline-block bg-white border rounded px-3 py-2"
                                 }
                             >
