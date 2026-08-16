@@ -45,7 +45,7 @@ export const Home = () => {
 						<div className="training-course-banner-content text-start d-flex flex-column gap-4 pe-lg-5">
 							
 							<h1 className="display-3 fw-black m-0 lh-sm text-dark" style={{ letterSpacing: "-1px" }}>
-								Check out our <span className="text-danger fw-black">LMS courses</span> for employee training
+								Improve your <span className="text-danger fw-black">Skills and Habits</span> with discipline and dedication
 							</h1>
 							
 							<p className="m-0 text-muted fs-6 lh-base" style={{ maxWidth: "550px", color: "#6c757d" }}>
@@ -54,9 +54,9 @@ export const Home = () => {
 							</p>
 							
 							<div className="btn-box">
-								<Link to="/users">
+								<Link to="/user-register">
 									<button className="btn btn-danger rounded-0 text-white fw-bold px-4 py-3 d-inline-flex align-items-center gap-2 border-0" style={{ backgroundColor: "#FF1744" }}>
-										<span>↔</span> View All Courses
+										 Create an Account
 									</button>
 								</Link>
 							</div>
