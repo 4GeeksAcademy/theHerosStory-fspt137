@@ -56,6 +56,8 @@ import { MentorProfile } from "./pages/MentorProfile";
 import { UserFlowBook } from "./pages/UserFlowBook";
 import { UserProfile } from "./pages/UserProfile";
 import { SurveySearchMentor } from "./pages/SurveySearchMentor";
+import { AboutUsView } from "./pages/AboutUsView";
+import { TeamView } from "./pages/TeamView";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -74,6 +76,9 @@ export const router = createBrowserRouter(
       <Route path="/quests" element={<Quests />} />
       <Route path="/quest-trackings" element={<QuestTracking />} />
       <Route path="/services" element={<Services />} />
+      <Route path="/about-us" element={<AboutUsView />} />
+      <Route path="/team" element={<TeamView />} />
+
 
       {/* Admin Management Routes */}
       <Route path="/new_mentor" element={<NewMentor />} />

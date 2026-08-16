@@ -6,50 +6,55 @@ export const Navbar = () => {
 	const dashboardPath = mentorId ? `/mentors/dashboard/${mentorId}` : "/mentors/login";
 
 	return (
-		<nav className="navbar navbar-light bg-light">
-			<div className="container">
-				<Link to="/">
-					<span className="navbar-brand mb-0 h1">React Boilerplate</span>
+	<nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom py-3">
+		<div className="container-fluid px-md-5">
+			
+			<Link to="/" className="navbar-brand fw-black fs-2 text-dark m-0" style={{ letterSpacing: "-1.5px", fontFamily: "'Inter', sans-serif" }}>
+				The Hero's Story
+			</Link>
+
+			<div className="d-flex align-items-center gap-4 ms-auto">
+				
+				<Link to="/about-us" className="nav-link fw-semibold text-secondary hover-dark fs-6">
+					About us
 				</Link>
-				<div className="ml-auto">
-					<Link to="/users">
-						<button className="btn btn-primary">Users</button>
-					</Link>
-					<Link to="/mentors">
-						<button className="btn btn-primary">Mentors</button>
-					</Link>
-					<Link to="/quests">
-						<button className="btn btn-primary">Quests</button>
-					</Link>
-					<Link to="/quest-trackings">
-						<button className="btn btn-primary">Quest tracking</button>
-					</Link>
-					<Link to={userId ? `/habits/user/${userId}` : "/login-user"}>
-    					<button className="btn btn-primary">Habits</button>
-					</Link>
-					<Link to="/services">
-						<button className="btn btn-primary">Services</button>
-					</Link>
-					<Link to="/mentors/login">
-						<button className="btn btn-primary">Mentor Log In</button>
-					</Link>
-					<Link to={dashboardPath}>
-						<button className="btn btn-primary">Mentor Dashboard</button>
-					</Link>
-					<Link to="/administrators">
-						<button className="btn btn-primary">Administrator</button>
-					</Link>
-					<Link to="/admin-login">
-						<button className="btn btn-primary">Admin login</button>
-					</Link>
-					<Link to="/admin-dashboard">
-						<button className="btn btn-primary">Admin Dashboar</button>
-					</Link>
-					<Link to="/login-user">
-						<button className="btn btn-success ms-2">Login</button>
-					</Link>
+				
+				<Link to="/team" className="nav-link fw-semibold text-secondary hover-dark fs-6">
+					Team
+				</Link>
+
+				<div className="dropdown">
+					<button 
+						className="btn dropdown-toggle fw-semibold text-secondary fs-6 border-0 bg-transparent p-0 d-flex align-items-center gap-1"
+						type="button" 
+						id="loginDropdown" 
+						data-bs-toggle="dropdown" 
+						aria-expanded="false"
+					>
+						Login As
+					</button>
+					<ul className="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 mt-2" aria-labelledby="loginDropdown">
+						<li>
+							<Link to="/login-user" className="dropdown-menu-item text-dark text-decoration-none d-block px-4 py-2 hover-bg-light">
+								User
+							</Link>
+						</li>
+						<li>
+							<Link to="/mentors/login" className="dropdown-menu-item text-dark text-decoration-none d-block px-4 py-2 hover-bg-light">
+								Mentor
+							</Link>
+						</li>
+						<li>
+							<Link to="/admin-login" className="dropdown-menu-item text-dark text-decoration-none d-block px-4 py-2 hover-bg-light">
+								Admin
+							</Link>
+						</li>
+					</ul>
 				</div>
+
 			</div>
-		</nav>
-	);
+		</div>
+	</nav>
+);
+
 };
