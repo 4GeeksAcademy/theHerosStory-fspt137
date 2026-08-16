@@ -7,6 +7,8 @@ export const UserFlowDashboard = () => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const navigate = useNavigate();
     const userId = localStorage.getItem("user_id");
+    const userName = localStorage.getItem("user_name");
+    const userEmail = localStorage.getItem("user_email");
 
     const [mensaje, setMensaje] = useState("");
     const [respuestaIA, setRespuestaIA] = useState("");
@@ -47,80 +49,340 @@ export const UserFlowDashboard = () => {
     };
 
     return (
-        <div className="container mt-5">
-            {/* Tarjeta de info del usuario original */}
-            <div className="card shadow p-4 mb-4">
-                <h1 className="text-success">User's private dashboard</h1>
-                <p className="lead">¡Bienvenido! Te has logueado con éxito.</p>
-                
-                <div className="d-flex gap-2 flex-wrap mb-3">
-                    <Link to={`/habits/user/${userId}`}>
-                        <button className="btn btn-primary">Habits</button>
-                    </Link>
-                    <Link to="/user-quests">
-                        <button className="btn btn-primary">Quests</button>
-                    </Link>
-                    <Link to="/survey-search-mentor">
-                    <button className="btn btn-succes">
-                        Find my mentor
-                    </button>
-                </Link>
-                <Link to="/user-mentors">
-                        <button className="btn btn-primary">Mentors</button>
-                    </Link>
-                    <Link to="/user-services">
-                        <button className="btn btn-primary">Services</button>
-                    </Link>
-                    <Link to="/user/profile">
-                    <button className="btn btn-primary">
-                            My profile
-                        </button>
-                </Link>
-                </div>
-                <button
-                    onClick={handleLogout}
-                    className="btn btn-danger mt-3 w-25"
-                >
-                    Log Out
-                </button>
-            </div>
+        <div className="container-fluid bg-light min-vh-100 p-0">
+            <div className="row g-0">
 
-            <div className="card shadow p-4">
-                <h2 className="text-primary mb-3">🧙‍♂️ Mentor Category Recomendation</h2>
-                <p className="text-muted">
-                    "Do you struggle to stick to your Habits or complete your Quests? Ask the Artificial Intelligence for personalized advice."
-                </p>
-                
-                <form onSubmit={handleEnviarIA}>
-                    <div className="mb-3">
-                        <textarea
-                            className="form-control"
-                            rows="3"
-                            placeholder="E.g., Lately, I've been feeling tired and unmotivated. I'm noticing that I'm not taking care of my routine or my diet."
-                            value={mensaje}
-                            onChange={(e) => setMensaje(e.target.value)}
-                            required
-                        ></textarea>
+                <aside className="col-md-3 col-lg-2 bg-white min-vh-100 border-end p-0">
+                    <div className="p-4 text-white"
+                        style={{ backgroundColor: "#ff1949" }}>
+                        <h4 className="fw-bold mb-1">
+                            The Hero's Story
+                        </h4>
+                        <small className="text-white">
+                            User Dashboard
+                        </small>
                     </div>
-                    <button 
-                        type="submit" 
-                        className="btn btn-success" 
-                        disabled={loading}
-                    >
-                        {loading ? "Thinking..." : "Get Recomendation"}
-                    </button>
-                </form>
 
-                {respuestaIA && (
-                    <div className="card mt-4 bg-light border-start border-primary border-4">
-                        <div className="card-body">
-                            <h5 className="card-title text-primary">Recomendación para tu camino:</h5>
-                            <p className="card-text" style={{ whiteSpace: 'pre-line' }}>
-                                {respuestaIA}
+                    <nav className="d-flex flex-column px-3 py-4 gap-2">
+
+                        <Link
+                            to={`/user-dashboard/${userId}`}
+                            className="btn text-start"
+                        >
+                            🏠 Dashboard
+                        </Link>
+
+                        <Link
+                            to={`/habits/user/${userId}`}
+                            className="btn text-start"
+                        >
+                            ✅ Habits
+                        </Link>
+
+                        <Link
+                            to="/user-mentors"
+                            className="btn text-start"
+                        >
+                            👥 Mentors
+                        </Link>
+
+                        <Link
+                            to="/user-services"
+                            className="btn text-start"
+                        >
+                            🛠️ Services
+                        </Link>
+
+                        <Link
+                            to="/survey-search-mentor"
+                            className="btn text-start"
+                        >
+                            🔎 Find my mentor
+                        </Link>
+
+                        <Link
+                            to="/user/profile"
+                            className="btn text-start"
+                        >
+                            👤 My Profile
+                        </Link>
+
+                        <hr className="border-secondary" />
+
+                        <button
+                            onClick={handleLogout}
+                            className="btn btn-outline-danger text-start"
+                        >
+                            🚪 Log Out
+                        </button>
+
+                    </nav>
+                </aside>
+
+                <main className="col-md-9 col-lg-10">
+
+                    <div className="text-white px-3 py-3 d-flex justify-content-between align-items-center"
+                        style={{ backgroundColor: "#ff1949" }}>
+
+
+                        <div>
+                            <h2 className="fw-bold mb-1">
+                                Welcome back 👋
+                            </h2>
+
+                            <p className="mb-0">
+                                Continue building your Hero's Story.
                             </p>
                         </div>
+
+                        <div className="dropdown">
+                            <button
+                                className="btn btn-light dropdown-toggle d-flex align-items-center gap-2"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                👤
+                                <span> {localStorage.getItem("user_email") || "My Account"} </span>
+                            </button>
+
+                            <ul className="dropdown-menu dropdown-menu-end shadow">
+                                <li>
+                                    <Link
+                                        className="dropdown-item"
+                                        to="/user/profile"
+                                    >
+                                        👤 Profile
+                                    </Link>
+                                </li>
+                                <li>
+                                    <hr className="dropdown-divider" />
+                                </li>
+
+                                <li>
+                                    <button
+                                        className="dropdown-item text-danger"
+                                        onClick={handleLogout}
+                                    >
+                                        🚪 Log Out
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+
                     </div>
-                )}
+                    <div className="px-4 py-4">
+
+                        <div className="row g-4 mb-5">
+
+                            <div className="col-12 col-sm-6 col-xl-3">
+                                <Link
+                                    to={`/habits/user/${userId}`}
+                                    className="text-decoration-none"
+                                >
+                                    <div className="card h-100 border-0 shadow-sm">
+                                        <div className="card-body p-4">
+
+                                            <div className="fs-2 mb-3">
+                                                ✅
+                                            </div>
+
+                                            <h5 className="card-title text-dark">
+                                                Habits
+                                            </h5>
+
+                                            <p className="card-text text-muted">
+                                                Track and improve your daily habits.
+                                            </p>
+
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+
+                            <div className="col-12 col-sm-6 col-xl-3">
+                                <Link
+                                    to="/user-quests"
+                                    className="text-decoration-none"
+                                >
+                                    <div className="card h-100 border-0 shadow-sm">
+                                        <div className="card-body p-4">
+
+                                            <div className="fs-2 mb-3">
+                                                🎯
+                                            </div>
+
+                                            <h5 className="card-title text-dark">
+                                                Quests
+                                            </h5>
+
+                                            <p className="card-text text-muted">
+                                                Review and continue your personal quests.
+                                            </p>
+
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+
+                            <div className="col-12 col-sm-6 col-xl-3">
+                                <Link
+                                    to="/user-mentors"
+                                    className="text-decoration-none"
+                                >
+                                    <div className="card h-100 border-0 shadow-sm">
+                                        <div className="card-body p-4">
+
+                                            <div className="fs-2 mb-3">
+                                                👥
+                                            </div>
+
+                                            <h5 className="card-title text-dark">
+                                                Mentors
+                                            </h5>
+
+                                            <p className="card-text text-muted">
+                                                Discover mentors near your location.
+                                            </p>
+
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+
+                            <div className="col-12 col-sm-6 col-xl-3">
+                                <Link
+                                    to="/survey-search-mentor"
+                                    className="text-decoration-none"
+                                >
+                                    <div className="card h-100 border-0 shadow-sm">
+                                        <div className="card-body p-4">
+                                            <div className="fs-2 mb-3">
+                                                🔎
+                                            </div>
+
+                                            <h5 className="card-title text-dark">
+                                                Find my mentor
+                                            </h5>
+                                            <p className="card-text text-muted">
+                                                Find mentor that match your goals.
+                                            </p>
+
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+
+                        </div>
+
+                        <div className="row g-4" >
+                            <div className="col-12 col-xl-8">
+                                <div className="card border-0 shadow-sm h-100" >
+                                    <div className="card-body p-4">
+                                        <div className="d-flex align-items-center mb-3">
+                                            <div className="fs-2 me-3">
+                                                🧙‍♂️
+                                            </div>
+                                            <div>
+                                                <h4 className="mb-1">
+                                                    IA Mentor Recommendation
+                                                </h4>
+
+                                                <small className="text-muted">
+                                                    Personalized guidance for your journey
+                                                </small>
+                                            </div>
+
+                                        </div>
+
+                                        <p className="text-muted">
+                                            Do you struggle to stick to your Habits or complete your Quests? Tell us what's going on and get Personalized advice.
+                                        </p>
+
+                                        <form onSubmit={handleEnviarIA}>
+                                            <div className="mb-3">
+                                                <textarea
+                                                    className="form-control"
+                                                    rows="4"
+                                                    placeholder="E.g., Lately, I've been feeling tired and unmotivated. I'm noticing that I'm not taking care of my routine or my diet."
+                                                    value={mensaje}
+                                                    onChange={(e) => setMensaje(e.target.value)}
+                                                    required
+                                                ></textarea>
+                                            </div>
+                                            <button
+                                                type="submit"
+                                                className="btn text-white"
+                                                style={{ backgroundColor: "#ff1949" }}
+                                                disabled={loading}
+                                            >
+                                                {loading ? "Thinking..." : "Get Recomendation"}
+                                            </button>
+                                        </form>
+                                        {respuestaIA && (
+                                            <div className="alert alert-light border mt-4">
+
+                                                <h6 className="fw-bold">
+                                                    ✨ Recommendation for your journey:</h6>
+                                                <p className="mb-0" style={{ whiteSpace: 'pre-line' }}>
+                                                    {respuestaIA}
+                                                </p>
+
+                                            </div>
+                                        )}
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div className="col-12 col-xl-4">
+                                <div className="card border-0 shadow-sm mb-4">
+                                    <div className="card-body p-4">
+                                        <h5 className="fw-bold">
+                                            Your Journey
+                                        </h5>
+                                        <p className="text-muted">
+                                            Keep progressing through habits, quests and mentoring.
+                                        </p>
+
+                                        <Link
+                                            to="/user-services"
+                                            className="btn w-100"
+                                            style={{
+                                                color: "#ff1949",
+                                                border: "1px solid #ff1949"
+                                            }}
+                                        >
+                                            Explore Services
+                                        </Link>
+                                    </div>
+
+                                </div>
+
+                                <div className="card border-0 shadow-sm">
+                                    <div className="card-body p-4">
+                                        <h5 className="fw-bold">
+                                            Need a mentor?
+                                        </h5>
+
+                                        <p className="text-muted">
+                                            Answer a few questions and we'll help you find mentors that fit your goals.
+                                        </p>
+
+                                        <Link
+                                            to="/survey-search-mentor"
+                                            className="btn text-white w-100"
+                                            style={{ backgroundColor: "#ff1949" }}
+                                        >
+                                            Find my mentor
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
             </div>
         </div>
     );
