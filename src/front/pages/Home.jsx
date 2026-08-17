@@ -34,7 +34,7 @@ export const Home = () => {
 	}, [])
 
 	return (
-	<div className="w-100" style={{ backgroundColor: "#F0F4FA", minHeight: "100vh" }}>
+	<div className="w-100 p" style={{ backgroundColor: "#F0F4FA", minHeight: "100vh" }}>
 		
 		<div className="training-course-banner-area py-5 px-3 px-md-5">
 			<div className="container-fluid">
