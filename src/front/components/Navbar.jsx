@@ -22,7 +22,10 @@ export const Navbar = () => {
 				<Link to="/team" className="nav-link fw-semibold text-secondary hover-dark fs-6">
 					Team
 				</Link>
-
+				
+				<Link to="/match-mentor" className="btn btn-outline-danger btn-sm mx-2 fw-bold">
+    					MatchMentor
+				</Link>
 				<div className="dropdown">
 					<button 
 						className="btn dropdown-toggle fw-semibold text-secondary fs-6 border-0 bg-transparent p-0 d-flex align-items-center gap-1"
