@@ -1569,7 +1569,7 @@ def obtener_recomendacion():
 
     try:
         completion = groq_client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+            model="openai/gpt-oss-120b",
             messages=[
                 {
                     "role": "system",

@@ -1,0 +1,21 @@
+.user-menu-button {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: rgb(255, 255, 255, 0.15);
+  border: none;
+  color: white;
+
+  transition: background-color 0.2s ease;
+}
+
+.user-menu-button:hover,
+.user-menu-button:focus {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}

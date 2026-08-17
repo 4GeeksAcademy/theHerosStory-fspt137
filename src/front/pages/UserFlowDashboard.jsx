@@ -135,15 +135,19 @@ export const UserFlowDashboard = () => {
                             </p>
                         </div>
 
+                        <div className="d-flex align-items-center gap-2">
+                            <div className="text-white">
+                            <span> {localStorage.getItem("user_email") || "My Account"} </span>
+                            </div>
+
                         <div className="dropdown">
                             <button
-                                className="btn btn-light dropdown-toggle d-flex align-items-center gap-2"
+                                className="btn user-menu-button "
                                 type="button"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
-                            >
+                                >
                                 👤
-                                <span> {localStorage.getItem("user_email") || "My Account"} </span>
                             </button>
 
                             <ul className="dropdown-menu dropdown-menu-end shadow">
@@ -151,7 +155,7 @@ export const UserFlowDashboard = () => {
                                     <Link
                                         className="dropdown-item"
                                         to="/user/profile"
-                                    >
+                                        >
                                         👤 Profile
                                     </Link>
                                 </li>
@@ -163,11 +167,12 @@ export const UserFlowDashboard = () => {
                                     <button
                                         className="dropdown-item text-danger"
                                         onClick={handleLogout}
-                                    >
+                                        >
                                         🚪 Log Out
                                     </button>
                                 </li>
                             </ul>
+                                        </div>
                         </div>
 
                     </div>
