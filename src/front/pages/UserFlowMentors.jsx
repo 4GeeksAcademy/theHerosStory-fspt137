@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, matchPath, useLocation } from "react-router-dom";
+import { UserPageLayout } from "../components/UserPageLayout";
 
 export const UserFlowMentors = () => {
     const [mentors, setMentors] = useState([]);
@@ -84,6 +85,8 @@ export const UserFlowMentors = () => {
     }, [mentors])
 
     return (
+        <UserPageLayout>
+
         <div className="container py-5">
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h1>Mentors near you</h1>
@@ -103,7 +106,7 @@ export const UserFlowMentors = () => {
                             height: "400px",
                             marginBottom: "25px"
                         }}
-                    ></div>
+                        ></div>
 
                     <div className="list-group">
                         {mentors.map((mentor) => (
@@ -125,5 +128,6 @@ export const UserFlowMentors = () => {
                 </>
             )}
         </div>
+            </UserPageLayout>
     );
 };

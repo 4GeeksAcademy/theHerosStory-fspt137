@@ -53,7 +53,8 @@ export const UserFlowQuests = () => {
             <div className="container py-5">
                 <div className="d-flex justify-content-between align-items-center mb-4">
                     <h1>My Quests</h1>
-                    <Link to="/quests/new" className="btn btn-primary">
+                    <Link to="/quests/new" className="btn text-white"
+                    style={{ backgroundColor: "#ff1949" }}>
                         Create a new quest
                     </Link>
                 </div>

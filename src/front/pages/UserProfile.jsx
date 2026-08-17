@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserPageLayout } from "../components/UserPageLayout";
 
 
 export const UserProfile = () => {
@@ -219,6 +220,8 @@ export const UserProfile = () => {
     }, [formData.address]);
 
     return (
+        <UserPageLayout>
+
         <div className="container py-4">
             <div className="row justify-content-center">
                 <div className="col-12 col-md-6 col-lg-5">
@@ -277,5 +280,6 @@ export const UserProfile = () => {
                 </div>
             </div>
         </div>
+    </UserPageLayout>
     );
 };

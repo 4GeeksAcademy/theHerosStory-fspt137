@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserPageLayout } from "../components/UserPageLayout";
 
 export const SurveySearchMentor = () => {
     const navigate = useNavigate();
@@ -129,6 +130,8 @@ export const SurveySearchMentor = () => {
     const progress = ((step + 1) / questions.length) * 100;
 
     return (
+        <UserPageLayout>
+
         <div className="container py-5">
             <div className="row justify-content-center">
                 <div className="col-12 col-md-8 col-lg-7">
@@ -144,7 +147,7 @@ export const SurveySearchMentor = () => {
                                 aria-valuenow={progress}
                                 aria-valuemin="0"
                                 aria-valuemax="100"
-                            >
+                                >
                             </div>
                         </div>
                         <div className="card shadow-sm">
@@ -173,7 +176,7 @@ export const SurveySearchMentor = () => {
                                         type="button"
                                         className="btn btn-outline-secondary"
                                         onClick={handleBack}
-                                    >
+                                        >
                                         Back
                                     </button>
                                 </div>
@@ -185,5 +188,6 @@ export const SurveySearchMentor = () => {
                 </div>
             </div>
         </div>
+                                        </UserPageLayout>
     );
 };

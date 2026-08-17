@@ -101,7 +101,7 @@ export const UserFlowDashboard = () => {
                         </Link>
 
                         <Link
-                            to="/survey-search-mentor"
+                            to="/match-mentor"
                             className="btn text-start"
                         >
                             🔎 Find my mentor
