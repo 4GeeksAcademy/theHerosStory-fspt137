@@ -18,7 +18,7 @@ export const CreateQuest = () => {
             status,
             user_id: localStorage.getItem("user_id")
         };
-
+   
         fetch(`${backendUrl}/api/quests`, {
             method: "POST",
             headers: {

@@ -252,7 +252,7 @@ export const UserFlowDashboard = () => {
 
                             <div className="col-12 col-sm-6 col-xl-3">
                                 <Link
-                                    to="/survey-search-mentor"
+                                    to="/match-mentor"
                                     className="text-decoration-none"
                                 >
                                     <div className="card h-100 border-0 shadow-sm">
