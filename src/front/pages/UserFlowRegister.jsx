@@ -30,56 +30,82 @@ export const UserFlowRegister = () => {
     };
 
     return (
-        <div className="container mt-5">
-            <div className="w-50 mx-auto card p-4 shadow-sm">
-                <h2 className="mb-4 text-center">Register New User</h2>
-                <form onSubmit={handleSubmit}>
-                    
-                    <div className="mb-3">
-                        <label className="form-label">Username</label>
-                        <input 
-                            type="text" 
-                            className="form-control" 
-                            value={username} 
-                            onChange={e => setUsername(e.target.value)} 
-                            required 
-                            placeholder="'John24'"
-                        />
+        <div className="container my-5 flex-grow-1 d-flex justify-content-center align-items-center">
+            <div className="row shadow-lg rounded-4 bg-white overflow-hidden p-0 w-100" style={{ maxWidth: "900px", minHeight: "500px" }}>
+                
+                {/* 1. Izquierda: Formulario de Registro */}
+                <div className="col-md-6 p-5 d-flex flex-column justify-content-center">
+                    <div className="mb-4">
+                        <h3 className="fw-bold text-dark">Register New User</h3>
+                        <p className="text-muted small">Crea una cuenta para comenzar.</p>
                     </div>
 
-                    <div className="mb-3">
-                        <label className="form-label">Correo Electrónico (Email)</label>
-                        <input 
-                            type="email" 
-                            className="form-control" 
-                            value={email} 
-                            onChange={e => setEmail(e.target.value)} 
-                            required 
-                            placeholder="example@mail.com"
-                        />
-                    </div>
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-3">
+                            <label className="form-label text-secondary small fw-semibold">Username</label>
+                            <input 
+                                type="text" 
+                                className="form-control px-3 py-2" 
+                                value={username} 
+                                onChange={e => setUsername(e.target.value)} 
+                                required 
+                                placeholder="'John24'"
+                            />
+                        </div>
 
-                    <div className="mb-3">
-                        <label className="form-label">Password</label>
-                        <input 
-                            type="password" 
-                            className="form-control" 
-                            value={password} 
-                            onChange={e => setPassword(e.target.value)} 
-                            required 
-                            placeholder="xxxxxxxxx"
-                        />
-                    </div>
+                        <div className="mb-3">
+                            <label className="form-label text-secondary small fw-semibold">Correo Electrónico (Email)</label>
+                            <input 
+                                type="email" 
+                                className="form-control px-3 py-2" 
+                                value={email} 
+                                onChange={e => setEmail(e.target.value)} 
+                                required 
+                                placeholder="example@mail.com"
+                            />
+                        </div>
 
-                    <div className="d-flex justify-content-between mt-4">
-                        <button type="button" className="btn btn-secondary" onClick={() => navigate("/users")}>
-                            Cancel
-                        </button>
-                        <button type="submit" className="btn btn-success">
-                            Register
-                        </button>
-                    </div>
-                </form>
+                        <div className="mb-4">
+                            <label className="form-label text-secondary small fw-semibold">Password</label>
+                            <input 
+                                type="password" 
+                                className="form-control px-3 py-2" 
+                                value={password} 
+                                onChange={e => setPassword(e.target.value)} 
+                                required 
+                                placeholder="xxxxxxxxx"
+                            />
+                        </div>
+
+                        <div className="d-flex justify-content-between align-items-center gap-2">
+                            <button 
+                                type="button" 
+                                className="btn btn-outline-secondary w-50 py-2" 
+                                onClick={() => navigate("/users")}
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                type="submit" 
+                                className="btn w-50 py-2 fw-bold text-white shadow-sm"
+                                style={{ backgroundColor: "#fa4251", border: "none" }}
+                            >
+                                Register
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                {/* 2. Derecha: La Imagen al lado */}
+                <div className="col-md-6 d-none d-md-block p-0 bg-light">
+                    <img 
+                        src="https://economipedia.com/wp-content/uploads/usuario.jpg" 
+                        alt="Register background" 
+                        className="w-100 h-100 object-fit-cover"
+                        style={{ minHeight: "450px" }}
+                    />
+                </div>
+
             </div>
         </div>
     );
