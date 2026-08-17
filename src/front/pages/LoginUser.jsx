@@ -6,7 +6,7 @@ export const LoginUser = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
-    
+
     const navigate = useNavigate();
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -23,13 +23,16 @@ export const LoginUser = () => {
             });
 
             const data = await response.json();
+            console.log("Respuesta login completa:", data)
 
             if (!response.ok) {
                 throw new Error(data.message || "Credenciales inválidas");
             }
 
             localStorage.setItem("user_token", data.access_token);
-            navigate(`/user-dashboard/${data.user_id}`);
+            localStorage.setItem("user_id", data.user.id);
+
+            navigate(`/user-dashboard/${data.user.id}`);
 
         } catch (err) {
             setError(err.message);
@@ -41,7 +44,7 @@ export const LoginUser = () => {
     return (
         <div className="container my-5 flex-grow-1 d-flex justify-content-center align-items-center">
             <div className="row shadow-lg rounded-4 bg-white overflow-hidden p-0 w-100" style={{ maxWidth: "900px", minHeight: "500px" }}>
-                
+
                 {/* 1. Izquierda: Formulario y Texto (como en Colorlib) */}
                 <div className="col-md-6 p-5 d-flex flex-column justify-content-center">
                     <div className="mb-4">
@@ -58,31 +61,31 @@ export const LoginUser = () => {
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
                             <label className="form-label text-secondary small fw-semibold">Username</label>
-                            <input 
-                                type="email" 
-                                className="form-control px-3 py-2" 
-                                placeholder="user@email.com" 
+                            <input
+                                type="email"
+                                className="form-control px-3 py-2"
+                                placeholder="user@email.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                required 
+                                required
                             />
                         </div>
 
                         <div className="mb-4">
                             <label className="form-label text-secondary small fw-semibold">Password</label>
-                            <input 
-                                type="password" 
-                                className="form-control px-3 py-2" 
-                                placeholder="Password" 
+                            <input
+                                type="password"
+                                className="form-control px-3 py-2"
+                                placeholder="Password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                required 
+                                required
                             />
                         </div>
 
                         <div className="d-grid mb-3">
-                            <button 
-                                type="submit" 
+                            <button
+                                type="submit"
                                 className="btn btn-warning py-2 fw-bold text-white shadow-sm"
                                 style={{ backgroundColor: "#fa4251", border: "none" }}
                                 disabled={loading}
@@ -102,11 +105,11 @@ export const LoginUser = () => {
                     </div>
                 </div>
 
-                
+
                 <div className="col-md-6 d-none d-md-block p-0 bg-light">
-                    <img 
-                        src="https://economipedia.com/wp-content/uploads/usuario.jpg" 
-                        alt="Login template background" 
+                    <img
+                        src="https://economipedia.com/wp-content/uploads/usuario.jpg"
+                        alt="Login template background"
                         className="w-100 h-100 object-fit-cover"
                         style={{ minHeight: "450px" }}
                     />
