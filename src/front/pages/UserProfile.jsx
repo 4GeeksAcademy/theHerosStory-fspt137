@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserPageLayout } from "../components/UserPageLayout";
 
 
 export const UserProfile = () => {
@@ -219,6 +220,8 @@ export const UserProfile = () => {
     }, [formData.address]);
 
     return (
+        <UserPageLayout>
+
         <div className="container py-4">
             <div className="row justify-content-center">
                 <div className="col-12 col-md-6 col-lg-5">
@@ -265,7 +268,10 @@ export const UserProfile = () => {
                                     </div>
                                 )}
                                 <div className="d-grid gap-2">
-                                    <button className="btn btn-primary" type="submit">Save change</button>
+                                    <button className="btn text-white"
+                                     type="submit"
+                                     style={{ backgroundColor: "#ff1949" }}
+                                     >Save change</button>
                                     <button className="btn btn-outline-secondary" type="button" onClick={() => navigate(`/user-dashboard/${localStorage.getItem("user_id")}`)}>Back to Dashboard</button>
                                 </div>
                             </form>
@@ -277,5 +283,6 @@ export const UserProfile = () => {
                 </div>
             </div>
         </div>
+    </UserPageLayout>
     );
 };

@@ -52,7 +52,7 @@ export const UserFlowDashboard = () => {
         <div className="container-fluid bg-light min-vh-100 p-0">
             <div className="row g-0">
 
-                <aside className="col-md-3 col-lg-2 bg-white min-vh-100 border-end p-0">
+                <aside className="col-md-2 col-lg-2 bg-white min-vh-100 border-end p-0">
                     <div className="p-4 text-white"
                         style={{ backgroundColor: "#ff1949" }}>
                         <h4 className="fw-bold mb-1">
@@ -80,6 +80,13 @@ export const UserFlowDashboard = () => {
                         </Link>
 
                         <Link
+                            to="/user-quests"
+                            className="btn text-start"
+                        >
+                            🎯 Quests
+                        </Link>
+
+                        <Link
                             to="/user-mentors"
                             className="btn text-start"
                         >
@@ -94,7 +101,7 @@ export const UserFlowDashboard = () => {
                         </Link>
 
                         <Link
-                            to="/survey-search-mentor"
+                            to="/match-mentor"
                             className="btn text-start"
                         >
                             🔎 Find my mentor
@@ -119,9 +126,9 @@ export const UserFlowDashboard = () => {
                     </nav>
                 </aside>
 
-                <main className="col-md-9 col-lg-10">
+                <main className="col-md-9 col-lg-10 ps-0">
 
-                    <div className="text-white px-3 py-3 d-flex justify-content-between align-items-center"
+                    <div className="text-white px-4 py-4 d-flex justify-content-between align-items-center"
                         style={{ backgroundColor: "#ff1949" }}>
 
 
@@ -135,39 +142,44 @@ export const UserFlowDashboard = () => {
                             </p>
                         </div>
 
-                        <div className="dropdown">
-                            <button
-                                className="btn btn-light dropdown-toggle d-flex align-items-center gap-2"
-                                type="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                👤
+                        <div className="d-flex align-items-center gap-2">
+                            <div className="text-white">
                                 <span> {localStorage.getItem("user_email") || "My Account"} </span>
-                            </button>
+                            </div>
 
-                            <ul className="dropdown-menu dropdown-menu-end shadow">
-                                <li>
-                                    <Link
-                                        className="dropdown-item"
-                                        to="/user/profile"
-                                    >
-                                        👤 Profile
-                                    </Link>
-                                </li>
-                                <li>
-                                    <hr className="dropdown-divider" />
-                                </li>
+                            <div className="dropdown">
+                                <button
+                                    className="btn user-menu-button "
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    👤
+                                </button>
 
-                                <li>
-                                    <button
-                                        className="dropdown-item text-danger"
-                                        onClick={handleLogout}
-                                    >
-                                        🚪 Log Out
-                                    </button>
-                                </li>
-                            </ul>
+                                <ul className="dropdown-menu dropdown-menu-end shadow">
+                                    <li>
+                                        <Link
+                                            className="dropdown-item"
+                                            to="/user/profile"
+                                        >
+                                            👤 Profile
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <hr className="dropdown-divider" />
+                                    </li>
+
+                                    <li>
+                                        <button
+                                            className="dropdown-item text-danger"
+                                            onClick={handleLogout}
+                                        >
+                                            🚪 Log Out
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
 
                     </div>

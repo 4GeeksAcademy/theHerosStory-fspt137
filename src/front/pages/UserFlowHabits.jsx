@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { UserPageLayout } from "../components/UserPageLayout";
 
 export const UserFlowHabits = () => {
     const [habits, setHabits] = useState([]);
@@ -45,11 +46,13 @@ export const UserFlowHabits = () => {
     };
 
     return (
+        <UserPageLayout>
         <div className="container py-5">
             <div className="d-flex justify-content-between align-items-center mb-4">
 
                 <h1>My Habits</h1>
-                <Link to="/habits/new" className="btn btn-primary">
+                <Link to="/habits/new" className="btn text-white"
+                style={{ backgroundColor: "#ff1949" }}>
                     Create a new habit
                 </Link>
             </div>
@@ -77,8 +80,9 @@ export const UserFlowHabits = () => {
                                 <div className="d-flex gap-2">
                                     <Link
                                         to={`/habits/edit/${habit.id}`}
-                                        className="btn btn-outline-primary btn-sm"
-                                    >
+                                        className="btn btn-sm"
+                                        style={{ color: "#ff1949", border: "1px solid $ff1949"}}
+                                        >
                                         Edit
                                     </Link>
 
@@ -86,7 +90,7 @@ export const UserFlowHabits = () => {
                                         type="button"
                                         className="btn btn-outline-danger btn-sm"
                                         onClick={() => deleteHabit(habit.id)}
-                                    >
+                                        >
                                         Delete
                                     </button>
                                 </div>
@@ -95,5 +99,6 @@ export const UserFlowHabits = () => {
                 </div>
             )}
         </div>
+    </UserPageLayout>
     );
 };

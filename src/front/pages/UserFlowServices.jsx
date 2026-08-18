@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { UserPageLayout } from "../components/UserPageLayout";
 
 export const UserFlowServices = () => {
     const [allServices, setAllServices] = useState([]);
@@ -87,69 +88,72 @@ export const UserFlowServices = () => {
     }
 
     return (
-        <div className="container py-5">
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <h1>Services</h1>
-                <Link to={`/user-dashboard/${userId}`} className="btn btn-outline-secondary">
-                    Back to dashboard
-                </Link>
-            </div>
+        <UserPageLayout>
 
-            {allServices.length === 0 ? (
-                <p className="text-muted">No services have been created yet.</p>
-            ) : (
-                <div className="list-group">
-                    {allServices.map((service) => (
-                        <div className="list-group-item d-flex justify-content-between align-items-center" key={service.id}>
-                            <div className="flex-grow-1 me-3">
-                                <h5 className="mb-1">{service.title}</h5>
-                                <p className="mb-2">{service.description}</p>
-                                <span className="badge text-bg-info">
-                                    ${service.price}
-                                </span>
-                            </div>
-                            <p className="mb-1 mt-2">
-                                <strong>Mentor:</strong>{service.mentor?.mentorname}
-                            </p>
-                            {service.mentor?.address && (
-                                <p className="mb-1">
-                                    📍 {service.mentor.address}
+            <div className="container py-5">
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h1>Services</h1>
+                    <Link to={`/user-dashboard/${userId}`} className="btn btn-outline-secondary">
+                        Back to dashboard
+                    </Link>
+                </div>
+
+                {allServices.length === 0 ? (
+                    <p className="text-muted">No services have been created yet.</p>
+                ) : (
+                    <div className="list-group">
+                        {allServices.map((service) => (
+                            <div className="list-group-item d-flex justify-content-between align-items-center" key={service.id}>
+                                <div className="flex-grow-1 me-3">
+                                    <h5 className="mb-1">{service.title}</h5>
+                                    <p className="mb-2">{service.description}</p>
+                                    <span className="badge text-bg-info">
+                                        ${service.price}
+                                    </span>
+                                </div>
+                                <p className="mb-1 mt-2">
+                                    <strong>Mentor:</strong>{service.mentor?.mentorname}
                                 </p>
-                            )}
+                                {service.mentor?.address && (
+                                    <p className="mb-1">
+                                        📍 {service.mentor.address}
+                                    </p>
+                                )}
 
-                            <div>
-                                <Link to={`/user-book/${service.id}`} className="btn btn-primary text-nowrap">
-                                    Book Appointment
-                                </Link>
-                                <button
-                                    type="button"
-                                    className="btn btn-outline-secondary btn-sn"
-                                    onClick={() => setselectedService(service)}
-                                >
-                                    View location
-                                </button>
+                                <div>
+                                    <Link to={`/user-book/${service.id}`} className="btn btn-primary text-nowrap">
+                                        Book Appointment
+                                    </Link>
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline-secondary btn-sn"
+                                        onClick={() => setselectedService(service)}
+                                    >
+                                        View location
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
-            )}
-            {selectedService && (
-                <div className="mt-4">
-                    <h4>
-                        Location - {selectedService.mentor?.mentorname}
-                    </h4>
-                    <p>
-                        📍 {selectedService.mentor?.address}
-                    </p>
-                    <div
-                        ref={mapRef}
-                        style={{
-                            width: "100%",
-                            height: "300px"
-                        }}
-                    />
-                </div>
-            )}
-        </div>
+                        ))}
+                    </div>
+                )}
+                {selectedService && (
+                    <div className="mt-4">
+                        <h4>
+                            Location - {selectedService.mentor?.mentorname}
+                        </h4>
+                        <p>
+                            📍 {selectedService.mentor?.address}
+                        </p>
+                        <div
+                            ref={mapRef}
+                            style={{
+                                width: "100%",
+                                height: "300px"
+                            }}
+                        />
+                    </div>
+                )}
+            </div>
+        </UserPageLayout>
     );
 };

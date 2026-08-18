@@ -18,7 +18,7 @@ export const AdminDashboard = () => {
         <div className="container-fluid bg-light min-vh-100 p-0">
             <div className="row g-0">
 
-                <aside className="col-md-3 col-lg-2 bg-white min-vh-100 border-end p-0">
+                <aside className="col-md-2 col-lg-2 bg-white min-vh-100 border-end p-0">
                     <div className="p-4 text-white"
                         style={{ backgroundColor: "#ff1949" }}>
                         <h4 className="fw-bold mb-1">
@@ -76,9 +76,9 @@ export const AdminDashboard = () => {
                     </nav>
                 </aside>
 
-                <main className="col-md-9 col-lg-10">
+                <main className="col-md-9 col-lg-10 ps-0">
 
-                    <div className="text-white px-3 py-3 d-flex justify-content-between align-items-center"
+                    <div className="text-white px-4 py-4 d-flex justify-content-between align-items-center"
                         style={{ backgroundColor: "#ff1949" }}>
 
 
@@ -92,43 +92,48 @@ export const AdminDashboard = () => {
                             </p>
                         </div>
 
-                        <div className="dropdown">
-                            <button
-                                className="btn btn-light dropdown-toggle d-flex align-items-center gap-2"
-                                type="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                <span className="fs-5">
-                                    👤
-                                </span>
-
+                        <div className="d-flex align-items-center gap-2">
+                            <div className="text-white">
                                 <span>
                                     {store.administrator?.name || "Administrator"}
                                 </span>
-                            </button>
+                            </div>
 
-                            <ul className="dropdown-menu dropdown-menu-end shadow">
-                                <li>
-                                    <span className="dropdown-item-text fw-semibold">
-                                        {store.administrator?.name || "Administrator"}
+
+                            <div className="dropdown">
+                                <button
+                                    className="btn user-menu-button"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    <span className="fs-5">
+                                        👤
                                     </span>
-                                </li>
-                                <li>
-                                    <hr className="dropdown-divider" />
-                                </li>
 
-                                <li>
-                                    <button
-                                        className="dropdown-item py-2 text-danger"
-                                        onClick={logout}
-                                    >
-                                        🚪 Log Out
-                                    </button>
-                                </li>
-                            </ul>
+                                </button>
+
+                                <ul className="dropdown-menu dropdown-menu-end shadow">
+                                    <li>
+                                        <span className="dropdown-item-text fw-semibold">
+                                            {store.administrator?.name || "Administrator"}
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <hr className="dropdown-divider" />
+                                    </li>
+
+                                    <li>
+                                        <button
+                                            className="dropdown-item py-2 text-danger"
+                                            onClick={logout}
+                                        >
+                                            🚪 Log Out
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-
                     </div>
                     <div className="px-4 py-4">
 

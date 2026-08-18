@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserPageLayout } from "../components/UserPageLayout";
 
 export const MatchMentor = () => {
     const [selectedGoals, setSelectedGoals] = useState([]);
@@ -37,6 +38,8 @@ export const MatchMentor = () => {
     };
 
     return (
+        <UserPageLayout>
+
         <div className="container my-5 flex-grow-1 d-flex justify-content-center align-items-center">
             <div className="row shadow-lg rounded-4 bg-white overflow-hidden p-0 w-100" style={{ maxWidth: "900px", minHeight: "500px" }}>
 
@@ -60,7 +63,7 @@ export const MatchMentor = () => {
                                                     id={`goal-${index}`}
                                                     value={goal}
                                                     onChange={() => handleCheckboxChange(goal)}
-                                                />
+                                                    />
                                                 <label className="form-check-label text-secondary small" htmlFor={`goal-${index}`}>
                                                     {goal}
                                                 </label>
@@ -74,7 +77,7 @@ export const MatchMentor = () => {
                                         type="submit"
                                         className="btn py-2 fw-bold text-white shadow-sm"
                                         style={{ backgroundColor: "#fa4251", border: "none" }}
-                                    >
+                                        >
                                         ¡Hacer Match!
                                     </button>
                                 </div>
@@ -91,7 +94,7 @@ export const MatchMentor = () => {
                             <button
                                 className="btn btn-dark rounded-pill px-4 mt-2"
                                 onClick={() => setMatched(false)}
-                            >
+                                >
                                 Buscar de nuevo
                             </button>
                         </div>
@@ -105,10 +108,11 @@ export const MatchMentor = () => {
                         alt="Match mentor background"
                         className="w-100 h-100 object-fit-cover"
                         style={{ minHeight: "450px" }}
-                    />
+                        />
                 </div>
 
             </div>
         </div>
+                        </UserPageLayout>
     );
 };
