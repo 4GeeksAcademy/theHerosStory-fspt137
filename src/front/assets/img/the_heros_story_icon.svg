@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%" style="background: transparent;">
+  <!-- FONDO CIRCULAR SUTIL PARA APPS/FAVICONS (OPCIONAL) -->
+  <circle cx="256" cy="256" r="240" fill="#0d1b2a" stroke="#415a77" stroke-width="4"/>
+  
+  <g transform="translate(136, 60)">
+    <!-- Estrella del Norte (Meta de Desarrollo Personal) -->
+    <path d="M 120 20 L 127 55 L 160 62 L 127 69 L 120 104 L 113 69 L 80 62 L 113 55 Z" fill="#e0a96d" />
+    <circle cx="120" cy="62" r="3" fill="#ffffff" />
+
+    <!-- Hoja de la Espada Estilo Gráfica de Hábitos Ascendente -->
+    <!-- Hábito Nivel 1 (Base) -->
+    <rect x="95" y="270" width="50" height="30" rx="5" fill="#1b263b" />
+    <!-- Hábito Nivel 2 -->
+    <rect x="99" y="235" width="42" height="30" rx="5" fill="#415a77" />
+    <!-- Hábito Nivel 3 -->
+    <rect x="104" y="200" width="32" height="30" rx="4" fill="#778da9" />
+    <!-- Hábito Nivel 4 -->
+    <rect x="108" y="165" width="24" height="30" rx="4" fill="#a3b18a" />
+    <!-- Hábito Nivel 5 (Punta / Victoria) -->
+    <path d="M 111 158 L 120 115 L 129 158 Z" fill="#e0a96d" />
+
+    <!-- Empuñadura Épica -->
+    <!-- Guarda -->
+    <rect x="65" y="305" width="110" height="12" rx="6" fill="#e0a96d" />
+    <!-- Mango -->
+    <rect x="111" y="322" width="18" height="45" rx="3" fill="#ffffff" />
+    <!-- Pomo -->
+    <circle cx="120" cy="375" r="12" fill="#e0a96d" />
+  </g>
+</svg>
