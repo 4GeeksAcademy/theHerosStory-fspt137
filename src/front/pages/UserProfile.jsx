@@ -91,8 +91,7 @@ export const UserProfile = () => {
 
         const data = new FormData();
         data.append("file", file);
-        data.append("upload_preset", "ml_default"); // <--- REEMPLAZA ESTO CON TU PRESET DE CLOUDINARY
-
+        data.append("upload_preset", "ml_default"); 
         setUploading(true);
         setStatus({ message: "Uploading image...", error: "" });
 

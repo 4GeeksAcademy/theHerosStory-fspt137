@@ -61,7 +61,7 @@ export const LoginUser = () => {
 
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
-                            <label className="form-label text-secondary small fw-semibold">Username</label>
+                            <label className="form-label text-secondary small fw-semibold">Email</label>
                             <input
                                 type="email"
                                 className="form-control px-3 py-2"
