@@ -12,7 +12,7 @@ export const TeamView = () => {
 			role: "Full Stack Developer",
 			bio: "Strategic professional with 10+ years of experience in advertising and finance, now pivoting to Full Stack development. She blends strong analytical and business skills with coding to build impactful digital solutions, offering a unique hybrid vision that bridges business strategy and tech.",
 			image: marianelaImg,
-			githubUrl: "https://github.com",   // 🔗 Rellena aquí tus enlaces definitivos
+			githubUrl: "https://github.com",   
 			linkedinUrl: "https://linkedin.com"
 		},
 		{
@@ -74,11 +74,9 @@ export const TeamView = () => {
 					<h2 className="fw-black text-dark display-5 m-0 mt-2" style={{ letterSpacing: "-1px" }}>Meet Our Team</h2>
 				</div>
 
-				{/* 🛠️ NUEVA FILA CENTRALIZADORA: Limita el ancho del contenido de tarjetas */}
 				<div className="row justify-content-center m-0">
 					<div className="col-12 col-lg-10 col-xl-8">
 						
-						{/* Tu cuadrícula original de tarjetas ahora vive dentro de las 8/10 columnas asignadas */}
 						<div className="row g-4 justify-content-center team-grid">
 							{developers.map((dev, index) => (
 								<div key={index} className="col-lg-4 col-md-6 col-sm-12">
@@ -99,7 +97,6 @@ export const TeamView = () => {
 												{dev.role}
 											</span>
 											
-											{/* Enlaces utilizando tus SVGs importados */}
 											<div className="d-flex gap-3 team-socials m-0">
 												<a href={dev.githubUrl} target="_blank" rel="noopener noreferrer">
 													<img 
