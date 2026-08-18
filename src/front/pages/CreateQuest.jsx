@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom";
+import { UserPageLayout } from "../components/UserPageLayout";
 
 export const CreateQuest = () => {
     const [title, setTitle] = useState("");
@@ -47,6 +48,8 @@ export const CreateQuest = () => {
 
 
     return (
+        <UserPageLayout>
+
         <div className="container py-5">
             <h1 className="mb-4">Create a new quest</h1>
 
@@ -60,7 +63,7 @@ export const CreateQuest = () => {
                         value={title}
                         onChange={(event) => setTitle(event.target.value)}
                         required
-                    />
+                        />
                 </div>
 
                 <div className="mb-3">
@@ -71,7 +74,7 @@ export const CreateQuest = () => {
                         value={description}
                         onChange={(event) => setDescription(event.target.value)}
                         required
-                    />
+                        />
                 </div>
 
                 <div className="mb-3">
@@ -81,19 +84,21 @@ export const CreateQuest = () => {
                         value={status}
                         onChange={(event) => setStatus(event.target.value)}
                         required
-                    >
+                        >
                         <option value="pending">Pending</option>
                         <option value="in_progress">In progress</option>
                         <option value="completed">Completed</option>
                     </select>
                 </div>
 
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="btn text-white"
+                style={{ backgroundColor: "#ff1949" }}>
                     Create quest
                 </button>
 
             </form >
         </div>
+    </UserPageLayout>
 
     );
 };

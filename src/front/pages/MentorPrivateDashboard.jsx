@@ -77,7 +77,7 @@ export const MentorPrivateDashboard = () => {
         <div className="container-fluid bg-light min-vh-100 p-0">
             <div className="row g-0">
 
-                <aside className="col-md-3 col-lg-2 bg-white min-vh-100 border-end p-0">
+                <aside className="col-md-2 col-lg-2 bg-white min-vh-100 border-end p-0">
                     <div className="p-4 text-white"
                         style={{ backgroundColor: "#ff1949" }}>
                         <h4 className="fw-bold mb-1">
@@ -137,9 +137,9 @@ export const MentorPrivateDashboard = () => {
                     </nav>
                 </aside>
 
-                <main className="col-md-9 col-lg-10">
+                <main className="col-md-9 col-lg-10 ps-0">
 
-                    <div className="text-white px-3 py-3 d-flex justify-content-between align-items-center"
+                    <div className="text-white px-4 py-4 d-flex justify-content-between align-items-center"
                         style={{ backgroundColor: "#ff1949" }}>
 
 
@@ -153,20 +153,26 @@ export const MentorPrivateDashboard = () => {
                             </p>
                         </div>
 
+                        <div className="d-flex align-items-center gap-2">
+                            <div className="text-white">
+
+                            <span>
+                                {mentorData?.mentorname || mentorData?.email || "My Account"}
+                            </span>
+                            </div>
+
+
                         <div className="dropdown">
                             <button
-                                className="btn btn-light dropdown-toggle d-flex align-items-center gap-2"
+                                className="btn user-menu-button"
                                 type="button"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
-                            >
+                                >
                                 <span className="fs-5">
                                     👤
                                 </span>
 
-                                <span>
-                                    {mentorData?.mentorname || mentorData?.email || "My Account"}
-                                </span>
                             </button>
 
                             <ul className="dropdown-menu dropdown-menu-end shadow">
@@ -174,7 +180,7 @@ export const MentorPrivateDashboard = () => {
                                     <Link
                                         className="dropdown-item py-2"
                                         to="/mentor/profile"
-                                    >
+                                        >
                                         👤 Profile
                                     </Link>
                                 </li>
@@ -186,11 +192,12 @@ export const MentorPrivateDashboard = () => {
                                     <button
                                         className="dropdown-item py-2 text-danger"
                                         onClick={logout}
-                                    >
+                                        >
                                         🚪 Log Out
                                     </button>
                                 </li>
                             </ul>
+                        </div>
                         </div>
 
                     </div>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { UserPageLayout } from "../components/UserPageLayout";
 
 export const EditHabit = () => {
     const [title, setTitle] = useState("");
@@ -83,6 +84,8 @@ export const EditHabit = () => {
     };
 
     return (
+        <UserPageLayout>
+
         <div className="container py-5">
             <h1 className="mb-4">Edit Habits</h1>
 
@@ -96,7 +99,7 @@ export const EditHabit = () => {
                         value={title}
                         onChange={(event) => setTitle(event.target.value)}
                         required
-                    />
+                        />
                 </div>
 
                 <div className="mb-3">
@@ -107,7 +110,7 @@ export const EditHabit = () => {
                         value={description}
                         onChange={(event) => setDescription(event.target.value)}
                         required
-                    />
+                        />
                 </div>
 
                 <div className="mb-3">
@@ -117,7 +120,7 @@ export const EditHabit = () => {
                         value={status}
                         onChange={(event) => setStatus(event.target.value)}
                         required
-                    >
+                        >
                         <option value="pending">Pending</option>
                         <option value="in_progress">In progress</option>
                         <option value="completed">Completed</option>
@@ -133,20 +136,22 @@ export const EditHabit = () => {
                                 alt="Current habit" 
                                 style={{ width: "80px", height: "80px", objectFit: "cover" }} 
                                 className="rounded shadow-sm"
-                            />
+                                />
                         </div>
                     )}
                     <input
                         type="file"
                         className="form-control"
                         onChange={(event) => setImageFile(event.target.files[0])}
-                    />
+                        />
                 </div>
 
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="btn text-white"
+                style={{ backgroundColor: "#ff1949" }}>
                     Save changes
                 </button>
             </form>
         </div>
+                        </UserPageLayout>
     );
 };
