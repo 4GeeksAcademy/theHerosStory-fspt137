@@ -5,36 +5,14 @@ export const MentorRegister = () => {
     const [mentorname, setMentorname] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [category, setCategory] = useState(""); 
-    const [tag, setTag] = useState("");           
+    
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const navigate = useNavigate();
 
-    const categoryOptions = [
-        "Mental Health & Wellbeing", "Fitness & Exercise", "Nutrition & Dietetics", 
-        "Personal Development", "Spirituality & Meditation", "Relationships & Family",
-        "Productivity & Routines", "Time Management", "Personal Finance",
-        "Fashion & Style", "Beauty & Skincare", "Interior Design & Decor",
-        "Minimalism & Decluttering", "Travel & Nomadism", "Gastronomy & Cooking",
-        "Sustainability & Eco-living", "Gardening & Plants", "Pet Care",
-        "Leisure & Entertainment", "Lifestyle Photography", "Reading & Writing",
-        "Motherhood & Fatherhood", "Healthy Aging", "Arts & Crafts (DIY)",
-        "Coffee & Mixology", "Rural Tourism & Adventure", "Workplace Wellness",
-        "Sleep & Rest Optimization", "Habit Breaking & Building", "Senior Lifestyle"
-    ]
-
-    const tagOptions = [
-        "Yoga", "Mindfulness", "Pilates", "Calisthenics", "Vegan / Vegetarian",
-        "Real Fooding", "Intermittent Fasting", "CrossFit", "Guided Meditation", "Journaling",
-        "Self-Love", "Emotional Intelligence", "Morning Routine", "Toxic Productivity", "Gentle Parenting",
-        "Budget Travel", "Hiking & Trekking", "Batch Cooking", "Natural Cosmetics", "Capsule Wardrobe",
-        "Zero Waste", "Passive Investing", "Home Organization", "Life Coaching", "Resilience",
-        "Stoicism", "Stress Management", "Urban Gardening", "Dog Training", "Speed Reading"
-    ]
-
+    
     const handleSubmit = (event) => {
         event.preventDefault();
         setError("");
@@ -49,8 +27,7 @@ export const MentorRegister = () => {
                 mentorname,
                 email,
                 password,
-                category, 
-                tag       
+                   
             })
         })
             .then(async (response) => {
@@ -130,46 +107,7 @@ export const MentorRegister = () => {
                             />
                         </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="category" className="form-label">
-                                Category
-                            </label>
-                            <select
-                                id="category"
-                                className="form-select"
-                                value={category}
-                                onChange={(event) => setCategory(event.target.value)}
-                                required
-                            >
-                                <option value="" disabled>Select a category</option>
-                                {categoryOptions.map((option, index) => (
-                                    <option key={index} value={option}>
-                                        {option}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="tag" className="form-label">
-                                Tag
-                            </label>
-                            <select
-                                id="tag"
-                                className="form-select"
-                                value={tag}
-                                onChange={(event) => setTag(event.target.value)}
-                                required
-                            >
-                                <option value="" disabled>Select a tag</option>
-                                {tagOptions.map((option, index) => (
-                                    <option key={index} value={option}>
-                                        {option}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
+                         
                         <button
                             type="submit"
                             className="btn btn-primary w-100"

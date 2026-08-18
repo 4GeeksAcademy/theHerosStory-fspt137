@@ -192,7 +192,8 @@ export const UserFlowDashboard = () => {
                                     to={`/habits/user/${userId}`}
                                     className="text-decoration-none"
                                 >
-                                    <div className="card h-100 border-0 shadow-sm">
+                                    <div className="card h-100 shadow-sm"
+                                    style={{ border: "none", borderLeft: "4px solid #ff1949"}}>
                                         <div className="card-body p-4">
 
                                             <div className="fs-2 mb-3">
@@ -217,7 +218,8 @@ export const UserFlowDashboard = () => {
                                     to="/user-quests"
                                     className="text-decoration-none"
                                 >
-                                    <div className="card h-100 border-0 shadow-sm">
+                                    <div className="card h-100 shadow-sm"
+                                    style={{ border: "none", borderLeft: "4px solid #ff1949"}}>
                                         <div className="card-body p-4">
 
                                             <div className="fs-2 mb-3">
@@ -242,7 +244,8 @@ export const UserFlowDashboard = () => {
                                     to="/user-mentors"
                                     className="text-decoration-none"
                                 >
-                                    <div className="card h-100 border-0 shadow-sm">
+                                    <div className="card h-100 shadow-sm"
+                                    style={{ border: "none", borderLeft: "4px solid #ff1949"}}>
                                         <div className="card-body p-4">
 
                                             <div className="fs-2 mb-3">
@@ -267,7 +270,8 @@ export const UserFlowDashboard = () => {
                                     to="/match-mentor"
                                     className="text-decoration-none"
                                 >
-                                    <div className="card h-100 border-0 shadow-sm">
+                                    <div className="card h-100 shadow-sm"
+                                    style={{ border: "none", borderLeft: "4px solid #ff1949"}}>
                                         <div className="card-body p-4">
                                             <div className="fs-2 mb-3">
                                                 🔎

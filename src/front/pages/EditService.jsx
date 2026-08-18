@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { MentorPageLayout } from "../components/MentorPageLayout";
 
 export const EditService = () => {
     const [title, setTitle] = useState("");
@@ -81,6 +82,8 @@ export const EditService = () => {
     };
 
     return (
+        <MentorPageLayout>
+
         <div className="container py-5">
             <h1 className="mb-4">Edit Service</h1>
 
@@ -115,7 +118,7 @@ export const EditService = () => {
                         value={price}
                         onChange={(event) => setPrice(event.target.value)}
                         required
-                    />
+                        />
                 </div>
 
                 <div className="mb-3">
@@ -125,7 +128,7 @@ export const EditService = () => {
                         className="form-control"
                         value={mentorId}
                         onChange={(event) => setMentorId(event.target.value)}
-                    />
+                        />
                 </div>
 
                 <div className="mb-3">
@@ -137,14 +140,14 @@ export const EditService = () => {
                                 alt="Current service" 
                                 style={{ width: "80px", height: "80px", objectFit: "cover" }} 
                                 className="rounded shadow-sm"
-                            />
+                                />
                         </div>
                     )}
                     <input
                         type="file"
                         className="form-control"
                         onChange={(event) => setImageFile(event.target.files[0])}
-                    />
+                        />
                 </div>
 
                 <button type="submit" className="btn btn-primary">
@@ -152,5 +155,6 @@ export const EditService = () => {
                 </button>
             </form>
         </div>
+                        </MentorPageLayout>
     );
 };

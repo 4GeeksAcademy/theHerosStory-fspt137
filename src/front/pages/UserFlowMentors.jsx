@@ -119,7 +119,7 @@ export const UserFlowMentors = () => {
                                     <p className="mb-1">{mentor.tag}</p>
                                     <small className="text-muted" > {mentor.distance} km away</small>
                                 </div>
-                                <Link to={`/user-chat/${mentor.id}`} className="btn btn-primary btn-sm">
+                                <Link to={`/user-chat/${mentor.id}`} className="btn text-white btn-sm" style={{ backgroundColor: "#ff1949"} }>
                                     Chat
                                 </Link>
                             </div>

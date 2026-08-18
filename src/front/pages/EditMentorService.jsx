@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { MentorPageLayout } from "../components/MentorPageLayout";
 
 export const EditMentorService = () => {
     const [title, setTitle] = useState("");
@@ -92,6 +93,8 @@ export const EditMentorService = () => {
     }
 
     return (
+        <MentorPageLayout>
+
         <div className="container py-5">
             <h1 className="mb-4">Edit Service</h1>
 
@@ -131,7 +134,8 @@ export const EditMentorService = () => {
                 </div>
 
                 <div className="d-flex gap-2">
-                    <button type="submit" className="btn btn-primary">
+                    <button type="submit" className="btn text-white"
+                    style={{backgroundColor: "#ff1949"}}>
                         Save changes
                     </button>
 
@@ -141,5 +145,6 @@ export const EditMentorService = () => {
                 </div>
             </form>
         </div>
+                        </MentorPageLayout>
     );
 };

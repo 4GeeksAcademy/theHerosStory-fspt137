@@ -92,7 +92,8 @@ export const CreateService = () => {
                     />
                 </div>
 
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="btn text-white"
+                style={{ backgroundColor: "#ff1949"}}>
                     Create service
                 </button>
             </form>

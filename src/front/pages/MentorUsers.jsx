@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { MentorPageLayout } from "../components/MentorPageLayout";
 
 export const MentorUsers = () => {
     const [users, setUsers] = useState([]);
@@ -49,6 +50,8 @@ export const MentorUsers = () => {
         );
     }
     return (
+        <MentorPageLayout>
+
         <div className="container py-5">
             <div className="d-flex justify-content-between align-items-center mb-4">
 
@@ -74,8 +77,8 @@ export const MentorUsers = () => {
                 <div className="list-group">
                     {users.map((user) => (
                         <div
-                            key={user.chat_id}
-                            className="list-group-item d-flex justify-content-between align-items-center"
+                        key={user.chat_id}
+                        className="list-group-item d-flex justify-content-between align-items-center"
                         >
                             <div>
                                 <h5 className="mb-1">
@@ -89,8 +92,8 @@ export const MentorUsers = () => {
 
                             <Link
                                 to={`/mentors/chats/${user.chat_id}`}
-                                className="btn btn-primary"
-                            >
+                                className="btn text-white" style={{ backgroundColor: "#ff1949"} }
+                                >
                                 Chat
                             </Link>
                         </div>
@@ -98,5 +101,6 @@ export const MentorUsers = () => {
                 </div>
             )}
         </div>
+            </MentorPageLayout>
     );
 }

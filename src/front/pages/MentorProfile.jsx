@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { MentorPageLayout } from "../components/MentorPageLayout";
 
 
 export const MentorProfile = () => {
@@ -223,6 +224,8 @@ export const MentorProfile = () => {
     }, [formData.address]);
 
     return (
+        <MentorPageLayout>
+
         <div className="container py-4">
             <div className="row justify-content-center">
                 <div className="col-12 col-md-6 col-lg-5">
@@ -258,13 +261,13 @@ export const MentorProfile = () => {
                                 </div>
                                 {formData.latitude && formData.longitude && (
                                     <div
-                                        ref={mapContainerRef}
-                                        style={{
-                                            width: "100%",
-                                            height: "300px",
-                                            marginTop: "15px",
-                                            marginBottom: "15px"
-                                        }}
+                                    ref={mapContainerRef}
+                                    style={{
+                                        width: "100%",
+                                        height: "300px",
+                                        marginTop: "15px",
+                                        marginBottom: "15px"
+                                    }}
                                     >
                                     </div>
                                 )}
@@ -276,7 +279,7 @@ export const MentorProfile = () => {
                                         name="category"
                                         value={formData.categoty}
                                         onChange={handleChange}
-                                    >
+                                        >
                                         <option value="">Select category</option>
                                         <option value="career">Career growth</option>
                                         <option value="personal-development">Personal development</option>
@@ -294,10 +297,13 @@ export const MentorProfile = () => {
                                         name="tag"
                                         value={formData.tag}
                                         onChange={handleChange}
-                                    ></input>
+                                        ></input>
                                 </div>
                                 <div className="d-grid gap-2">
-                                    <button className="btn btn-primary" type="submit">Save change</button>
+                                    <button className="btn text-white"
+                                    type="submit"
+                                    style={{ backgroundColor: "#ff1949"}}
+                                    >Save change</button>
                                     <button className="btn btn-outline-secondary" type="button" onClick={() => navigate(`/mentors/dashboard/${localStorage.getItem("mentor_id")}`)}>Back to Dashboard</button>
                                 </div>
                             </form>
@@ -309,5 +315,6 @@ export const MentorProfile = () => {
                 </div>
             </div>
         </div>
+                                        </MentorPageLayout>
     );
 };
