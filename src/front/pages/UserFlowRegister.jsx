@@ -23,7 +23,8 @@ export const UserFlowRegister = () => {
             
             if (!resp.ok) throw new Error("Error creating user in server");
             
-            navigate("/users"); 
+            // Redirige al login para que el usuario pueda iniciar sesión con sus credenciales
+            navigate("/login-user"); 
         } catch (error) {
             console.error("Error capturado:", error);
         }
@@ -81,7 +82,7 @@ export const UserFlowRegister = () => {
                             <button 
                                 type="button" 
                                 className="btn btn-outline-secondary w-50 py-2" 
-                                onClick={() => navigate("/users")}
+                                onClick={() => navigate("/login-user")}
                             >
                                 Cancel
                             </button>

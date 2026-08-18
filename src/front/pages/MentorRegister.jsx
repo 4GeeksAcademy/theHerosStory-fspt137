@@ -1,191 +1,111 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const MentorRegister = () => {
-    const [mentorname, setMentorname] = useState("");
     const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [category, setCategory] = useState(""); 
-    const [tag, setTag] = useState("");           
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
-
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const navigate = useNavigate();
 
-    const categoryOptions = [
-        "Mental Health & Wellbeing", "Fitness & Exercise", "Nutrition & Dietetics", 
-        "Personal Development", "Spirituality & Meditation", "Relationships & Family",
-        "Productivity & Routines", "Time Management", "Personal Finance",
-        "Fashion & Style", "Beauty & Skincare", "Interior Design & Decor",
-        "Minimalism & Decluttering", "Travel & Nomadism", "Gastronomy & Cooking",
-        "Sustainability & Eco-living", "Gardening & Plants", "Pet Care",
-        "Leisure & Entertainment", "Lifestyle Photography", "Reading & Writing",
-        "Motherhood & Fatherhood", "Healthy Aging", "Arts & Crafts (DIY)",
-        "Coffee & Mixology", "Rural Tourism & Adventure", "Workplace Wellness",
-        "Sleep & Rest Optimization", "Habit Breaking & Building", "Senior Lifestyle"
-    ]
-
-    const tagOptions = [
-        "Yoga", "Mindfulness", "Pilates", "Calisthenics", "Vegan / Vegetarian",
-        "Real Fooding", "Intermittent Fasting", "CrossFit", "Guided Meditation", "Journaling",
-        "Self-Love", "Emotional Intelligence", "Morning Routine", "Toxic Productivity", "Gentle Parenting",
-        "Budget Travel", "Hiking & Trekking", "Batch Cooking", "Natural Cosmetics", "Capsule Wardrobe",
-        "Zero Waste", "Passive Investing", "Home Organization", "Life Coaching", "Resilience",
-        "Stoicism", "Stress Management", "Urban Gardening", "Dog Training", "Speed Reading"
-    ]
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        setError("");
-        setLoading(true);
-
-        fetch(`${backendUrl}/api/mentors`, {
-            method: "POST",
-            headers: {
-                "content-type": "application/json"
-            },
-            body: JSON.stringify({
-                mentorname,
-                email,
-                password,
-                category, 
-                tag       
-            })
-        })
-            .then(async (response) => {
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.msg || "Error creating mentor");
-                }
-
-                return data;
-            })
-            .then((data) => {
-                console.log("Mentor created:", data);
-                navigate("/mentors/login");
-            })
-            .catch((error) => {
-                console.error(error);
-                setError(error.message);
-            })
-            .finally(() => {
-                setLoading(false);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const resp = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/mentors", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: email,
+                    username: username, 
+                    password: password, 
+                    is_active: true   
+                })
             });
+            
+            if (!resp.ok) throw new Error("Error creating mentor in server");
+            
+            navigate("/login-user"); 
+        } catch (error) {
+            console.error("Error capturado:", error);
+        }
     };
 
     return (
-        <div className="container py-5">
-            <div className="row justify-content-center">
-                <div className="col-md-6 col-lg-4">
-                    <h1 className="mb-4 text-center">Mentor Register</h1>
-
-                    {error && (
-                        <div className="alert alert-danger">
-                            {error}
-                        </div>
-                    )}
+        <div className="container my-5 flex-grow-1 d-flex justify-content-center align-items-center">
+            <div className="row shadow-lg rounded-4 bg-white overflow-hidden p-0 w-100" style={{ maxWidth: "900px", minHeight: "500px" }}>
+                
+                {/* 1. Izquierda: Formulario de Registro de Mentor */}
+                <div className="col-md-6 p-5 d-flex flex-column justify-content-center">
+                    <div className="mb-4">
+                        <h3 className="fw-bold text-dark">Register Mentor</h3>
+                        <p className="text-muted small">Crea una cuenta como mentor para comenzar.</p>
+                    </div>
 
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
-                            <label htmlFor="mentorname" className="form-label">
-                                Mentor name
-                            </label>
-                            <input
-                                id="mentorname"
-                                type="text"
-                                className="form-control"
-                                value={mentorname}
-                                onChange={(event) => setMentorname(event.target.value)}
-                                required
-                            />
-                        </div>
-                        
-                        <div className="mb-3">
-                            <label htmlFor="email" className="form-label">
-                                Email
-                            </label>
-                            <input
-                                id="email"
-                                type="email"
-                                className="form-control"
-                                value={email}
-                                onChange={(event) => setEmail(event.target.value)}
-                                required
+                            <label className="form-label text-secondary small fw-semibold">Username</label>
+                            <input 
+                                type="text" 
+                                className="form-control px-3 py-2" 
+                                value={username} 
+                                onChange={e => setUsername(e.target.value)} 
+                                required 
+                                placeholder="MentorUser"
                             />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="password" className="form-label">
-                                Password
-                            </label>
-                            <input
-                                id="password"
-                                type="password"
-                                className="form-control"
-                                value={password}
-                                onChange={(event) => setPassword(event.target.value)}
-                                required
+                            <label className="form-label text-secondary small fw-semibold">Correo Electrónico (Email)</label>
+                            <input 
+                                type="email" 
+                                className="form-control px-3 py-2" 
+                                value={email} 
+                                onChange={e => setEmail(e.target.value)} 
+                                required 
+                                placeholder="mentor@mail.com"
                             />
                         </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="category" className="form-label">
-                                Category
-                            </label>
-                            <select
-                                id="category"
-                                className="form-select"
-                                value={category}
-                                onChange={(event) => setCategory(event.target.value)}
-                                required
+                        <div className="mb-4">
+                            <label className="form-label text-secondary small fw-semibold">Password</label>
+                            <input 
+                                type="password" 
+                                className="form-control px-3 py-2" 
+                                value={password} 
+                                onChange={e => setPassword(e.target.value)} 
+                                required 
+                                placeholder="xxxxxxxxx"
+                            />
+                        </div>
+
+                        <div className="d-flex justify-content-between align-items-center gap-2">
+                            <button 
+                                type="button" 
+                                className="btn btn-outline-secondary w-50 py-2" 
+                                onClick={() => navigate("/login-user")}
                             >
-                                <option value="" disabled>Select a category</option>
-                                {categoryOptions.map((option, index) => (
-                                    <option key={index} value={option}>
-                                        {option}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="tag" className="form-label">
-                                Tag
-                            </label>
-                            <select
-                                id="tag"
-                                className="form-select"
-                                value={tag}
-                                onChange={(event) => setTag(event.target.value)}
-                                required
+                                Cancel
+                            </button>
+                            <button 
+                                type="submit" 
+                                className="btn w-50 py-2 fw-bold text-white shadow-sm"
+                                style={{ backgroundColor: "#fa4251", border: "none" }}
                             >
-                                <option value="" disabled>Select a tag</option>
-                                {tagOptions.map((option, index) => (
-                                    <option key={index} value={option}>
-                                        {option}
-                                    </option>
-                                ))}
-                            </select>
+                                Register
+                            </button>
                         </div>
-
-                        <button
-                            type="submit"
-                            className="btn btn-primary w-100"
-                            disabled={loading}
-                        >
-                            {loading ? "Creating account..." : "Register"}
-                        </button>
                     </form>
-
-                    <p className="text-center mt-3">
-                        Already have an account?{" "}
-                        <Link to="/mentors/login">
-                            Login
-                        </Link>
-                    </p>
                 </div>
+
+                {/* 2. Derecha: La Imagen al lado */}
+                <div className="col-md-6 d-none d-md-block p-0 bg-light">
+                    <img 
+                        src="https://img.magnific.com/foto-gratis/equipo-trabajando-juntos-proyecto_23-2149325425.jpg?semt=ais_hybrid&w=740&q=80" 
+                        alt="Register Mentor background" 
+                        className="w-100 h-100 object-fit-cover"
+                        style={{ minHeight: "450px" }}
+                    />
+                </div>
+
             </div>
         </div>
     );
