@@ -31,6 +31,7 @@ export const LoginUser = () => {
 
             localStorage.setItem("user_token", data.access_token);
             localStorage.setItem("user_id", data.user.id);
+            localStorage.setItem("user_email", data.user.email);
 
             navigate(`/user-dashboard/${data.user.id}`);
 

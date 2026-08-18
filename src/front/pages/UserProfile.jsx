@@ -268,7 +268,10 @@ export const UserProfile = () => {
                                     </div>
                                 )}
                                 <div className="d-grid gap-2">
-                                    <button className="btn btn-primary" type="submit">Save change</button>
+                                    <button className="btn text-white"
+                                     type="submit"
+                                     style={{ backgroundColor: "#ff1949" }}
+                                     >Save change</button>
                                     <button className="btn btn-outline-secondary" type="button" onClick={() => navigate(`/user-dashboard/${localStorage.getItem("user_id")}`)}>Back to Dashboard</button>
                                 </div>
                             </form>

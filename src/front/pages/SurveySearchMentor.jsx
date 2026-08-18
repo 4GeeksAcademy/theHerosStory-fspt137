@@ -97,6 +97,11 @@ export const SurveySearchMentor = () => {
     const currentQuestion = questions[step];
 
     const handleSelect = (option) => {
+        setAnswers({
+            ...answers,
+            [step]: option.label
+        });
+
         const newScores = { ...scores };
 
         Object.entries(option.scores).forEach(([category, points]) => {
@@ -132,62 +137,70 @@ export const SurveySearchMentor = () => {
     return (
         <UserPageLayout>
 
-        <div className="container py-5">
-            <div className="row justify-content-center">
-                <div className="col-12 col-md-8 col-lg-7">
-                    <div className="mb-4">
-                        <p className="text-muted mb-2">
-                            Question {step + 1} of {questions.length}
-                        </p>
-                        <div className="progress">
-                            <div
-                                className="progress-bar"
-                                role="progressbar"
-                                style={{ width: `${progress}%` }}
-                                aria-valuenow={progress}
-                                aria-valuemin="0"
-                                aria-valuemax="100"
+            <div className="container py-5">
+                <div className="row justify-content-center">
+                    <div className="col-12 col-md-8 col-lg-7">
+                        <div className="mb-4">
+                            <p className="text-muted mb-2">
+                                Question {step + 1} of {questions.length}
+                            </p>
+                            <div className="progress">
+                                <div
+                                    className="progress-bar"
+                                    role="progressbar"
+                                    style={{
+                                        width: `${progress}%`,
+                                        backgroundColor: "#ff1949"
+                                    }}
+                                    aria-valuenow={progress}
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
                                 >
-                            </div>
-                        </div>
-                        <div className="card shadow-sm">
-                            <div className="card-body p-4">
-
-                                <h2 className="mb-4">
-                                    {currentQuestion.title}
-                                </h2>
-
-                                <div className="row g-3">
-                                    {currentQuestion.options.map((option) => (
-                                        <div className="col-12 col-md-6" key={option.label}>
-                                            <button
-                                                type="button"
-                                                className="btn btn-outline-primary w-100 p-4"
-                                                onClick={() => handleSelect(option)}
-                                            >
-                                                {option.label}
-                                            </button>
-                                        </div>
-                                    ))}
                                 </div>
+                            </div>
+                            <div className="card shadow-sm">
+                                <div className="card-body p-4">
 
-                                <div className="mt-4">
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline-secondary"
-                                        onClick={handleBack}
+                                    <h2 className="mb-4">
+                                        {currentQuestion.title}
+                                    </h2>
+
+                                    <div className="row g-3">
+                                        {currentQuestion.options.map((option) => (
+                                            <div className="col-12 col-md-6" key={option.label}>
+                                                <button
+                                                    type="button"
+                                                    className="btn w-100 p-4"
+                                                    style={{
+                                                        backgroundColor: answers[step] === option.label ? "#ff1949" : "white",
+                                                        color: answers[step] === option.label ? "white" : "#ff1949",
+                                                        border: "1px solid #ff1949"
+                                                    }}
+                                                    onClick={() => handleSelect(option)}
+                                                >
+                                                    {option.label}
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="mt-4">
+                                        <button
+                                            type="button"
+                                            className="btn btn-outline-secondary"
+                                            onClick={handleBack}
                                         >
-                                        Back
-                                    </button>
+                                            Back
+                                        </button>
+                                    </div>
+
                                 </div>
-
                             </div>
-                        </div>
 
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-                                        </UserPageLayout>
+        </UserPageLayout>
     );
 };

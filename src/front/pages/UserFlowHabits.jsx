@@ -80,7 +80,8 @@ export const UserFlowHabits = () => {
                                 <div className="d-flex gap-2">
                                     <Link
                                         to={`/habits/edit/${habit.id}`}
-                                        className="btn btn-outline-primary btn-sm"
+                                        className="btn btn-sm"
+                                        style={{ color: "#ff1949", border: "1px solid $ff1949"}}
                                         >
                                         Edit
                                     </Link>
