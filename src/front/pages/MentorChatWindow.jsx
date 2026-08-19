@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { MentorPageLayout } from "../components/MentorPageLayout";
 import { socket } from "../../socket";
 
 export const MentorChatWindow = () => {
@@ -114,6 +115,8 @@ export const MentorChatWindow = () => {
     }
 
     return (
+        <MentorPageLayout>
+
         <div className="container py-5" style={{ maxWidth: "700px" }}>
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h1>Chat #{chatId}</h1>
@@ -145,7 +148,7 @@ export const MentorChatWindow = () => {
                         <div
                             key={message.id}
                             className={message.sender === "mentor" ? "text-end mb-3" : "text-start mb-3"}
-                        >
+                            >
                             <div>
                                 <strong>
                                     {message.sender === "mentor" ? "Mentor" : "User"}
@@ -155,10 +158,10 @@ export const MentorChatWindow = () => {
                             <span
                                 className={
                                     message.sender === "mentor"
-                                        ? "d-inline-block bg-primary text-white rounded px-3 py-2"
-                                        : "d-inline-block bg-white border rounded px-3 py-2"
+                                    ? "d-inline-block bg-primary text-white rounded px-3 py-2"
+                                    : "d-inline-block bg-white border rounded px-3 py-2"
                                 }
-                            >
+                                >
                                 {message.content}
                             </span>
                         </div>
@@ -174,12 +177,14 @@ export const MentorChatWindow = () => {
                         value={content}
                         onChange={(event) => setContent(event.target.value)}
                         required
-                    />
-                    <button type="submit" className="btn btn-primary">
+                        />
+                    <button type="submit" className="btn text-white"
+                    style={{ backgroundColor: "#ff1949"}}>
                         Send
                     </button>
                 </div>
             </form>
         </div>
+                        </MentorPageLayout>
     );
 };

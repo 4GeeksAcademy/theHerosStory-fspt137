@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { MentorPageLayout } from "../components/MentorPageLayout";
 
 export const MentorServices = () => {
     const [services, setServices] = useState([]);
@@ -82,6 +83,8 @@ export const MentorServices = () => {
     }
 
     return (
+        <MentorPageLayout>
+
         <div className="container py-5">
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h1>My Services</h1>
@@ -91,15 +94,16 @@ export const MentorServices = () => {
                 <Link
                     to={`/mentors/dashboard/${localStorage.getItem("mentor_id")}`}
                     className="btn btn-outline-secondary"
-                >
+                    >
                     Back to Dashboard
                 </Link>
 
 
                 <Link
                     to="/mentors/services/new"
-                    className="btn btn-primary"
-                >
+                    className="btn text-white"
+                    style={{ backgroundColor: "#ff1949"}}
+                    >
                     Create a new service
                 </Link>
             </div>
@@ -118,8 +122,8 @@ export const MentorServices = () => {
                 <div className="list-group">
                     {services.map((service) => (
                         <div
-                            key={service.id}
-                            className="list-group-item d-flex justify-content-between align-items-center"
+                        key={service.id}
+                        className="list-group-item d-flex justify-content-between align-items-center"
                         >
                             <div>
                                 <h5 className="mb-1">
@@ -138,8 +142,12 @@ export const MentorServices = () => {
                             <div className="d-flex gap-2">
                                 <Link
                                     to={`/mentors/services/edit/${service.id}`}
-                                    className="btn btn-outline-primary btn-sm"
-                                >
+                                    className="btn btn-sm"
+                                    style={{ 
+                                        color: "#ff1949",
+                                        border: "1px solid #ff1949"                                    
+                                    }}
+                                    >
                                     Edit
                                 </Link>
                                 <button
@@ -148,7 +156,7 @@ export const MentorServices = () => {
                                     onClick={() =>
                                         deleteService(service.id)
                                     }
-                                >
+                                    >
                                     Delete
                                 </button>
                             </div>
@@ -157,5 +165,6 @@ export const MentorServices = () => {
                 </div>
             )}
         </div>
+    </MentorPageLayout>
     );
 };

@@ -111,14 +111,6 @@ export const MentorPrivateDashboard = () => {
                             🛠️ My Services
                         </Link>
 
-
-                        <Link
-                            to="/mentors/appointments"
-                            className="btn text-start"
-                        >
-                            📅 Appointments
-                        </Link>
-
                         <Link
                             to="/mentors/users"
                             className="btn text-start"
@@ -205,12 +197,13 @@ export const MentorPrivateDashboard = () => {
 
                         <div className="row g-4 mb-5">
 
-                            <div className="col-12 col-sm-6 col-xl-3">
+                            <div className="col-12 col-sm-6 col-xl-4">
                                 <Link
                                     to="/mentors/services"
                                     className="text-decoration-none"
                                 >
-                                    <div className="card h-100 border-0 shadow-sm">
+                                    <div className="card h-100 shadow-sm"
+                                    style={{ border: "none", borderLeft: "4px solid #ff1949"}}>
                                         <div className="card-body p-4">
 
                                             <div className="fs-2 mb-3">
@@ -230,12 +223,13 @@ export const MentorPrivateDashboard = () => {
                                 </Link>
                             </div>
 
-                            <div className="col-12 col-sm-6 col-xl-3">
+                            <div className="col-12 col-sm-6 col-xl-4">
                                 <Link
                                     to="/mentors/services/new"
                                     className="text-decoration-none"
                                 >
-                                    <div className="card h-100 border-0 shadow-sm">
+                                    <div className="card h-100 shadow-sm"
+                                    style={{ border: "none", borderLeft: "4px solid #ff1949"}}>
                                         <div className="card-body p-4">
 
                                             <div className="fs-2 mb-3">
@@ -254,38 +248,14 @@ export const MentorPrivateDashboard = () => {
                                     </div>
                                 </Link>
                             </div>
-
-                            <div className="col-12 col-sm-6 col-xl-3">
-                                <Link
-                                    to="/mentors/appointments"
-                                    className="text-decoration-none"
-                                >
-                                    <div className="card h-100 border-0 shadow-sm">
-                                        <div className="card-body p-4">
-
-                                            <div className="fs-2 mb-3">
-                                                📅
-                                            </div>
-
-                                            <h5 className="card-title text-dark">
-                                                Appointments
-                                            </h5>
-
-                                            <p className="card-text text-muted">
-                                                Review appointment requests from users.
-                                            </p>
-
-                                        </div>
-                                    </div>
-                                </Link>
-                            </div>
-
-                            <div className="col-12 col-sm-6 col-xl-3">
+                            
+                            <div className="col-12 col-sm-6 col-xl-4">
                                 <Link
                                     to="/mentors/users"
                                     className="text-decoration-none"
                                 >
-                                    <div className="card h-100 border-0 shadow-sm">
+                                    <div className="card h-100 shadow-sm"
+                                    style={{ border: "none", borderLeft: "4px solid #ff1949"}}>
                                         <div className="card-body p-4">
                                             <div className="fs-2 mb-3">
                                                 💬

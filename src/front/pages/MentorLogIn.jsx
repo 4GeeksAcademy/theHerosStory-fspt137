@@ -32,6 +32,7 @@ export const MentorLogIn = () => {
                 if (data && data.access_mentor_token && data.mentor_id) {
                     localStorage.setItem("mentor_token", data.access_mentor_token);
                     localStorage.setItem("mentor_id", data.mentor_id);
+                    localStorage.setItem("mentor_email", email);
                     navigate(`/mentors/dashboard/${data.mentor_id}`);
                 }
 

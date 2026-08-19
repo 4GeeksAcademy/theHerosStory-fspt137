@@ -101,56 +101,74 @@ export const UserFlowServices = () => {
                 {allServices.length === 0 ? (
                     <p className="text-muted">No services have been created yet.</p>
                 ) : (
-                    <div className="list-group">
+                    <div className="row g-4">
                         {allServices.map((service) => (
-                            <div className="list-group-item d-flex justify-content-between align-items-center" key={service.id}>
-                                <div className="flex-grow-1 me-3">
-                                    <h5 className="mb-1">{service.title}</h5>
-                                    <p className="mb-2">{service.description}</p>
-                                    <span className="badge text-bg-info">
-                                        ${service.price}
-                                    </span>
-                                </div>
-                                <p className="mb-1 mt-2">
-                                    <strong>Mentor:</strong>{service.mentor?.mentorname}
-                                </p>
-                                {service.mentor?.address && (
-                                    <p className="mb-1">
-                                        📍 {service.mentor.address}
-                                    </p>
-                                )}
+                            <div className="col-12 col-lg-6" key={service.id}>
+                                <div className="card h-100 shadow-sm"
+                                    style={{ border: "none", borderLeft: "4px solid #ff1949" }}
+                                >
+                                    <div className="card-body p-4">
+                                        <h4 className="fw-bold mb-2">{service.title}</h4>
+                                        <p className="text-muted mb-3">{service.description}</p>
 
-                                <div>
-                                    <Link to={`/user-book/${service.id}`} className="btn btn-primary text-nowrap">
-                                        Book Appointment
-                                    </Link>
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline-secondary btn-sn"
-                                        onClick={() => setselectedService(service)}
-                                    >
-                                        View location
-                                    </button>
+                                        <p className="mb-2">
+                                            <strong>Mentor:</strong>
+                                            {service.mentor?.mentorname}
+                                        </p>
+
+                                        {service.mentor?.address && (
+                                            <p className="mb-1">
+                                                📍 {service.mentor.address}
+                                            </p>
+                                        )}
+                                        <span className="badge fs-6"
+                                            style={{
+                                                backgroundColor: "#ff1949"
+                                            }}>
+                                            ${service.price}
+                                        </span>
+
+                                        <div className="d-flex gap-2">
+                                            <Link to={`/user-book/${service.id}`} className="btn text-white text-nowrap" style={{
+                                                backgroundColor: "#ff1949"
+                                            }}>
+                                                Book Appointment
+                                            </Link>
+                                            <button
+                                                type="button"
+                                                className="btn btn-outline-secondary "
+                                                onClick={() => setselectedService(service)}
+                                            >
+                                                View location
+                                            </button>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         ))}
                     </div>
                 )}
                 {selectedService && (
-                    <div className="mt-4">
-                        <h4>
-                            Location - {selectedService.mentor?.mentorname}
-                        </h4>
-                        <p>
-                            📍 {selectedService.mentor?.address}
-                        </p>
-                        <div
-                            ref={mapRef}
-                            style={{
-                                width: "100%",
-                                height: "300px"
-                            }}
-                        />
+                    <div className="mt-5">
+                        <div className="card border-0 shadow-sm">
+                            <div className="card-body p-4">
+
+                                <h4>
+                                    Location - {selectedService.mentor?.mentorname}
+                                </h4>
+                                <p className="text-muted">
+                                    📍 {selectedService.mentor?.address}
+                                </p>
+                                <div
+                                    ref={mapRef}
+                                    style={{
+                                        width: "100%",
+                                        height: "300px"
+                                    }}
+                                />
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>

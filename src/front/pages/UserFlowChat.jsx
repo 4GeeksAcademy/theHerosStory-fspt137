@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { socket } from "../../socket";
+import { UserPageLayout } from "../components/UserPageLayout";
 
 export const UserFlowChat = () => {
     const { mentorId } = useParams();
@@ -114,6 +115,8 @@ export const UserFlowChat = () => {
     };
 
     return (
+        <UserPageLayout>
+
         <div className="container py-5" style={{ maxWidth: "700px" }}>
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h1>Chat with {mentorName || "Mentor"}</h1>
@@ -122,7 +125,7 @@ export const UserFlowChat = () => {
                         className="btn btn-warning btn-sm"
                         onClick={getMessages}
                         title="Refresh messages"
-                    >
+                        >
                         Refresh
                     </button>
                     <button className="btn btn-outline-secondary btn-sm" onClick={() => navigate("/user-mentors")}>
@@ -137,8 +140,8 @@ export const UserFlowChat = () => {
                 ) : (
                     messages.map((message) => (
                         <div
-                            key={message.id}
-                            className={message.sender === "user" ? "text-end mb-3" : "text-start mb-3"}
+                        key={message.id}
+                        className={message.sender === "user" ? "text-end mb-3" : "text-start mb-3"}
                         >
                             <div>
                                 <strong>
@@ -148,10 +151,10 @@ export const UserFlowChat = () => {
                             <span
                                 className={
                                     message.sender === "user"
-                                        ? "d-inline-block bg-primary text-white rounded px-3 py-2"
-                                        : "d-inline-block bg-white border rounded px-3 py-2"
+                                    ? "d-inline-block bg-primary text-white rounded px-3 py-2"
+                                    : "d-inline-block bg-white border rounded px-3 py-2"
                                 }
-                            >
+                                >
                                 {message.content}
                             </span>
                         </div>
@@ -168,10 +171,12 @@ export const UserFlowChat = () => {
                         value={content}
                         onChange={(event) => setContent(event.target.value)}
                         required
-                    />
-                    <button type="submit" className="btn btn-primary">Send</button>
+                        />
+                    <button type="submit" className="btn text-white"
+                    style={{ backgroundColor: "#ff1949"} }>Send</button>
                 </div>
             </form>
         </div>
+        </UserPageLayout>
     );
 };

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { MentorPageLayout } from "../components/MentorPageLayout";
 
 export const CreateMentorsService = () => {
     const [title, setTitle] = useState("");
@@ -50,6 +51,8 @@ export const CreateMentorsService = () => {
     };
 
     return (
+        <MentorPageLayout>
+
         <div className="container py-5">
             <h1 className="mb-4">Create a new service</h1>
 
@@ -62,7 +65,7 @@ export const CreateMentorsService = () => {
                         value={title}
                         onChange={(event) => setTitle(event.target.value)}
                         required
-                    />
+                        />
                 </div>
 
                 <div className="mb-3">
@@ -73,7 +76,7 @@ export const CreateMentorsService = () => {
                         value={description}
                         onChange={(event) => setDescription(event.target.value)}
                         required
-                    />
+                        />
                 </div>
 
                 <div className="mb-3">
@@ -84,11 +87,12 @@ export const CreateMentorsService = () => {
                         value={price}
                         onChange={(event) => setPrice(event.target.value)}
                         required
-                    />
+                        />
                 </div>
 
                 <div className="mb-3">
-                    <button type="submit" className="btn btn-primary">
+                    <button type="submit" className="btn text-white"
+                style={{ backgroundColor: "#ff1949"}}>
                         Create service
                     </button>
 
@@ -98,5 +102,6 @@ export const CreateMentorsService = () => {
                 </div>
             </form>
         </div>
+                    </MentorPageLayout>
     );
 };

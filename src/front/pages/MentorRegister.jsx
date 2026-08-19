@@ -3,36 +3,59 @@ import { useNavigate } from "react-router-dom";
 
 export const MentorRegister = () => {
     const [email, setEmail] = useState("");
-    const [username, setUsername] = useState("");
+    const [mentorname, setMentorname] = useState("");
     const [password, setPassword] = useState("");
+
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const resp = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/mentors", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    email: email,
-                    username: username, 
-                    password: password, 
-                    is_active: true   
-                })
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        setError("");
+        setLoading(true);
+
+        fetch(`${backendUrl}/api/mentors`, {
+            method: "POST",
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({
+                mentorname,
+                email,
+                password,
+
+            })
+        })
+            .then(async (response) => {
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.msg || "Error creating mentor");
+                }
+
+                return data;
+            })
+            .then((data) => {
+                console.log("Mentor created:", data);
+                navigate("/mentors/login");
+            })
+            .catch((error) => {
+                console.error(error);
+                setError(error.message);
+            })
+            .finally(() => {
+                setLoading(false);
             });
-            
-            if (!resp.ok) throw new Error("Error creating mentor in server");
-            
-            navigate("/login-user"); 
-        } catch (error) {
-            console.error("Error capturado:", error);
-        }
     };
 
     return (
         <div className="container my-5 flex-grow-1 d-flex justify-content-center align-items-center">
             <div className="row shadow-lg rounded-4 bg-white overflow-hidden p-0 w-100" style={{ maxWidth: "900px", minHeight: "500px" }}>
-                
+
                 {/* 1. Izquierda: Formulario de Registro de Mentor */}
                 <div className="col-md-6 p-5 d-flex flex-column justify-content-center">
                     <div className="mb-4">
@@ -43,64 +66,56 @@ export const MentorRegister = () => {
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
                             <label className="form-label text-secondary small fw-semibold">Username</label>
-                            <input 
-                                type="text" 
-                                className="form-control px-3 py-2" 
-                                value={username} 
-                                onChange={e => setUsername(e.target.value)} 
-                                required 
+                            <input
+                                type="text"
+                                className="form-control px-3 py-2"
+                                value={mentorname}
+                                onChange={e => setMentorname(e.target.value)}
+                                required
                                 placeholder="MentorUser"
                             />
                         </div>
 
                         <div className="mb-3">
                             <label className="form-label text-secondary small fw-semibold">Correo Electrónico (Email)</label>
-                            <input 
-                                type="email" 
-                                className="form-control px-3 py-2" 
-                                value={email} 
-                                onChange={e => setEmail(e.target.value)} 
-                                required 
+                            <input
+                                type="email"
+                                className="form-control px-3 py-2"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                                required
                                 placeholder="mentor@mail.com"
                             />
                         </div>
 
                         <div className="mb-4">
                             <label className="form-label text-secondary small fw-semibold">Password</label>
-                            <input 
-                                type="password" 
-                                className="form-control px-3 py-2" 
-                                value={password} 
-                                onChange={e => setPassword(e.target.value)} 
-                                required 
+                            <input
+                                type="password"
+                                className="form-control px-3 py-2"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                                required
                                 placeholder="xxxxxxxxx"
                             />
                         </div>
 
-                        <div className="d-flex justify-content-between align-items-center gap-2">
-                            <button 
-                                type="button" 
-                                className="btn btn-outline-secondary w-50 py-2" 
-                                onClick={() => navigate("/login-user")}
-                            >
-                                Cancel
-                            </button>
-                            <button 
-                                type="submit" 
-                                className="btn w-50 py-2 fw-bold text-white shadow-sm"
-                                style={{ backgroundColor: "#fa4251", border: "none" }}
-                            >
-                                Register
-                            </button>
-                        </div>
+
+                        <button
+                            type="submit"
+                            className="btn btn-primary w-100"
+                            disabled={loading}
+                        >
+                            {loading ? "Creating account..." : "Register"}
+                        </button>
                     </form>
                 </div>
 
                 {/* 2. Derecha: La Imagen al lado */}
                 <div className="col-md-6 d-none d-md-block p-0 bg-light">
-                    <img 
-                        src="https://img.magnific.com/foto-gratis/equipo-trabajando-juntos-proyecto_23-2149325425.jpg?semt=ais_hybrid&w=740&q=80" 
-                        alt="Register Mentor background" 
+                    <img
+                        src="https://img.magnific.com/foto-gratis/equipo-trabajando-juntos-proyecto_23-2149325425.jpg?semt=ais_hybrid&w=740&q=80"
+                        alt="Register Mentor background"
                         className="w-100 h-100 object-fit-cover"
                         style={{ minHeight: "450px" }}
                     />
