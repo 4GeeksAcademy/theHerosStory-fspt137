@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { AdminPageLayout } from "../components/AdminPageLayout";
 
 export const EditMentor = () => {
     const navigate = useNavigate();
@@ -64,6 +65,8 @@ export const EditMentor = () => {
     };
 
     return (
+        <AdminPageLayout>
+
         <div className="container py-4">
             <div className="row justify-content-center">
                 <div className="col-12 col-md-6 col-lg-5">
@@ -84,7 +87,7 @@ export const EditMentor = () => {
                                     <input className="form-control" type="text" name="password" value={formData.password} onChange={handleChange} autoComplete="off" />
                                 </div>
                                 <div className="d-grid gap-2">
-                                    <button className="btn btn-primary" type="submit">Actualizar</button>
+                                    <button className="btn text-white" style={{backgroundColor: "#ff1949"}} type="submit">Actualizar</button>
                                     <button className="btn btn-outline-secondary" type="button" onClick={() => navigate("/mentors")}>Cancelar</button>
                                 </div>
                             </form>
@@ -96,5 +99,6 @@ export const EditMentor = () => {
                 </div>
             </div>
         </div>
+        </AdminPageLayout>
     );
 };

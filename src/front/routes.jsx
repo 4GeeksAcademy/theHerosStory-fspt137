@@ -92,8 +92,8 @@ export const router = createBrowserRouter(
       <Route path="/quests/edit/:quest_id" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"><EditQuest /></PrivateRoute>} />
       <Route path="/quest-trackings/new" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"><CreateQuestTracking /></PrivateRoute>} />
       <Route path="/quest-trackings/:tracking_id/edit" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"><EditQuestTracking /></PrivateRoute>} />
-      <Route path="/add-user" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"><AddUser /></PrivateRoute>} />
-      <Route path="/edit-user/:id" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"><EditUser /></PrivateRoute>} />
+      <Route path="/add-user" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><AddUser /></PrivateRoute>} />
+      <Route path="/edit-user/:id" element={<PrivateRoute tokenName="adminToken" redirectTo="/admin-login"><EditUser /></PrivateRoute>} />
       <Route path="/habits/new" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"><CreateHabit /></PrivateRoute>} />
       <Route path="/habits/edit/:habit_id" element={<PrivateRoute tokenName="user_token" redirectTo="/login-user"><EditHabit /></PrivateRoute>} />
       <Route path="/services/new" element={<PrivateRoute tokenName="mentor_token" redirectTo="/mentors/login"><CreateService /></PrivateRoute>} />

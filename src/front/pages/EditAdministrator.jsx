@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom";
-
+import { AdminPageLayout } from "../components/AdminPageLayout";
 export const EditAdministrator = () => {
     const { admin_id } = useParams();
 
@@ -84,6 +84,8 @@ export const EditAdministrator = () => {
     };
 
     return (
+        <AdminPageLayout>
+
         <div className="container py-5">
             <h1>Edit administrator</h1>
 
@@ -108,7 +110,7 @@ export const EditAdministrator = () => {
                             setName(event.target.value)
                         }
                         required
-                    >
+                        >
                     </input>
                 </div>
 
@@ -123,7 +125,7 @@ export const EditAdministrator = () => {
                         className="form-control"
                         value={email}
                         onChange={(event) => setEmail(event.target.value)}
-                    >
+                        >
                     </input>
                 </div>
 
@@ -139,7 +141,7 @@ export const EditAdministrator = () => {
                         value={password}
                         onChange={(event) => setPassword(event.target.value)}
                         placeholder="Leave blank to keep current password"
-                    >
+                        >
                     </input>
                 </div>
 
@@ -147,20 +149,22 @@ export const EditAdministrator = () => {
                 <div className="d-flex gap-2">
                     <button
                         type="submit"
-                        className="btn btn-primary"
+                        className="btn text-white"
+                        style={ { backgroundColor: "#ff1949"}}
                         disabled={saving}
-                    >
+                        >
                         {saving ? "Saving..." : "Saving change"}
                     </button>
 
                     <Link
                         to="/administrators"
                         className="btn btn-outline-secondary"
-                    >
+                        >
                         Cancel
                     </Link>
                 </div>
             </form>
         </div>
+                        </AdminPageLayout>
     );
 };

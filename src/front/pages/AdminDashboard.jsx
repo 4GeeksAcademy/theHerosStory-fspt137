@@ -30,7 +30,7 @@ export const AdminDashboard = () => {
                     <nav className="d-flex flex-column px-3 py-4 gap-2">
 
                         <Link
-                            to="/admin/dashboard"
+                            to="/admin-dashboard"
                             className="btn text-start"
                         >
                             🏠 Dashboard
@@ -57,14 +57,7 @@ export const AdminDashboard = () => {
                         >
                             👥 Mentors
                         </Link>
-
-                        <Link
-                            to="/quests"
-                            className="btn text-start"
-                        >
-                            🎯 Quests
-                        </Link>
-
+                        
                         <button
                             type="button"
                             onClick={logout}
@@ -139,12 +132,16 @@ export const AdminDashboard = () => {
 
                         <div className="row g-4 mb-5">
 
-                            <div className="col-12 col-sm-6 col-xl-3">
+                            <div className="col-12 col-sm-6 col-xl-4">
                                 <Link
                                     to="/administrators"
                                     className="text-decoration-none"
                                 >
-                                    <div className="card h-100 border-0 shadow-sm">
+                                    <div className="card h-100 shadow-sm"
+                                    style={{
+                                        border: "none",
+                                        borderLeft: "4px solid #ff1949"
+                                    }}>
                                         <div className="card-body p-4">
 
                                             <div className="fs-2 mb-3">
@@ -164,12 +161,16 @@ export const AdminDashboard = () => {
                                 </Link>
                             </div>
 
-                            <div className="col-12 col-sm-6 col-xl-3">
+                            <div className="col-12 col-sm-6 col-xl-4">
                                 <Link
                                     to="/users"
                                     className="text-decoration-none"
                                 >
-                                    <div className="card h-100 border-0 shadow-sm">
+                                    <div className="card h-100 shadow-sm"
+                                    style={{
+                                        border: "none",
+                                        borderLeft: "4px solid #ff1949"
+                                    }}>
                                         <div className="card-body p-4">
 
                                             <div className="fs-2 mb-3">
@@ -189,12 +190,16 @@ export const AdminDashboard = () => {
                                 </Link>
                             </div>
 
-                            <div className="col-12 col-sm-6 col-xl-3">
+                            <div className="col-12 col-sm-6 col-xl-4">
                                 <Link
                                     to="/mentors"
                                     className="text-decoration-none"
                                 >
-                                    <div className="card h-100 border-0 shadow-sm">
+                                    <div className="card h-100 shadow-sm"
+                                    style={{
+                                        border: "none",
+                                        borderLeft: "4px solid #ff1949"
+                                    }}>
                                         <div className="card-body p-4">
 
                                             <div className="fs-2 mb-3">
@@ -214,28 +219,7 @@ export const AdminDashboard = () => {
                                 </Link>
                             </div>
 
-                            <div className="col-12 col-sm-6 col-xl-3">
-                                <Link
-                                    to="/quests"
-                                    className="text-decoration-none"
-                                >
-                                    <div className="card h-100 border-0 shadow-sm">
-                                        <div className="card-body p-4">
-                                            <div className="fs-2 mb-3">
-                                                🎯
-                                            </div>
-
-                                            <h5 className="card-title text-dark">
-                                                Quests
-                                            </h5>
-                                            <p className="card-text text-muted">
-                                                Review and manage available quests.
-                                            </p>
-
-                                        </div>
-                                    </div>
-                                </Link>
-                            </div>
+                 
 
                         </div>
 
@@ -264,7 +248,7 @@ export const AdminDashboard = () => {
                                         </p>
 
                                         <Link
-                                            to="/mentor/profile"
+                                            to="/users"
                                             className="btn text-white"
                                             style={{ backgroundColor: "#ff1949" }}
                                         >

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { AdminPageLayout } from "../components/AdminPageLayout";
 
 export const EditUser = () => {
     const { id } = useParams(); 
@@ -99,6 +100,8 @@ export const EditUser = () => {
     }
 
     return (
+        <AdminPageLayout>
+
         <div className="container mt-5">
             <div className="w-50 mx-auto card p-4 shadow-sm">
                 <h2 className="mb-4 text-center">Editar Usuario #{id}</h2>
@@ -110,20 +113,20 @@ export const EditUser = () => {
                         alt="Avatar actual" 
                         className="rounded-circle shadow-sm mb-3" 
                         style={{ width: "120px", height: "120px", objectFit: "cover" }}
-                    />
+                        />
                     <div className="mb-2">
                         <input 
                             type="file" 
                             className="form-control form-control-sm" 
                             onChange={(e) => setImageFile(e.target.files[0])} 
-                        />
+                            />
                     </div>
                     {imageFile && (
                         <button 
-                            type="button" 
-                            className="btn btn-info btn-sm text-white" 
-                            onClick={handleUploadAvatar}
-                            disabled={uploading}
+                        type="button" 
+                        className="btn btn-info btn-sm text-white" 
+                        onClick={handleUploadAvatar}
+                        disabled={uploading}
                         >
                             {uploading ? "Subiendo..." : "Subir nueva foto"}
                         </button>
@@ -140,7 +143,7 @@ export const EditUser = () => {
                             value={username} 
                             onChange={e => setUsername(e.target.value)} 
                             required 
-                        />
+                            />
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Correo Electrónico (Email)</label>
@@ -163,5 +166,6 @@ export const EditUser = () => {
                 </form>
             </div>
         </div>
+                            </AdminPageLayout>
     );
 };
