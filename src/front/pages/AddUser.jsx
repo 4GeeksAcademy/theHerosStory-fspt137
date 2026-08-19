@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AdminPageLayout } from "../components/AdminPageLayout";
 
 export const AddUser = () => {
     // 1. Añadimos los estados para guardar lo que escribe el usuario
@@ -33,6 +34,8 @@ export const AddUser = () => {
     };
 
     return (
+        <AdminPageLayout>
+
         <div className="container mt-5">
             <div className="w-50 mx-auto card p-4 shadow-sm">
                 <h2 className="mb-4 text-center">Crear Nuevo Usuario</h2>
@@ -61,7 +64,7 @@ export const AddUser = () => {
                             onChange={e => setEmail(e.target.value)} 
                             required 
                             placeholder="ejemplo@correo.com"
-                        />
+                            />
                     </div>
 
                     {/* CAMPO: Contraseña */}
@@ -74,19 +77,20 @@ export const AddUser = () => {
                             onChange={e => setPassword(e.target.value)} 
                             required 
                             placeholder="Mínimo 6 caracteres"
-                        />
+                            />
                     </div>
 
                     <div className="d-flex justify-content-between mt-4">
                         <button type="button" className="btn btn-secondary" onClick={() => navigate("/users")}>
                             Cancelar
                         </button>
-                        <button type="submit" className="btn btn-success">
+                        <button type="submit" className="btn text-white" style={{backgroundColor: "#ff1949"}}>
                             Guardar Usuario
                         </button>
                     </div>
                 </form>
             </div>
         </div>
+                            </AdminPageLayout>
     );
 };

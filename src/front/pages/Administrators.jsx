@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
+import { AdminPageLayout } from "../components/AdminPageLayout";
+
 
 export const Administrators = () => {
     const [administrators, setAdministrators] = useState([]);
@@ -60,13 +62,15 @@ export const Administrators = () => {
             });
     };
     return (
+        <AdminPageLayout>
         <div className="container py-5">
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h1>Administrators</h1>
 
                 <Link
-                    to="/administrators/new" className="btn btn-primary"
-                >
+                    to="/administrators/new" className="btn text-white"
+                        style={ { backgroundColor: "#ff1949"}}
+                    >
                     Create Administrator
                 </Link>
             </div>
@@ -91,8 +95,8 @@ export const Administrators = () => {
                 <div className="list-group">
                     {administrators.map((administrator) => (
                         <div
-                            className="list-group-item d-flex justify-content-between align-items-center"
-                            key={administrator.id}
+                        className="list-group-item d-flex justify-content-between align-items-center"
+                        key={administrator.id}
                         >
                             <div>
                                 <h5 className="mb-1">
@@ -106,15 +110,19 @@ export const Administrators = () => {
                             <div className="d-flex gap-2">
                                 <Link
                                     to={`/administrators/${administrator.id}/edit`}
-                                    className="btn btn-outline-primary btn-sm"
-                                >
+                                    className="btn btn-sm"
+                                    style={{
+                                        color: "#ff1949",
+                                        border: "1px solid #ff1949"
+                                    }}
+                                    >
                                     Edit
                                 </Link>
                                 <button
                                     type="button"
                                     className="btn btn-outline-danger btn-sm"
                                     onClick={() => deleteAdministrator(administrator.id)}
-                                >
+                                    >
                                     Delete
                                 </button>
                             </div>
@@ -123,5 +131,7 @@ export const Administrators = () => {
                 </div>
             )}
         </div>
+    </AdminPageLayout>
+     
     );
 };

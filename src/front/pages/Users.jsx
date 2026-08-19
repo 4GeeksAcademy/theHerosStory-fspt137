@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { AdminPageLayout } from "../components/AdminPageLayout";
 
 export const Users = props => {
     const [users, setUsers] = useState([]);
@@ -37,10 +38,13 @@ export const Users = props => {
     }, []);
 
     return (
+        <AdminPageLayout>
+
         <div className="container mt-5">
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h1>Lista de Usuarios</h1>
-                <Link to="/add-user" className="btn btn-success">
+                <Link to="/add-user" className="btn text-white"
+                style={{backgroundColor: "#ff1949"}}>
                     Crear Nuevo Usuario
                 </Link>
             </div>
@@ -65,7 +69,7 @@ export const Users = props => {
                                                 alt="Avatar" 
                                                 className="rounded-circle shadow-sm" 
                                                 style={{ width: "80px", height: "80px", objectFit: "cover" }}
-                                            />
+                                                />
                                         </div>
                                         <h5 className="card-title text-center">Usuario #{user.id}</h5>
                                         <p className="card-text">
@@ -99,5 +103,6 @@ export const Users = props => {
                 </div>
             )}
         </div>
+            </AdminPageLayout>
     );
 };

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { AdminPageLayout } from "../components/AdminPageLayout";
 
 export const CreateAdministrator = () => {
     const [name, setName] = useState("");
@@ -50,6 +51,8 @@ export const CreateAdministrator = () => {
     };
 
     return (
+        <AdminPageLayout>
+
         <div className="container py-5">
             <h1>Create administrator</h1>
 
@@ -74,7 +77,7 @@ export const CreateAdministrator = () => {
                             setName(event.target.value)
                         }
                         required
-                    >
+                        >
                     </input>
                 </div>
 
@@ -89,7 +92,7 @@ export const CreateAdministrator = () => {
                         className="form-control"
                         value={email}
                         onChange={(event) => setEmail(event.target.value)}
-                    >
+                        >
                     </input>
                 </div>
 
@@ -105,7 +108,7 @@ export const CreateAdministrator = () => {
                         value={password}
                         onChange={(event) => setPassword(event.target.value)}
                         required
-                    >
+                        >
                     </input>
                 </div>
 
@@ -113,9 +116,10 @@ export const CreateAdministrator = () => {
                 <div className="d-flex gap-2">
                     <button
                         type="submit"
-                        className="btn btn-primary"
+                        className="btn text-white"
+                        style={ { backgroundColor: "#ff1949"}}
                         disabled={saving}
-                    >
+                        >
                         {saving ? "Saving..." : "Create administrator"}
                     </button>
 
@@ -128,5 +132,6 @@ export const CreateAdministrator = () => {
                 </div>
             </form>
         </div>
+                        </AdminPageLayout>
     );
 };
